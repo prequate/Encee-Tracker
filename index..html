@@ -1,0 +1,596 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Encee Aromatics | Transition Tracker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#FFFFFF; --surface:#FFFFFF; --soft:#F6F6F6; --line:#E6E6E6;
+  --ink:#161616; --grey:#707070; --orange:#FF9633; --deep:#F96900;
+  --ok:#2E7D4F; --okbg:#E9F4EE; --warn:#B3261E; --warnbg:#FBEAE9; --hold:#8A6D00; --holdbg:#FBF3DC;
+  --tint:#FFF3E8;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#161616; --surface:#1E1E1E; --soft:#232323; --line:#333333;
+    --ink:#F2F2F2; --grey:#A3A3A3; --tint:#2A1E14;
+    --okbg:#16291E; --warnbg:#2E1715; --holdbg:#2B2410; --ok:#6CC08E; --warn:#F08A82; --hold:#E0C25A;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#161616; --surface:#1E1E1E; --soft:#232323; --line:#333333;
+  --ink:#F2F2F2; --grey:#A3A3A3; --tint:#2A1E14;
+  --okbg:#16291E; --warnbg:#2E1715; --holdbg:#2B2410; --ok:#6CC08E; --warn:#F08A82; --hold:#E0C25A;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{height:100%; scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0; min-height:100%; background:var(--bg); color:var(--ink);
+  font-family:"Product Sans","Open Sans",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+  font-weight:300; font-size:15px; line-height:1.55; -webkit-font-smoothing:antialiased}
+button,input,select,textarea{font:inherit; color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--deep); outline-offset:2px}
+.wordmark{font-weight:700; letter-spacing:.02em; font-size:18px; line-height:1}
+.wordmark .p{color:var(--grey)} .wordmark .q{color:var(--orange)}
+
+/* Login */
+.gate{min-height:100vh; min-height:100dvh; display:grid; place-items:center; padding:32px 20px}
+.gate-card{width:100%; max-width:400px}
+.gate h1{font-size:28px; font-weight:700; line-height:1.2; margin:40px 0 6px}
+.gate p{color:var(--grey); margin:0 0 32px}
+.pin{display:flex; gap:10px; margin-bottom:14px}
+.pin input{width:100%; aspect-ratio:1/1.15; max-width:54px; text-align:center; font-size:24px; font-weight:600;
+  border:1.5px solid var(--line); border-radius:8px; background:var(--surface)}
+.pin input:focus{border-color:var(--orange); outline:none; box-shadow:0 0 0 3px var(--tint)}
+.pin.bad input{border-color:var(--warn)}
+.gate .msg{min-height:22px; font-size:13px; color:var(--warn)}
+.gate .foot{margin-top:48px; font-size:12px; color:var(--grey)}
+
+/* App */
+.top{position:sticky; top:env(safe-area-inset-top,0px); z-index:5; background:var(--bg); border-bottom:1px solid var(--line)}
+.top-in{max-width:1120px; margin:0 auto; padding:16px 24px; display:flex; align-items:center; gap:20px; flex-wrap:wrap}
+.top .client{color:var(--grey); font-size:13px; border-left:1px solid var(--line); padding-left:16px}
+.top .spacer{flex:1}
+.who{font-size:13px; color:var(--grey)} .who b{color:var(--ink); font-weight:600}
+.link{background:none; border:0; color:var(--deep); font-weight:600; font-size:13px; padding:4px}
+.tabs{max-width:1120px; margin:0 auto; padding:0 24px; display:flex; gap:28px}
+.tab{background:none; border:0; padding:12px 0; font-weight:600; color:var(--grey); border-bottom:2px solid transparent; font-size:14px}
+.tab[aria-selected="true"]{color:var(--ink); border-bottom-color:var(--orange)}
+main{max-width:1120px; margin:0 auto; padding:32px 24px 120px}
+
+.head h2{font-size:26px; font-weight:700; margin:0 0 4px; line-height:1.25}
+.head p{margin:0; color:var(--grey)}
+
+/* Progress line: the memorable element */
+.progress{margin:28px 0 36px}
+.bar{display:flex; height:10px; border-radius:5px; overflow:hidden; background:var(--soft)}
+.bar span{display:block; height:100%}
+.legend{display:flex; flex-wrap:wrap; gap:8px 22px; margin-top:12px; font-size:13px; color:var(--grey)}
+.legend i{display:inline-block; width:9px; height:9px; border-radius:2px; margin-right:6px; vertical-align:0}
+.big{display:flex; align-items:baseline; gap:10px; margin-bottom:14px}
+.big strong{font-size:44px; font-weight:700; line-height:1; color:var(--ink)}
+.big span{color:var(--grey)}
+
+.owners{display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); border:1px solid var(--line); border-radius:10px; overflow:hidden; margin-bottom:40px}
+.owner{padding:18px 20px; border-right:1px solid var(--line)}
+.owner:last-child{border-right:0}
+.owner .n{font-weight:600; font-size:14px}
+.owner .c{font-size:30px; font-weight:700; line-height:1.2; margin-top:6px}
+.owner .s{font-size:12.5px; color:var(--grey)}
+.owner .s.late{color:var(--warn); font-weight:600}
+
+h3.sec{font-size:15px; font-weight:700; margin:0 0 12px}
+.scroll{overflow-x:auto; border:1px solid var(--line); border-radius:10px}
+table{width:100%; border-collapse:collapse; min-width:820px; font-size:14px}
+th{text-align:left; font-weight:400; font-size:12.5px; color:var(--grey); padding:12px 14px; border-bottom:1px solid var(--line); background:var(--soft); white-space:nowrap}
+td{padding:14px; border-bottom:1px solid var(--line); vertical-align:top}
+tr:last-child td{border-bottom:0}
+td.no{color:var(--grey); width:36px; font-weight:400}
+.t-title{font-weight:600; line-height:1.35}
+.t-type{font-size:12px; color:var(--grey); margin-top:2px}
+.expand{background:none; border:0; padding:0; text-align:left; width:100%}
+.detail td{background:var(--soft); padding:0}
+.detail .d{padding:16px 18px 18px 50px; display:grid; grid-template-columns:1fr 1fr; gap:20px; font-size:13.5px}
+.detail h4{margin:0 0 4px; font-size:12.5px; font-weight:600; color:var(--grey)}
+.detail p{margin:0}
+.muted{color:var(--grey)}
+
+.pill{display:inline-block; font-size:12px; font-weight:600; padding:3px 9px; border-radius:20px; white-space:nowrap}
+.st-ns{background:var(--soft); color:var(--grey)}
+.st-ip{background:var(--tint); color:var(--deep)}
+.st-dn{background:var(--okbg); color:var(--ok)}
+.st-oh{background:var(--holdbg); color:var(--hold)}
+.due{font-size:13px; white-space:nowrap}
+.due small{display:block; font-size:12px; color:var(--grey)}
+.due small.late{color:var(--warn); font-weight:600}
+.due small.soon{color:var(--deep); font-weight:600}
+
+select,input[type=date],input[type=text],textarea{border:1px solid var(--line); border-radius:6px; background:var(--surface); padding:6px 8px; font-size:13px; font-weight:400; max-width:100%}
+textarea{width:100%; resize:vertical; min-height:54px}
+
+/* My tasks */
+.cards{display:grid; gap:14px}
+.task{border:1px solid var(--line); border-radius:10px; padding:20px 22px; display:grid; grid-template-columns:1fr auto; gap:6px 24px; background:var(--surface)}
+.task.late{border-left:3px solid var(--warn)}
+.task.soon{border-left:3px solid var(--orange)}
+.task .role{font-size:12px; color:var(--grey)}
+.task h4{margin:2px 0 8px; font-size:17px; font-weight:600; line-height:1.35}
+.task .oc{color:var(--grey); font-size:13.5px; margin:0; max-width:64ch}
+.task .side{text-align:right; display:flex; flex-direction:column; align-items:flex-end; gap:8px}
+.task .ctrl{grid-column:1/-1; display:flex; gap:12px; flex-wrap:wrap; align-items:flex-start; margin-top:10px; padding-top:14px; border-top:1px solid var(--line)}
+.task .ctrl .note{flex:1; min-width:220px}
+.task .meta{font-size:12px; color:var(--grey); grid-column:1/-1}
+.empty{border:1px dashed var(--line); border-radius:10px; padding:28px; color:var(--grey); text-align:center}
+details.done-list{margin-top:28px}
+details.done-list summary{cursor:pointer; font-weight:600; font-size:14px; color:var(--grey)}
+
+/* Admin */
+.admin{margin-top:48px; display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:24px}
+.box{border:1px solid var(--line); border-radius:10px; padding:20px 22px}
+.box h3{margin:0 0 4px; font-size:15px; font-weight:700}
+.box p{margin:0 0 14px; color:var(--grey); font-size:13px}
+.row{display:flex; gap:10px; align-items:center; margin-bottom:10px; flex-wrap:wrap}
+.row label{width:74px; font-size:13px; font-weight:400}
+.btn{border:0; border-radius:6px; padding:9px 16px; font-weight:600; font-size:13.5px; background:var(--orange); color:#161616}
+.btn:hover{background:var(--deep); color:#fff}
+.btn.ghost{background:none; border:1px solid var(--line); color:var(--ink)}
+.btn.ghost:hover{border-color:var(--orange); color:var(--deep); background:none}
+.btn[disabled]{opacity:.5; cursor:not-allowed}
+
+.savebar{position:fixed; left:0; right:0; bottom:0; z-index:10; background:var(--ink); color:var(--bg);
+  padding:14px 24px calc(14px + env(safe-area-inset-bottom,0px)); display:none}
+.savebar.on{display:block}
+.savebar .in{max-width:1120px; margin:0 auto; display:flex; gap:16px; align-items:center; flex-wrap:wrap}
+.savebar .txt{flex:1; font-size:14px}
+.savebar .btn.ghost{color:var(--bg); border-color:#555}
+.notice{margin-top:24px; font-size:13px; color:var(--grey); border-left:3px solid var(--orange); padding:8px 14px; background:var(--tint)}
+.toast{position:fixed; left:50%; transform:translateX(-50%); bottom:calc(84px + env(safe-area-inset-bottom,0px)); background:var(--ink); color:var(--bg); padding:10px 18px; border-radius:6px; font-size:13.5px; z-index:20; display:none}
+.toast.on{display:block}
+
+@media (max-width:760px){
+  .admin{grid-template-columns:1fr}
+  .detail .d{grid-template-columns:1fr; padding-left:18px}
+  .task{grid-template-columns:1fr}
+  .task .side{text-align:left; align-items:flex-start; flex-direction:row; gap:12px}
+  .top .client{display:none}
+  .owner{border-right:0; border-bottom:1px solid var(--line)}
+}
+@media (prefers-reduced-motion:no-preference){ .bar span{transition:width .6s ease} }
+</style>
+<style>
+dialog{border:1px solid var(--line); border-radius:12px; padding:24px; max-width:460px; width:calc(100% - 40px); background:var(--surface); color:var(--ink)}
+dialog::backdrop{background:rgba(22,22,22,.55)}
+dialog h3{margin:0 0 6px; font-size:17px; font-weight:700}
+dialog p{margin:0 0 14px; color:var(--grey); font-size:13.5px}
+dialog input[type=password]{width:100%; padding:9px 10px; font-size:14px}
+dialog .acts{display:flex; gap:10px; justify-content:flex-end; margin-top:18px}
+dialog label.chk{display:flex; gap:8px; align-items:center; font-size:13px; margin-top:12px}
+.loading{color:var(--grey); font-size:13px}
+</style>
+
+<style>.d.edit input[type=text],.d.edit textarea{width:100%;font-size:13.5px}.d.edit{padding-left:18px}</style>
+</head>
+<body>
+<div id="app"></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script>
+(function(){
+"use strict";
+/* Repository settings. Leave owner and repo blank on a <user>.github.io address and they are detected automatically.
+   Fill them in if you use a custom domain. */
+const CONFIG = { owner:"", repo:"", branch:"main", path:"data.json" };
+
+const $ = (s,el=document)=>el.querySelector(s);
+const esc = s => String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const enc = s => new TextEncoder().encode(s);
+const ub64 = s => Uint8Array.from(atob(s.replace(/\s/g,"")),c=>c.charCodeAt(0));
+const tob64 = u8 => { let s=""; const a=new Uint8Array(u8); for(let i=0;i<a.length;i+=8192) s+=String.fromCharCode.apply(null,a.subarray(i,i+8192)); return btoa(s); };
+const utf8b64 = str => tob64(enc(str));
+const b64utf8 = b => new TextDecoder().decode(ub64(b));
+const clone = o => JSON.parse(JSON.stringify(o));
+const STATUSES = ["Not started","In progress","On hold","Done"];
+const stCls = s => ({"Not started":"st-ns","In progress":"st-ip","On hold":"st-oh","Done":"st-dn"}[s]||"st-ns");
+
+let file=null;            // the encrypted data.json as loaded
+let dkRaw=null, dk=null;  // data key after PIN unlock
+let saved=null, state=null, pendingSlots={};
+let role=null, view="overall", openRow=null, token=null, saving=false;
+
+try{ token = localStorage.getItem("encee_gh_token"); }catch(e){}
+
+function repo(){
+  let {owner,repo,branch,path}=CONFIG;
+  const host=location.hostname;
+  if((!owner||!repo) && host.endsWith(".github.io")){
+    owner = owner || host.split(".")[0];
+    const seg = location.pathname.split("/").filter(Boolean)[0];
+    repo = repo || (seg && !seg.includes(".") ? seg : host);
+  }
+  return {owner,repo,branch,path};
+}
+
+/* ---------- Crypto ---------- */
+async function pinKey(pin){
+  const base = await crypto.subtle.importKey("raw", enc(pin), "PBKDF2", false, ["deriveKey"]);
+  return crypto.subtle.deriveKey({name:"PBKDF2", salt:ub64(file.kdf.salt), iterations:file.kdf.iter, hash:"SHA-256"},
+    base, {name:"AES-GCM", length:256}, false, ["encrypt","decrypt"]);
+}
+async function tryUnwrap(pk, who, slot){
+  try{ return new Uint8Array(await crypto.subtle.decrypt({name:"AES-GCM", iv:ub64(slot.iv), additionalData:enc(who)}, pk, ub64(slot.ct))); }
+  catch(e){ return null; }
+}
+async function wrap(pk, who){
+  const iv=crypto.getRandomValues(new Uint8Array(12));
+  const ct=await crypto.subtle.encrypt({name:"AES-GCM", iv, additionalData:enc(who)}, pk, dkRaw);
+  return {iv:tob64(iv), ct:tob64(ct)};
+}
+async function decryptData(f){
+  const pt=await crypto.subtle.decrypt({name:"AES-GCM", iv:ub64(f.data.iv)}, dk, ub64(f.data.ct));
+  return JSON.parse(new TextDecoder().decode(pt));
+}
+async function encryptData(obj){
+  const iv=crypto.getRandomValues(new Uint8Array(12));
+  const ct=await crypto.subtle.encrypt({name:"AES-GCM", iv}, dk, enc(JSON.stringify(obj)));
+  return {iv:tob64(iv), ct:tob64(ct)};
+}
+
+/* ---------- Loading and saving ---------- */
+function apiUrl(){ const r=repo(); return `https://api.github.com/repos/${r.owner}/${r.repo}/contents/${r.path}?ref=${encodeURIComponent(r.branch)}`; }
+async function apiGet(){
+  const res=await fetch(apiUrl(),{headers:{Authorization:"Bearer "+token, Accept:"application/vnd.github+json"}, cache:"no-store"});
+  if(!res.ok) throw {status:res.status};
+  const j=await res.json(); return {sha:j.sha, file:JSON.parse(b64utf8(j.content))};
+}
+async function loadFile(){
+  if(token && repo().repo){ try{ return (await apiGet()).file; }catch(e){} }
+  const res=await fetch(repo().path+"?t="+Date.now(),{cache:"no-store"});
+  if(!res.ok) throw new Error("load");
+  return res.json();
+}
+async function save(){
+  if(saving) return;
+  if(!token){ const ok=await askToken(); if(!ok) return; }
+  const r=repo();
+  if(!r.owner||!r.repo){ toast("Repository not set. Fill in CONFIG at the top of the page script."); return; }
+  saving=true; renderSaveBar();
+  try{
+    const remote=await apiGet();
+    if(remote.file.rev!==file.rev){
+      toast("Someone saved a newer version. Your changes were kept on screen; reload to compare.");
+      saving=false; renderSaveBar(); return;
+    }
+    const out=clone(state); out.updatedAt=new Date().toISOString(); out.updatedBy=role;
+    const next={format:1, rev:file.rev+1, kdf:file.kdf, slots:Object.assign({}, file.slots, pendingSlots), data:await encryptData(out)};
+    const res=await fetch(apiUrl().split("?")[0],{method:"PUT",
+      headers:{Authorization:"Bearer "+token, Accept:"application/vnd.github+json", "Content-Type":"application/json"},
+      body:JSON.stringify({message:`Tracker update by ${nameOf(role)} (rev ${next.rev})`, content:utf8b64(JSON.stringify(next,null,1)), sha:remote.sha, branch:r.branch})});
+    if(!res.ok) throw {status:res.status};
+    file=next; state=out; saved=clone(out); pendingSlots={};
+    toast("Saved. Others will see it within about a minute.");
+  }catch(e){
+    const s=e&&e.status;
+    if(s===401){ forgetToken(); toast("The GitHub access key was rejected. Add a valid key and save again."); }
+    else if(s===403||s===404){ toast("The access key cannot write to "+r.owner+"/"+r.repo+". Check its repository access and Contents permission."); }
+    else if(s===409){ toast("Someone saved a newer version. Reload latest and apply your change again."); }
+    else toast("Could not save. Check the connection and try again.");
+  }
+  saving=false; render();
+}
+async function reloadLatest(){
+  if(dirty() && !confirm("Reloading will discard your unsaved changes. Continue?")) return;
+  try{ const f=await loadFile(); const d=await decryptData(f); file=f; state=d; saved=clone(d); pendingSlots={}; render(); toast("Showing the latest saved version."); }
+  catch(e){ toast("Could not reload. Try again in a moment."); }
+}
+function forgetToken(){ token=null; try{ localStorage.removeItem("encee_gh_token"); }catch(e){} }
+function askToken(){
+  return new Promise(resolve=>{
+    const d=document.createElement("dialog");
+    d.innerHTML=`<h3>Add GitHub access key</h3>
+      <p>Saving writes to the tracker's repository. Paste the fine grained access key Prequate issued for this repository.</p>
+      <input type="password" id="tk" placeholder="github_pat_..." autocomplete="off">
+      <label class="chk"><input type="checkbox" id="tkr" checked> Remember on this device</label>
+      <div class="acts"><button class="btn ghost" id="tkc">Cancel</button><button class="btn" id="tko">Use this key</button></div>`;
+    document.body.appendChild(d); d.showModal(); $("#tk",d).focus();
+    const done=v=>{ d.close(); d.remove(); resolve(v); };
+    $("#tkc",d).onclick=()=>done(false);
+    $("#tko",d).onclick=()=>{ const v=$("#tk",d).value.trim(); if(!v) return;
+      token=v; if($("#tkr",d).checked){ try{ localStorage.setItem("encee_gh_token",v); }catch(e){} } done(true); };
+    d.addEventListener("cancel",()=>done(false));
+  });
+}
+
+/* ---------- Helpers ---------- */
+const nameOf = id => (state&&state.people.find(p=>p.id===id)||{}).name || "Unassigned";
+const dirty = () => !!state && (JSON.stringify(state)!==JSON.stringify(saved) || Object.keys(pendingSlots).length>0);
+function today(){ const d=new Date(); d.setHours(0,0,0,0); return d; }
+function dueInfo(t){
+  if(!t.due) return {label:"No date set", cls:""};
+  const d=new Date(t.due+"T00:00:00"), days=Math.round((d-today())/86400000);
+  const label=d.toLocaleDateString("en-IN",{day:"numeric",month:"short",year:"numeric"});
+  const pl=n=>n+" day"+(n===1?"":"s");
+  if(t.status==="Done") return {label, sub:"Completed", cls:""};
+  if(days<0) return {label, sub:pl(-days)+" overdue", cls:"late"};
+  if(days===0) return {label, sub:"Due today", cls:"soon"};
+  if(days<=14) return {label, sub:pl(days)+" left", cls:"soon"};
+  return {label, sub:pl(days)+" left", cls:""};
+}
+function toast(msg){ const t=$("#toast"); t.textContent=msg; t.classList.add("on"); clearTimeout(toast._t); toast._t=setTimeout(()=>t.classList.remove("on"),4200); }
+const editor = () => role==="prequate" || !!token;
+function canEditTask(t){ return editor() && (role==="prequate" || t.primary===role || t.secondary===role); }
+
+/* ---------- Login ---------- */
+async function renderGate(){
+  document.querySelector(".savebar")?.remove();
+  $("#app").innerHTML=`
+  <div class="gate"><div class="gate-card">
+    <div class="wordmark" aria-label="Prequate"><span class="p">PRE</span><span class="q">QUATE</span></div>
+    <h1>Encee Aromatics transition tracker</h1>
+    <p>Enter your 6 digit PIN to see the project and the tasks pending with you.</p>
+    <form id="pinform" autocomplete="off" onsubmit="return false">
+      <div class="pin" id="pin">${[0,1,2,3,4,5].map(i=>`<input inputmode="numeric" pattern="[0-9]*" maxlength="1" aria-label="PIN digit ${i+1}">`).join("")}</div>
+      <div class="msg" id="pinmsg"></div>
+    </form>
+    <div class="foot">Prepared by Prequate Advisory for Encee Aromatics Private Limited.</div>
+  </div></div>`;
+  const boxes=[...document.querySelectorAll("#pin input")];
+  const msg=$("#pinmsg");
+  if(!file){
+    boxes.forEach(b=>b.disabled=true); msg.className="msg loading"; msg.textContent="Loading tracker";
+    try{ file=await loadFile(); }catch(e){ msg.className="msg"; msg.textContent="The tracker data could not be loaded. Check that data.json sits next to this page and refresh."; return; }
+    boxes.forEach(b=>b.disabled=false); msg.className="msg"; msg.textContent="";
+  }
+  boxes[0].focus();
+  boxes.forEach((b,i)=>{
+    b.addEventListener("input",()=>{
+      const v=b.value.replace(/\D/g,"");
+      if(v.length>1) v.split("").slice(0,6-i).forEach((ch,k)=>boxes[i+k].value=ch); else b.value=v;
+      $("#pin").classList.remove("bad"); msg.className="msg"; msg.textContent="";
+      const next=boxes.find(x=>!x.value); if(next) next.focus(); else check();
+    });
+    b.addEventListener("keydown",e=>{ if(e.key==="Backspace"&&!b.value&&i>0){ boxes[i-1].focus(); boxes[i-1].value=""; } });
+  });
+  async function check(){
+    const pin=boxes.map(b=>b.value).join(""); if(pin.length<6) return;
+    boxes.forEach(b=>b.disabled=true); msg.className="msg loading"; msg.textContent="Checking PIN";
+    try{
+      const pk=await pinKey(pin);
+      for(const [who,slot] of Object.entries(file.slots)){
+        const raw=await tryUnwrap(pk,who,slot);
+        if(raw){
+          dkRaw=raw; dk=await crypto.subtle.importKey("raw",raw,{name:"AES-GCM"},false,["encrypt","decrypt"]);
+          state=await decryptData(file); saved=clone(state); role=who; view="overall"; render(); return;
+        }
+      }
+    }catch(e){}
+    boxes.forEach(b=>{b.disabled=false; b.value="";}); $("#pin").classList.add("bad");
+    msg.className="msg"; msg.textContent="That PIN does not match. Check the digits and try again."; boxes[0].focus();
+  }
+}
+
+/* ---------- Shell ---------- */
+function render(){
+  if(!role) return renderGate();
+  const pendingMine=state.tasks.filter(t=>(t.primary===role||t.secondary===role)&&t.status!=="Done").length;
+  $("#app").innerHTML=`
+  <header class="top">
+    <div class="top-in">
+      <div class="wordmark"><span class="p">PRE</span><span class="q">QUATE</span></div>
+      <div class="client">Encee Aromatics Private Limited</div>
+      <div class="spacer"></div>
+      <div class="who">Signed in as <b>${esc(nameOf(role))}</b></div>
+      <button class="link" id="logout">Sign out</button>
+    </div>
+    <nav class="tabs" role="tablist">
+      <button class="tab" role="tab" aria-selected="${view==="overall"}" data-v="overall">Overall project</button>
+      <button class="tab" role="tab" aria-selected="${view==="mine"}" data-v="mine">My tasks (${pendingMine})</button>
+    </nav>
+  </header>
+  <main id="main"></main>`;
+  $("#logout").onclick=()=>{ if(dirty()&&!confirm("You have unsaved changes. Sign out and discard them?")) return;
+    role=null; dk=null; dkRaw=null; state=null; saved=null; pendingSlots={}; render(); };
+  document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{ view=b.dataset.v; render(); });
+  view==="overall"?renderOverall():renderMine();
+  renderSaveBar();
+}
+function footer(){
+  const last = state.updatedAt ? `Last saved ${esc(new Date(state.updatedAt).toLocaleString("en-IN",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"}))}${state.updatedBy?` by ${esc(nameOf(state.updatedBy))}`:""}. ` : "";
+  return `<p class="muted" style="font-size:12.5px;margin-top:14px">${last}<button class="link" id="reload">Reload latest</button></p>
+  ${!editor()?`<div class="notice">You are viewing the tracker. To record updates here, <button class="link" id="addkey" style="padding:0">add an access key</button>, or send your update to Prequate.</div>`:""}`;
+}
+function bindFooter(){
+  $("#reload").onclick=reloadLatest;
+  const a=$("#addkey"); if(a) a.onclick=async()=>{ if(await askToken()) render(); };
+}
+
+/* ---------- Overall ---------- */
+function renderOverall(){
+  const T=state.tasks, n=T.length, cnt=s=>T.filter(t=>t.status===s).length;
+  const done=cnt("Done"), ip=cnt("In progress"), oh=cnt("On hold"), ns=cnt("Not started");
+  const pct=n?Math.round(done/n*100):0, w=x=>n?(x/n*100)+"%":"0%";
+  const late=T.filter(t=>t.status!=="Done"&&dueInfo(t).cls==="late").length;
+  const unassigned=T.filter(t=>!t.primary).length;
+  const isP=role==="prequate";
+  const ownerCol=id=>{
+    const mine=T.filter(t=>t.primary===id&&t.status!=="Done");
+    const sec=T.filter(t=>t.secondary===id&&t.status!=="Done").length;
+    const lateN=mine.filter(t=>dueInfo(t).cls==="late").length;
+    const nx=mine.filter(t=>t.due).sort((a,b)=>a.due.localeCompare(b.due))[0];
+    return `<div class="owner"><div class="n">${esc(nameOf(id))}</div><div class="c">${mine.length}</div>
+      <div class="s">pending as primary${sec?`, ${sec} as secondary`:""}</div>
+      ${lateN?`<div class="s late">${lateN} overdue</div>`:nx?`<div class="s">Next due ${esc(dueInfo(nx).label)}</div>`:""}</div>`;
+  };
+  const opts=v=>`<option value="">Unassigned</option>`+state.people.map(p=>`<option value="${p.id}" ${p.id===v?"selected":""}>${esc(p.name)}</option>`).join("");
+  const rows=T.map(t=>{
+    const di=dueInfo(t), open=openRow===t.id, ed=canEditTask(t);
+    return `<tr>
+      <td class="no">${esc(t.no)}</td>
+      <td><button class="expand" data-open="${t.id}" aria-expanded="${open}"><div class="t-title">${esc(t.title)}</div><div class="t-type">${esc(t.type)}${open?(isP?" | close":""):(isP?" | edit all fields":" | view outcome")}</div></button></td>
+      <td>${isP?`<select data-f="primary" data-id="${t.id}" aria-label="Primary owner">${opts(t.primary)}</select>`:`<span class="${t.primary?"":"muted"}">${esc(nameOf(t.primary))}</span>`}</td>
+      <td>${isP?`<select data-f="secondary" data-id="${t.id}" aria-label="Secondary owner">${opts(t.secondary)}</select>`:`<span class="${t.secondary?"":"muted"}">${t.secondary?esc(nameOf(t.secondary)):"None"}</span>`}</td>
+      <td>${isP?`<input type="date" data-f="due" data-id="${t.id}" value="${esc(t.due)}" aria-label="Expected timeline">`:""}<div class="due">${isP?"":esc(di.label)}${di.sub?`<small class="${di.cls}">${esc(di.sub)}</small>`:""}</div></td>
+      <td>${ed?`<select data-f="status" data-id="${t.id}" aria-label="Status">${STATUSES.map(s=>`<option ${s===t.status?"selected":""}>${s}</option>`).join("")}</select>`:`<span class="pill ${stCls(t.status)}">${esc(t.status)}</span>`}</td>
+    </tr>
+    ${open&&isP?editRow(t):""}
+    ${open&&!isP?`<tr class="detail"><td colspan="6"><div class="d">
+      <div><h4>Outcome</h4><p>${esc(t.outcome)||'<span class="muted">Not written yet</span>'}</p></div>
+      <div><h4>What it facilitates</h4><p>${esc(t.facilitates)||'<span class="muted">Not written yet</span>'}</p></div>
+      ${t.note?`<div style="grid-column:1/-1"><h4>Latest update${t.updatedBy?` from ${esc(nameOf(t.updatedBy))}`:""}${t.updated?`, ${esc(new Date(t.updated).toLocaleDateString("en-IN",{day:"numeric",month:"short"}))}`:""}</h4><p>${esc(t.note)}</p></div>`:""}
+    </div></td></tr>`:""}`;
+  }).join("");
+  $("#main").innerHTML=`
+  <section class="head"><h2>${esc(state.fn)}</h2><p>Handover of finance, accounts and banking from Nanjaraj to Ankitha. ${n} tasks tracked.</p></section>
+  <section class="progress" aria-label="Project progress">
+    <div class="big"><strong>${pct}%</strong><span>${done} of ${n} tasks complete${late?`, <b style="color:var(--warn)">${late} overdue</b>`:""}</span></div>
+    <div class="bar"><span style="width:${w(done)};background:var(--ok)"></span><span style="width:${w(ip)};background:var(--orange)"></span><span style="width:${w(oh)};background:var(--hold)"></span></div>
+    <div class="legend"><span><i style="background:var(--ok)"></i>Done ${done}</span><span><i style="background:var(--orange)"></i>In progress ${ip}</span><span><i style="background:var(--hold)"></i>On hold ${oh}</span><span><i style="background:var(--soft);border:1px solid var(--line)"></i>Not started ${ns}</span></div>
+  </section>
+  <section class="owners" aria-label="Pending by person">
+    ${state.people.map(p=>ownerCol(p.id)).join("")}
+    ${unassigned?`<div class="owner"><div class="n muted">Unassigned</div><div class="c">${unassigned}</div><div class="s">${isP?"Assign a primary owner below":"Awaiting allocation by Prequate"}</div></div>`:""}
+  </section>
+  <h3 class="sec">All tasks</h3>
+  <div class="scroll"><table>
+    <thead><tr><th>#</th><th>Sub-task / process</th><th>Primary</th><th>Secondary</th><th>Expected timeline</th><th>Status</th></tr></thead>
+    <tbody>${rows}</tbody></table></div>
+  ${footer()}
+  ${isP?adminHTML():""}`;
+  document.querySelectorAll("[data-open]").forEach(b=>b.onclick=()=>{ openRow=openRow===b.dataset.open?null:b.dataset.open; renderOverall(); renderSaveBar(); });
+  document.querySelectorAll("#main [data-f]").forEach(el=>el.onchange=()=>setField(el.dataset.id,el.dataset.f,el.value));
+  document.querySelectorAll("[data-del]").forEach(b=>b.onclick=()=>{ if(!confirm("Remove this task from the tracker?")) return; state.tasks=state.tasks.filter(t=>t.id!==b.dataset.del); renumber(); render(); });
+  document.querySelectorAll("[data-e]").forEach(el=>el.onchange=()=>setField(el.dataset.id,el.dataset.e,el.tagName==="SELECT"?el.value:el.value.trim(),true));
+  document.querySelectorAll("[data-mv]").forEach(b=>b.onclick=()=>{ const i=state.tasks.findIndex(t=>t.id===b.dataset.id), j=i+(+b.dataset.mv);
+    if(j<0||j>=state.tasks.length) return; [state.tasks[i],state.tasks[j]]=[state.tasks[j],state.tasks[i]]; renumber(); render(); });
+  bindFooter();
+  if(isP) bindAdmin();
+}
+function editRow(t){
+  const i=state.tasks.indexOf(t), last=i===state.tasks.length-1;
+  return `<tr class="detail"><td colspan="6"><div class="d edit">
+    <div style="grid-column:1/-1"><h4>Sub-task / process</h4><input type="text" data-e="title" data-id="${t.id}" value="${esc(t.title)}" style="width:100%"></div>
+    <div><h4>Outcome</h4><textarea data-e="outcome" data-id="${t.id}" rows="4">${esc(t.outcome)}</textarea></div>
+    <div><h4>What it facilitates</h4><textarea data-e="facilitates" data-id="${t.id}" rows="4">${esc(t.facilitates)}</textarea></div>
+    <div><h4>One-time / Continuous</h4><select data-e="type" data-id="${t.id}">${["Continuous","One-time"].map(x=>`<option ${x===t.type?"selected":""}>${x}</option>`).join("")}</select></div>
+    <div><h4>Latest update${t.updatedBy?` (last by ${esc(nameOf(t.updatedBy))})`:""}</h4><textarea data-e="note" data-id="${t.id}" rows="2" placeholder="Progress note shown to everyone">${esc(t.note)}</textarea></div>
+    <div style="grid-column:1/-1;display:flex;gap:10px;flex-wrap:wrap">
+      <button class="btn ghost" data-mv="-1" data-id="${t.id}" ${i===0?"disabled":""}>Move up</button>
+      <button class="btn ghost" data-mv="1" data-id="${t.id}" ${last?"disabled":""}>Move down</button>
+      <span style="flex:1"></span>
+      <button class="btn ghost" data-del="${t.id}">Remove this task</button>
+    </div>
+  </div></td></tr>`;
+}
+function setField(id,f,v,quiet){
+  const t=state.tasks.find(x=>x.id===id); if(!t) return;
+  if(f==="secondary"&&v&&t.primary===v){ toast("Secondary cannot be the same person as primary."); render(); return; }
+  t[f]=v;
+  if(f==="primary"&&v&&t.secondary===v) t.secondary="";
+  if(f==="status"||f==="note"){ t.updated=new Date().toISOString(); t.updatedBy=role; }
+  if(quiet){ renderSaveBar(); return; }
+  render();
+}
+function renumber(){ state.tasks.forEach((t,i)=>t.no=i+1); }
+
+/* ---------- Prequate admin ---------- */
+function adminHTML(){
+  return `<section class="admin">
+    <div class="box"><h3>Add a task</h3><p>For items agreed in the meeting that are not yet on the list.</p>
+      <div class="row"><input type="text" id="nt-title" placeholder="Sub-task or process" style="flex:1;min-width:200px"></div>
+      <div class="row"><textarea id="nt-outcome" placeholder="Outcome: what Ankitha can do once this is complete"></textarea></div>
+      <div class="row"><textarea id="nt-fac" placeholder="What it facilitates"></textarea></div>
+      <div class="row"><select id="nt-type"><option>Continuous</option><option>One-time</option></select><button class="btn" id="nt-add">Add task</button></div>
+    </div>
+    <div class="box"><h3>People responsible</h3><p>Names that appear in the Primary and Secondary lists. Only people with a PIN can sign in.</p>
+      ${state.people.map(p=>{ const core=!!file.slots[p.id], used=state.tasks.some(t=>t.primary===p.id||t.secondary===p.id);
+        return `<div class="row"><input type="text" data-pn="${p.id}" value="${esc(p.name)}" style="flex:1;min-width:140px" aria-label="Name">
+          <span class="muted" style="font-size:12px;width:70px">${core?"Has PIN":"No PIN"}</span>
+          ${core?"":`<button class="btn ghost" data-prm="${p.id}" ${used?'disabled title="Reassign their tasks first"':""}>Remove</button>`}</div>`; }).join("")}
+      <div class="row" style="margin-top:14px"><input type="text" id="np-name" placeholder="Add a person, e.g. Accounts head" style="flex:1;min-width:160px"><button class="btn" id="np-add">Add person</button></div>
+    </div>
+    <div class="box"><h3>Access PINs</h3><p>Set a new 6 digit PIN for any person. It takes effect once you save. Keep a record of every PIN: a lost PIN cannot be recovered, only replaced by Prequate.</p>
+      ${state.people.filter(p=>file.slots[p.id]).map(p=>`<div class="row"><label for="pin-${p.id}">${esc(p.name)}</label><input type="text" inputmode="numeric" maxlength="6" id="pin-${p.id}" placeholder="New PIN" style="width:92px"><button class="btn ghost" data-pin="${p.id}">Set PIN</button>${pendingSlots[p.id]?`<span class="muted" style="font-size:12px">Changed, not saved</span>`:""}</div>`).join("")}
+      <p style="margin-top:18px">GitHub access key: ${token?`added on this device. <button class="link" id="tk-forget" style="padding:0">Remove it</button>`:`not added. <button class="link" id="tk-add" style="padding:0">Add key</button>`}</p>
+    </div>
+  </section>`;
+}
+function bindAdmin(){
+  $("#nt-add").onclick=()=>{
+    const title=$("#nt-title").value.trim(); if(!title){ toast("Give the task a name first."); $("#nt-title").focus(); return; }
+    state.tasks.push({id:"t"+Date.now().toString(36),no:0,title,outcome:$("#nt-outcome").value.trim(),facilitates:$("#nt-fac").value.trim(),type:$("#nt-type").value,primary:"",secondary:"",due:"",status:"Not started",note:"",updated:"",updatedBy:"",custom:true});
+    renumber(); render(); toast("Task added. Save to publish it.");
+  };
+  document.querySelectorAll("[data-pin]").forEach(b=>b.onclick=async()=>{
+    const id=b.dataset.pin, v=$("#pin-"+id).value.trim();
+    if(!/^\d{6}$/.test(v)){ toast("A PIN must be exactly 6 digits."); return; }
+    b.disabled=true; b.textContent="Setting";
+    const pk=await pinKey(v);
+    const slots=Object.assign({}, file.slots, pendingSlots);
+    for(const [who,slot] of Object.entries(slots)){
+      if(who!==id && await tryUnwrap(pk,who,slot)){ toast("That PIN is already in use by "+nameOf(who)+". Choose another."); render(); return; }
+    }
+    pendingSlots[id]=await wrap(pk,id); render(); toast("New PIN set for "+nameOf(id)+". Save to apply it.");
+  });
+  document.querySelectorAll("[data-pn]").forEach(el=>el.onchange=()=>{ const v=el.value.trim(); const p=state.people.find(x=>x.id===el.dataset.pn);
+    if(!v){ el.value=p.name; toast("A name cannot be blank."); return; } p.name=v; render(); });
+  document.querySelectorAll("[data-prm]").forEach(b=>b.onclick=()=>{ state.people=state.people.filter(p=>p.id!==b.dataset.prm); render(); });
+  $("#np-add").onclick=()=>{ const v=$("#np-name").value.trim(); if(!v){ toast("Enter a name first."); return; }
+    if(state.people.some(p=>p.name.toLowerCase()===v.toLowerCase())){ toast(v+" is already on the list."); return; }
+    state.people.push({id:"p"+Date.now().toString(36), name:v}); render(); toast(v+" added. Save to keep it."); };
+  const f=$("#tk-forget"); if(f) f.onclick=()=>{ forgetToken(); render(); toast("Access key removed from this device."); };
+  const a=$("#tk-add"); if(a) a.onclick=async()=>{ if(await askToken()) render(); };
+}
+
+/* ---------- My tasks ---------- */
+function renderMine(){
+  const mine=state.tasks.filter(t=>t.primary===role||t.secondary===role);
+  const k=t=>t.due||"9999";
+  const pending=mine.filter(t=>t.status!=="Done").sort((a,b)=>k(a).localeCompare(k(b)));
+  const done=mine.filter(t=>t.status==="Done");
+  const late=pending.filter(t=>dueInfo(t).cls==="late").length;
+  const card=t=>{
+    const di=dueInfo(t), ed=canEditTask(t);
+    const r=t.primary===role?"You are primary"+(t.secondary?`, with ${esc(nameOf(t.secondary))} as secondary`:""):`You are secondary to ${esc(nameOf(t.primary))}`;
+    return `<article class="task ${t.status!=="Done"?di.cls:""}">
+      <div><div class="role">Task ${esc(t.no)} | ${r}</div><h4>${esc(t.title)}</h4><p class="oc">${esc(t.outcome)}</p></div>
+      <div class="side"><span class="pill ${stCls(t.status)}">${esc(t.status)}</span><div class="due">${esc(di.label)}${di.sub?`<small class="${di.cls}">${esc(di.sub)}</small>`:""}</div></div>
+      ${ed?`<div class="ctrl"><select data-m="status" data-id="${t.id}" aria-label="Update status">${STATUSES.map(s=>`<option ${s===t.status?"selected":""}>${s}</option>`).join("")}</select>
+        <div class="note"><textarea data-m="note" data-id="${t.id}" placeholder="Add an update: what moved, what is blocking, what you need">${esc(t.note)}</textarea></div></div>`
+        :t.note?`<div class="meta">Latest update: ${esc(t.note)}</div>`:""}
+    </article>`;
+  };
+  $("#main").innerHTML=`
+  <section class="head"><h2>${pending.length?`${pending.length} task${pending.length===1?"":"s"} pending with you`:"Nothing pending with you"}</h2>
+    <p>${esc(state.fn)}.${late?` <b style="color:var(--warn)">${late} overdue.</b>`:""} Sorted by expected timeline, earliest first.</p></section>
+  <div class="cards" style="margin-top:28px">${pending.length?pending.map(card).join(""):`<div class="empty">${mine.length?"Every task allocated to you is complete.":role==="prequate"?"No tasks are allocated to Prequate yet. Assign owners from the Overall project tab.":"No tasks have been allocated to you yet. Prequate will assign them after the review meeting."}</div>`}</div>
+  ${done.length?`<details class="done-list"><summary>Completed (${done.length})</summary><div class="cards" style="margin-top:14px">${done.map(card).join("")}</div></details>`:""}
+  ${footer()}`;
+  document.querySelectorAll("[data-m=status]").forEach(el=>el.onchange=()=>setField(el.dataset.id,"status",el.value));
+  document.querySelectorAll("[data-m=note]").forEach(el=>el.onchange=()=>setField(el.dataset.id,"note",el.value.trim()));
+  bindFooter();
+}
+
+/* ---------- Save bar ---------- */
+function renderSaveBar(){
+  let bar=document.querySelector(".savebar");
+  if(!bar){ bar=document.createElement("div"); bar.className="savebar";
+    bar.innerHTML=`<div class="in"><div class="txt">You have unsaved changes. Save to share them with everyone.</div><button class="btn ghost" id="discard">Discard</button><button class="btn" id="save">Save changes</button></div>`;
+    document.body.appendChild(bar);
+    $("#discard",bar).onclick=()=>{ state=clone(saved); pendingSlots={}; render(); };
+    $("#save",bar).onclick=save; }
+  bar.classList.toggle("on", dirty());
+  const b=$("#save",bar); b.disabled=saving; b.textContent=saving?"Saving":"Save changes";
+}
+
+window.addEventListener("beforeunload",e=>{ if(dirty()){ e.preventDefault(); e.returnValue=""; } });
+render();
+})();
+
+</script>
+</body>
+</html>
