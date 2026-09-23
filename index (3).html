@@ -1,0 +1,671 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Encee Aromatics | Transition Tracker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#FFFFFF; --surface:#FFFFFF; --soft:#F6F6F6; --line:#E6E6E6;
+  --ink:#161616; --grey:#707070; --orange:#FF9633; --deep:#F96900;
+  --ok:#2E7D4F; --okbg:#E9F4EE; --warn:#B3261E; --warnbg:#FBEAE9; --hold:#8A6D00; --holdbg:#FBF3DC;
+  --tint:#FFF3E8;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#161616; --surface:#1E1E1E; --soft:#232323; --line:#333333;
+    --ink:#F2F2F2; --grey:#A3A3A3; --tint:#2A1E14;
+    --okbg:#16291E; --warnbg:#2E1715; --holdbg:#2B2410; --ok:#6CC08E; --warn:#F08A82; --hold:#E0C25A;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#161616; --surface:#1E1E1E; --soft:#232323; --line:#333333;
+  --ink:#F2F2F2; --grey:#A3A3A3; --tint:#2A1E14;
+  --okbg:#16291E; --warnbg:#2E1715; --holdbg:#2B2410; --ok:#6CC08E; --warn:#F08A82; --hold:#E0C25A;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{height:100%; scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0; min-height:100%; background:var(--bg); color:var(--ink);
+  font-family:"Product Sans","Open Sans",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+  font-weight:300; font-size:15px; line-height:1.55; -webkit-font-smoothing:antialiased}
+button,input,select,textarea{font:inherit; color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--deep); outline-offset:2px}
+.wordmark{font-weight:700; letter-spacing:.02em; font-size:18px; line-height:1}
+.wordmark .p{color:var(--grey)} .wordmark .q{color:var(--orange)}
+
+/* Login */
+.gate{min-height:100vh; min-height:100dvh; display:grid; place-items:center; padding:32px 20px}
+.gate-card{width:100%; max-width:400px}
+.gate h1{font-size:28px; font-weight:700; line-height:1.2; margin:40px 0 6px}
+.gate p{color:var(--grey); margin:0 0 32px}
+.pin{display:flex; gap:10px; margin-bottom:14px}
+.pin input{width:100%; aspect-ratio:1/1.15; max-width:54px; text-align:center; font-size:24px; font-weight:600;
+  border:1.5px solid var(--line); border-radius:8px; background:var(--surface)}
+.pin input:focus{border-color:var(--orange); outline:none; box-shadow:0 0 0 3px var(--tint)}
+.pin.bad input{border-color:var(--warn)}
+.gate .msg{min-height:22px; font-size:13px; color:var(--warn)}
+.gate .foot{margin-top:48px; font-size:12px; color:var(--grey)}
+
+/* App */
+.top{position:sticky; top:env(safe-area-inset-top,0px); z-index:5; background:var(--bg); border-bottom:1px solid var(--line)}
+.top-in{max-width:1120px; margin:0 auto; padding:16px 24px; display:flex; align-items:center; gap:20px; flex-wrap:wrap}
+.top .client{color:var(--grey); font-size:13px; border-left:1px solid var(--line); padding-left:16px}
+.top .spacer{flex:1}
+.who{font-size:13px; color:var(--grey)} .who b{color:var(--ink); font-weight:600}
+.link{background:none; border:0; color:var(--deep); font-weight:600; font-size:13px; padding:4px}
+.tabs{max-width:1120px; margin:0 auto; padding:0 24px; display:flex; gap:28px}
+.tab{background:none; border:0; padding:12px 0; font-weight:600; color:var(--grey); border-bottom:2px solid transparent; font-size:14px}
+.tab[aria-selected="true"]{color:var(--ink); border-bottom-color:var(--orange)}
+main{max-width:1120px; margin:0 auto; padding:32px 24px 120px}
+
+.head h2{font-size:26px; font-weight:700; margin:0 0 4px; line-height:1.25}
+.head p{margin:0; color:var(--grey)}
+
+/* Progress line: the memorable element */
+.progress{margin:28px 0 36px}
+.bar{display:flex; height:10px; border-radius:5px; overflow:hidden; background:var(--soft)}
+.bar span{display:block; height:100%}
+.legend{display:flex; flex-wrap:wrap; gap:8px 22px; margin-top:12px; font-size:13px; color:var(--grey)}
+.legend i{display:inline-block; width:9px; height:9px; border-radius:2px; margin-right:6px; vertical-align:0}
+.big{display:flex; align-items:baseline; gap:10px; margin-bottom:14px}
+.big strong{font-size:44px; font-weight:700; line-height:1; color:var(--ink)}
+.big span{color:var(--grey)}
+
+.owners{display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); border:1px solid var(--line); border-radius:10px; overflow:hidden; margin-bottom:40px}
+.owner{padding:18px 20px; border-right:1px solid var(--line)}
+.owner:last-child{border-right:0}
+.owner .n{font-weight:600; font-size:14px}
+.owner .c{font-size:30px; font-weight:700; line-height:1.2; margin-top:6px}
+.owner .s{font-size:12.5px; color:var(--grey)}
+.owner .s.late{color:var(--warn); font-weight:600}
+
+h3.sec{font-size:15px; font-weight:700; margin:0 0 12px}
+.scroll{overflow-x:auto; border:1px solid var(--line); border-radius:10px}
+table{width:100%; border-collapse:collapse; min-width:820px; font-size:14px}
+th{text-align:left; font-weight:400; font-size:12.5px; color:var(--grey); padding:12px 14px; border-bottom:1px solid var(--line); background:var(--soft); white-space:nowrap}
+td{padding:14px; border-bottom:1px solid var(--line); vertical-align:top}
+tr:last-child td{border-bottom:0}
+td.no{color:var(--grey); width:36px; font-weight:400}
+.t-title{font-weight:600; line-height:1.35}
+.t-type{font-size:12px; color:var(--grey); margin-top:2px}
+.expand{background:none; border:0; padding:0; text-align:left; width:100%}
+.detail td{background:var(--soft); padding:0}
+.detail .d{padding:16px 18px 18px 50px; display:grid; grid-template-columns:1fr 1fr; gap:20px; font-size:13.5px}
+.detail h4{margin:0 0 4px; font-size:12.5px; font-weight:600; color:var(--grey)}
+.detail p{margin:0}
+.muted{color:var(--grey)}
+
+.pill{display:inline-block; font-size:12px; font-weight:600; padding:3px 9px; border-radius:20px; white-space:nowrap}
+.st-ns{background:var(--soft); color:var(--grey)}
+.st-ip{background:var(--tint); color:var(--deep)}
+.st-dn{background:var(--okbg); color:var(--ok)}
+.st-oh{background:var(--holdbg); color:var(--hold)}
+.due{font-size:13px; white-space:nowrap}
+.due small{display:block; font-size:12px; color:var(--grey)}
+.due small.late{color:var(--warn); font-weight:600}
+.due small.soon{color:var(--deep); font-weight:600}
+
+select,input[type=date],input[type=text],textarea{border:1px solid var(--line); border-radius:6px; background:var(--surface); padding:6px 8px; font-size:13px; font-weight:400; max-width:100%}
+textarea{width:100%; resize:vertical; min-height:54px}
+
+/* My tasks */
+.cards{display:grid; gap:14px}
+.task{border:1px solid var(--line); border-radius:10px; padding:20px 22px; display:grid; grid-template-columns:1fr auto; gap:6px 24px; background:var(--surface)}
+.task.late{border-left:3px solid var(--warn)}
+.task.soon{border-left:3px solid var(--orange)}
+.task .role{font-size:12px; color:var(--grey)}
+.task h4{margin:2px 0 8px; font-size:17px; font-weight:600; line-height:1.35}
+.task .oc{color:var(--grey); font-size:13.5px; margin:0; max-width:64ch}
+.task .side{text-align:right; display:flex; flex-direction:column; align-items:flex-end; gap:8px}
+.task .ctrl{grid-column:1/-1; display:flex; gap:12px; flex-wrap:wrap; align-items:flex-start; margin-top:10px; padding-top:14px; border-top:1px solid var(--line)}
+.task .ctrl .note{flex:1; min-width:220px}
+.task .meta{font-size:12px; color:var(--grey); grid-column:1/-1}
+.empty{border:1px dashed var(--line); border-radius:10px; padding:28px; color:var(--grey); text-align:center}
+details.done-list{margin-top:28px}
+details.done-list summary{cursor:pointer; font-weight:600; font-size:14px; color:var(--grey)}
+
+/* Admin */
+.admin{margin-top:48px; display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:24px}
+.box{border:1px solid var(--line); border-radius:10px; padding:20px 22px}
+.box h3{margin:0 0 4px; font-size:15px; font-weight:700}
+.box p{margin:0 0 14px; color:var(--grey); font-size:13px}
+.row{display:flex; gap:10px; align-items:center; margin-bottom:10px; flex-wrap:wrap}
+.row label{width:74px; font-size:13px; font-weight:400}
+.btn{border:0; border-radius:6px; padding:9px 16px; font-weight:600; font-size:13.5px; background:var(--orange); color:#161616}
+.btn:hover{background:var(--deep); color:#fff}
+.btn.ghost{background:none; border:1px solid var(--line); color:var(--ink)}
+.btn.ghost:hover{border-color:var(--orange); color:var(--deep); background:none}
+.btn[disabled]{opacity:.5; cursor:not-allowed}
+
+.savebar{position:fixed; left:0; right:0; bottom:0; z-index:10; background:var(--ink); color:var(--bg);
+  padding:14px 24px calc(14px + env(safe-area-inset-bottom,0px)); display:none}
+.savebar.on{display:block}
+.savebar .in{max-width:1120px; margin:0 auto; display:flex; gap:16px; align-items:center; flex-wrap:wrap}
+.savebar .txt{flex:1; font-size:14px}
+.savebar .btn.ghost{color:var(--bg); border-color:#555}
+.notice{margin-top:24px; font-size:13px; color:var(--grey); border-left:3px solid var(--orange); padding:8px 14px; background:var(--tint)}
+.toast{position:fixed; left:50%; transform:translateX(-50%); bottom:calc(84px + env(safe-area-inset-bottom,0px)); background:var(--ink); color:var(--bg); padding:10px 18px; border-radius:6px; font-size:13.5px; z-index:20; display:none}
+.toast.on{display:block}
+
+@media (max-width:760px){
+  .admin{grid-template-columns:1fr}
+  .detail .d{grid-template-columns:1fr; padding-left:18px}
+  .task{grid-template-columns:1fr}
+  .task .side{text-align:left; align-items:flex-start; flex-direction:row; gap:12px}
+  .top .client{display:none}
+  .owner{border-right:0; border-bottom:1px solid var(--line)}
+}
+@media (prefers-reduced-motion:no-preference){ .bar span{transition:width .6s ease} }
+</style>
+<style>
+dialog{border:1px solid var(--line); border-radius:12px; padding:24px; max-width:460px; width:calc(100% - 40px); background:var(--surface); color:var(--ink)}
+dialog::backdrop{background:rgba(22,22,22,.55)}
+dialog h3{margin:0 0 6px; font-size:17px; font-weight:700}
+dialog p{margin:0 0 14px; color:var(--grey); font-size:13.5px}
+dialog input[type=password]{width:100%; padding:9px 10px; font-size:14px}
+dialog .acts{display:flex; gap:10px; justify-content:flex-end; margin-top:18px}
+dialog label.chk{display:flex; gap:8px; align-items:center; font-size:13px; margin-top:12px}
+.loading{color:var(--grey); font-size:13px}
+</style>
+
+<style>
+.d.edit input[type=text],.d.edit textarea{width:100%;font-size:13.5px}.d.edit{padding-left:18px}
+.savestate{font-size:12.5px;color:var(--grey);padding:3px 10px;border-radius:20px;background:var(--soft)}
+.savestate.ok{color:var(--ok);background:var(--okbg)}
+.savestate.warn{color:var(--warn);background:var(--warnbg)}
+.setup{border:1.5px solid var(--orange);border-radius:10px;padding:22px 24px;margin-bottom:36px;background:var(--tint)}
+.setup h3{margin:0 0 4px;font-size:17px;font-weight:700}
+.setup p{margin:0 0 12px;color:var(--grey);font-size:13.5px;max-width:70ch}
+.setup ol{margin:0;padding-left:20px;font-size:14px;line-height:1.7}
+.setup a{color:var(--deep);font-weight:600}
+@media (max-width:760px){.savestate{order:5}}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script>
+(function(){
+"use strict";
+/* Repository settings. On a <user>.github.io address these are detected automatically.
+   Fill them in only if you move the tracker to a custom domain. */
+const CONFIG = { owner:"", repo:"", branch:"main", path:"data.json" };
+
+const $ = (s,el=document)=>el.querySelector(s);
+const esc = s => String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const enc = s => new TextEncoder().encode(s);
+const ub64 = s => Uint8Array.from(atob(s.replace(/\s/g,"")),c=>c.charCodeAt(0));
+const tob64 = u8 => { let s=""; const a=new Uint8Array(u8); for(let i=0;i<a.length;i+=8192) s+=String.fromCharCode.apply(null,a.subarray(i,i+8192)); return btoa(s); };
+const utf8b64 = str => tob64(enc(str));
+const b64utf8 = b => new TextDecoder().decode(ub64(b));
+const clone = o => JSON.parse(JSON.stringify(o));
+const same = (a,b) => JSON.stringify(a)===JSON.stringify(b);
+const STATUSES = ["Not started","In progress","On hold","Done"];
+const stCls = s => ({"Not started":"st-ns","In progress":"st-ip","On hold":"st-oh","Done":"st-dn"}[s]||"st-ns");
+
+let file=null, dkRaw=null, dk=null;
+let saved=null, state=null, pendingSlots={}, pendingSecret=null;
+let role=null, view="overall", openRow=null;
+let token=null, tokenBad=false, saving=false, saveTimer=null, saveErr="", lastSaveOk=0;
+
+function repo(){
+  let {owner,repo,branch,path}=CONFIG;
+  const host=location.hostname;
+  if((!owner||!repo) && host.endsWith(".github.io")){
+    owner = owner || host.split(".")[0];
+    const seg = location.pathname.split("/").filter(Boolean)[0];
+    repo = repo || (seg && !seg.includes(".") ? seg : host);
+  }
+  return {owner,repo,branch,path};
+}
+function tokenLink(){
+  const r=repo();
+  const q=new URLSearchParams({name:"Encee tracker autosave",
+    description:"Lets the Encee transition tracker save changes. Under Repository access choose Only select repositories and pick "+(r.repo||"the tracker repository")+".",
+    expires_in:"366", contents:"write"});
+  if(r.owner) q.set("target_name", r.owner);
+  return "https://github.com/settings/personal-access-tokens/new?"+q.toString();
+}
+
+/* ---------- Crypto ---------- */
+async function pinKey(pin){
+  const base=await crypto.subtle.importKey("raw",enc(pin),"PBKDF2",false,["deriveKey"]);
+  return crypto.subtle.deriveKey({name:"PBKDF2",salt:ub64(file.kdf.salt),iterations:file.kdf.iter,hash:"SHA-256"},base,{name:"AES-GCM",length:256},false,["encrypt","decrypt"]);
+}
+async function tryUnwrap(pk,who,slot){
+  try{ return new Uint8Array(await crypto.subtle.decrypt({name:"AES-GCM",iv:ub64(slot.iv),additionalData:enc(who)},pk,ub64(slot.ct))); }catch(e){ return null; }
+}
+async function wrap(pk,who){ const iv=crypto.getRandomValues(new Uint8Array(12));
+  return {iv:tob64(iv), ct:tob64(await crypto.subtle.encrypt({name:"AES-GCM",iv,additionalData:enc(who)},pk,dkRaw))}; }
+async function decryptBox(box){ return JSON.parse(new TextDecoder().decode(await crypto.subtle.decrypt({name:"AES-GCM",iv:ub64(box.iv)},dk,ub64(box.ct)))); }
+async function encryptBox(obj){ const iv=crypto.getRandomValues(new Uint8Array(12));
+  return {iv:tob64(iv), ct:tob64(await crypto.subtle.encrypt({name:"AES-GCM",iv},dk,enc(JSON.stringify(obj))))}; }
+async function readToken(f){ try{ return f.secret ? (await decryptBox(f.secret)).token : null; }catch(e){ return null; } }
+
+/* ---------- GitHub ---------- */
+function apiUrl(){ const r=repo(); return `https://api.github.com/repos/${r.owner}/${r.repo}/contents/${r.path}`; }
+async function apiGet(tk,anon){
+  const h={Accept:"application/vnd.github+json"}; const k=anon?null:(tk||token); if(k) h.Authorization="Bearer "+k;
+  const res=await fetch(apiUrl()+"?ref="+encodeURIComponent(repo().branch)+"&t="+Date.now(),{headers:h,cache:"no-store"});
+  if(!res.ok) throw {status:res.status};
+  const j=await res.json(); return {sha:j.sha, file:JSON.parse(b64utf8(j.content))};
+}
+/* Read the live copy straight from the repository; fall back to the published site copy. */
+async function loadFresh(){
+  if(repo().owner&&repo().repo){ try{ return (await apiGet(null,true)).file; }catch(e){} }
+  return loadPublic();
+}
+async function loadPublic(){
+  const res=await fetch(repo().path+"?t="+Date.now(),{cache:"no-store"});
+  if(!res.ok) throw new Error("load"); return res.json();
+}
+
+/* Three way merge: keep what someone else saved, apply what changed locally since `base`. */
+function mergeList(base,local,remote,key){
+  const bm=new Map(base.map(x=>[x[key],x])), lm=new Map(local.map(x=>[x[key],x]));
+  let out=remote.map(x=>clone(x)).filter(x=>!(bm.has(x[key])&&!lm.has(x[key])));
+  local.forEach(lx=>{
+    const bx=bm.get(lx[key]), rx=out.find(x=>x[key]===lx[key]);
+    if(!bx){ if(!rx) out.push(clone(lx)); return; }
+    if(!rx) return;
+    Object.keys(lx).forEach(k=>{ if(!same(lx[k],bx[k])) rx[k]=clone(lx[k]); });
+  });
+  const bo=base.map(x=>x[key]).filter(id=>lm.has(id)), lo=local.map(x=>x[key]).filter(id=>bm.has(id));
+  if(!same(bo,lo)){ const idx=new Map(local.map((x,i)=>[x[key],i])); out.sort((a,b)=>(idx.has(a[key])?idx.get(a[key]):1e9)-(idx.has(b[key])?idx.get(b[key]):1e9)); }
+  return out;
+}
+function merge(base,local,remote){
+  const out=clone(remote);
+  if(local.fn!==base.fn) out.fn=local.fn;
+  out.people=mergeList(base.people,local.people,remote.people,"id");
+  out.tasks=mergeList(base.tasks,local.tasks,remote.tasks,"id");
+  out.tasks.forEach((t,i)=>t.no=i+1);
+  return out;
+}
+
+/* ---------- Auto-save ---------- */
+const dirty = () => !!state && (!same(state,saved) || Object.keys(pendingSlots).length>0 || !!pendingSecret);
+function scheduleSave(delay){
+  updateStatus();
+  if(!dirty() || !token || tokenBad) return;
+  clearTimeout(saveTimer); saveTimer=setTimeout(flush, delay==null?1200:delay);
+}
+async function flush(){
+  if(saving){ scheduleSave(800); return; }
+  if(!dirty() || !token || tokenBad) return;
+  saving=true; saveErr=""; updateStatus();
+  const snap=clone(state), slotsSnap=clone(pendingSlots), secretSnap=pendingSecret;
+  try{
+    let {sha, file:remote}=await apiGet();
+    let out=snap;
+    if(remote.rev!==file.rev){ const rs=await decryptBox(remote.data); out=merge(saved,snap,rs); }
+    out=clone(out); out.updatedAt=new Date().toISOString(); out.updatedBy=role;
+    const next={format:1, rev:(remote.rev||0)+1, kdf:remote.kdf, slots:Object.assign({},remote.slots,slotsSnap),
+      data:await encryptBox(out), secret:secretSnap||remote.secret};
+    const res=await fetch(apiUrl(),{method:"PUT",headers:{Authorization:"Bearer "+token,Accept:"application/vnd.github+json","Content-Type":"application/json"},
+      body:JSON.stringify({message:`Tracker update by ${nameOf(role)}`,content:utf8b64(JSON.stringify(next,null,1)),sha,branch:repo().branch})});
+    if(!res.ok) throw {status:res.status};
+    const moved=!same(state,snap);
+    state = moved ? merge(snap,state,out) : clone(out);
+    saved=clone(out); file=next;
+    Object.keys(slotsSnap).forEach(k=>{ if(same(pendingSlots[k],slotsSnap[k])) delete pendingSlots[k]; });
+    if(pendingSecret===secretSnap) pendingSecret=null;
+    lastSaveOk=Date.now(); saving=false;
+    if(!moved && !document.activeElement?.matches("input,textarea,select")) render(); else updateStatus();
+    if(dirty()) scheduleSave(300);
+    return;
+  }catch(e){
+    const s=e&&e.status; saving=false;
+    if(s===401){ tokenBad=true; saveErr="The GitHub permission has expired or was removed. Prequate needs to renew it."; }
+    else if(s===403||s===404){ tokenBad=true; saveErr="The GitHub permission cannot write to "+repo().repo+". Prequate needs to renew it."; }
+    else if(s===409||s===422){ scheduleSave(600); return; }
+    else { saveErr="offline"; scheduleSave(5000); }
+    updateStatus();
+    if(tokenBad && role==="prequate") render();
+  }
+}
+let lastAnon=0;
+async function refresh(force){
+  if(!role || saving || dirty()) return;
+  if(document.activeElement?.matches("input,textarea,select")) return;
+  const useToken = token && !tokenBad;
+  if(!useToken && !force && Date.now()-lastAnon<120000) return;  // anonymous reads are limited, so check every 2 minutes
+  try{
+    let f;
+    if(useToken) f=(await apiGet()).file; else { lastAnon=Date.now(); f=await loadFresh(); }
+    if(f.rev!==file.rev || (!token && f.secret)){
+      const d=await decryptBox(f.data); if(dirty()) return;
+      file=f; state=d; saved=clone(d);
+      if(!token){ token=await readToken(f); tokenBad=false; }
+      render();
+    }
+  }catch(e){}
+}
+setInterval(refresh, 30000);
+document.addEventListener("visibilitychange",()=>{ if(!document.hidden) refresh(true); });
+
+function statusText(){
+  if(!token) return role==="prequate" ? {t:"Auto-save is off",c:"warn"} : {t:"View only",c:""};
+  if(tokenBad) return {t:"Not saving",c:"warn"};
+  if(saving) return {t:"Saving",c:""};
+  if(saveErr==="offline") return {t:"Offline, will retry",c:"warn"};
+  if(dirty()) return {t:"Saving shortly",c:""};
+  return {t:"All changes saved",c:"ok"};
+}
+function updateStatus(){ const el=$("#savestate"); if(!el) return; const s=statusText(); el.textContent=s.t; el.className="savestate "+s.c; }
+
+/* Save before the page closes if anything is still waiting. */
+window.addEventListener("beforeunload",e=>{ if(dirty()){ flush(); e.preventDefault(); e.returnValue=""; } });
+
+/* ---------- Helpers ---------- */
+const nameOf = id => (state&&state.people.find(p=>p.id===id)||{}).name || "Unassigned";
+function today(){ const d=new Date(); d.setHours(0,0,0,0); return d; }
+function dueInfo(t){
+  if(!t.due) return {label:"No date set", cls:""};
+  const d=new Date(t.due+"T00:00:00"), days=Math.round((d-today())/86400000);
+  const label=d.toLocaleDateString("en-IN",{day:"numeric",month:"short",year:"numeric"});
+  const pl=n=>n+" day"+(n===1?"":"s");
+  if(t.status==="Done") return {label, sub:"Completed", cls:""};
+  if(days<0) return {label, sub:pl(-days)+" overdue", cls:"late"};
+  if(days===0) return {label, sub:"Due today", cls:"soon"};
+  if(days<=14) return {label, sub:pl(days)+" left", cls:"soon"};
+  return {label, sub:pl(days)+" left", cls:""};
+}
+function toast(msg){ const t=$("#toast"); t.textContent=msg; t.classList.add("on"); clearTimeout(toast._t); toast._t=setTimeout(()=>t.classList.remove("on"),4200); }
+const editor = () => role==="prequate" || (!!token && !tokenBad);
+function canEditTask(t){ return editor() && (role==="prequate" || t.primary===role || t.secondary===role); }
+
+/* ---------- Login ---------- */
+async function renderGate(){
+  document.querySelector(".savebar")?.remove();
+  $("#app").innerHTML=`
+  <div class="gate"><div class="gate-card">
+    <div class="wordmark" aria-label="Prequate"><span class="p">PRE</span><span class="q">QUATE</span></div>
+    <h1>Encee Aromatics transition tracker</h1>
+    <p>Enter your 6 digit PIN to see the project and the tasks pending with you.</p>
+    <form id="pinform" autocomplete="off" onsubmit="return false">
+      <div class="pin" id="pin">${[0,1,2,3,4,5].map(i=>`<input inputmode="numeric" pattern="[0-9]*" maxlength="1" aria-label="PIN digit ${i+1}">`).join("")}</div>
+      <div class="msg" id="pinmsg"></div>
+    </form>
+    <div class="foot">Prepared by Prequate Advisory for Encee Aromatics Private Limited.</div>
+  </div></div>`;
+  const boxes=[...document.querySelectorAll("#pin input")];
+  const msg=$("#pinmsg");
+  if(!file){
+    boxes.forEach(b=>b.disabled=true); msg.className="msg loading"; msg.textContent="Loading tracker";
+    try{ file=await loadFresh(); }catch(e){ msg.className="msg"; msg.textContent="The tracker data could not be loaded. Check that data.json sits next to this page and refresh."; return; }
+    boxes.forEach(b=>b.disabled=false); msg.className="msg"; msg.textContent="";
+  }
+  boxes[0].focus();
+  boxes.forEach((b,i)=>{
+    b.addEventListener("input",()=>{
+      const v=b.value.replace(/\D/g,"");
+      if(v.length>1) v.split("").slice(0,6-i).forEach((ch,k)=>boxes[i+k].value=ch); else b.value=v;
+      $("#pin").classList.remove("bad"); msg.className="msg"; msg.textContent="";
+      const next=boxes.find(x=>!x.value); if(next) next.focus(); else check();
+    });
+    b.addEventListener("keydown",e=>{ if(e.key==="Backspace"&&!b.value&&i>0){ boxes[i-1].focus(); boxes[i-1].value=""; } });
+  });
+  async function check(){
+    const pin=boxes.map(b=>b.value).join(""); if(pin.length<6) return;
+    boxes.forEach(b=>b.disabled=true); msg.className="msg loading"; msg.textContent="Checking PIN";
+    try{
+      const pk=await pinKey(pin);
+      for(const [who,slot] of Object.entries(file.slots)){
+        const raw=await tryUnwrap(pk,who,slot);
+        if(raw){
+          dkRaw=raw; dk=await crypto.subtle.importKey("raw",raw,{name:"AES-GCM"},false,["encrypt","decrypt"]);
+          state=await decryptBox(file.data); saved=clone(state); token=await readToken(file); tokenBad=false; role=who; view="overall"; render(); refresh(); return;
+        }
+      }
+    }catch(e){}
+    boxes.forEach(b=>{b.disabled=false; b.value="";}); $("#pin").classList.add("bad");
+    msg.className="msg"; msg.textContent="That PIN does not match. Check the digits and try again."; boxes[0].focus();
+  }
+}
+
+/* ---------- Shell ---------- */
+function render(){
+  if(!role) return renderGate();
+  const pendingMine=state.tasks.filter(t=>(t.primary===role||t.secondary===role)&&t.status!=="Done").length;
+  $("#app").innerHTML=`
+  <header class="top">
+    <div class="top-in">
+      <div class="wordmark"><span class="p">PRE</span><span class="q">QUATE</span></div>
+      <div class="client">Encee Aromatics Private Limited</div>
+      <div class="spacer"></div>
+      <div class="savestate" id="savestate"></div>
+      <div class="who">Signed in as <b>${esc(nameOf(role))}</b></div>
+      <button class="link" id="logout">Sign out</button>
+    </div>
+    <nav class="tabs" role="tablist">
+      <button class="tab" role="tab" aria-selected="${view==="overall"}" data-v="overall">Overall project</button>
+      <button class="tab" role="tab" aria-selected="${view==="mine"}" data-v="mine">My tasks (${pendingMine})</button>
+    </nav>
+  </header>
+  <main id="main"></main>`;
+  $("#logout").onclick=async()=>{
+    if(dirty()&&token&&!tokenBad){ clearTimeout(saveTimer); await flush(); }
+    if(dirty()&&!confirm("Some changes have not been saved yet. Sign out anyway?")) return;
+    role=null; dk=null; dkRaw=null; state=null; saved=null; token=null; pendingSlots={}; pendingSecret=null; render(); };
+  document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{ view=b.dataset.v; render(); });
+  view==="overall"?renderOverall():renderMine();
+  scheduleSave();
+}
+function footer(){
+  const last = state.updatedAt ? `Last saved ${esc(new Date(state.updatedAt).toLocaleString("en-IN",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"}))}${state.updatedBy?` by ${esc(nameOf(state.updatedBy))}`:""}.` : "";
+  const msg = !token && role!=="prequate" ? "Updates are switched off until Prequate turns on auto-save. You can still view everything."
+    : tokenBad && role!=="prequate" ? "Changes cannot be saved right now. Prequate has been asked to renew the connection." : "";
+  return `<p class="muted" style="font-size:12.5px;margin-top:14px">${last}</p>${msg?`<div class="notice">${msg}</div>`:""}`;
+}
+function bindFooter(){}
+function setupHTML(){
+  if(role!=="prequate" || (token && !tokenBad)) return "";
+  return `<section class="setup">
+    <h3>${tokenBad?"Renew auto-save":"Switch on auto-save"}</h3>
+    <p>${tokenBad?esc(saveErr)+" ":""}A one time step that takes about two minutes. After this, every change by anyone saves on its own. Nothing else is needed from Nanjaraj or Ankitha.</p>
+    <ol>
+      <li><a href="${esc(tokenLink())}" target="_blank" rel="noopener">Open the GitHub permission page</a>. The name, expiry and permission are already filled in.</li>
+      <li>Under <b>Repository access</b>, choose <b>Only select repositories</b> and pick <b>${esc(repo().repo||"your tracker repository")}</b>.</li>
+      <li>Scroll to the bottom, click <b>Generate token</b>, and copy the code that appears.</li>
+      <li>Paste it here.<div class="row" style="margin-top:8px"><input type="password" id="tk" placeholder="github_pat_..." autocomplete="off" style="flex:1;min-width:220px"><button class="btn" id="tk-go">Switch on auto-save</button></div></li>
+    </ol>
+  </section>`;
+}
+function bindSetup(){
+  const b=$("#tk-go"); if(!b) return;
+  b.onclick=async()=>{
+    const v=$("#tk").value.trim(); if(!v){ toast("Paste the code from GitHub first."); return; }
+    b.disabled=true; b.textContent="Checking";
+    try{ await apiGet(v); }
+    catch(e){
+      b.disabled=false; b.textContent="Switch on auto-save";
+      const s=e&&e.status;
+      toast(s===401?"GitHub did not accept that code. Copy the whole code and paste it again."
+        : s===403||s===404?"That code cannot reach "+repo().repo+". On GitHub, make sure you picked it under Repository access."
+        : "Could not reach GitHub. Check the connection and try again.");
+      return;
+    }
+    token=v; tokenBad=false; saveErr=""; pendingSecret=await encryptBox({token:v});
+    render(); scheduleSave(0); toast("Auto-save is on. Every change now saves on its own.");
+  };
+}
+/* ---------- Overall ---------- */
+function renderOverall(){
+  const T=state.tasks, n=T.length, cnt=s=>T.filter(t=>t.status===s).length;
+  const done=cnt("Done"), ip=cnt("In progress"), oh=cnt("On hold"), ns=cnt("Not started");
+  const pct=n?Math.round(done/n*100):0, w=x=>n?(x/n*100)+"%":"0%";
+  const late=T.filter(t=>t.status!=="Done"&&dueInfo(t).cls==="late").length;
+  const unassigned=T.filter(t=>!t.primary).length;
+  const isP=role==="prequate";
+  const ownerCol=id=>{
+    const mine=T.filter(t=>t.primary===id&&t.status!=="Done");
+    const sec=T.filter(t=>t.secondary===id&&t.status!=="Done").length;
+    const lateN=mine.filter(t=>dueInfo(t).cls==="late").length;
+    const nx=mine.filter(t=>t.due).sort((a,b)=>a.due.localeCompare(b.due))[0];
+    return `<div class="owner"><div class="n">${esc(nameOf(id))}</div><div class="c">${mine.length}</div>
+      <div class="s">pending as primary${sec?`, ${sec} as secondary`:""}</div>
+      ${lateN?`<div class="s late">${lateN} overdue</div>`:nx?`<div class="s">Next due ${esc(dueInfo(nx).label)}</div>`:""}</div>`;
+  };
+  const opts=v=>`<option value="">Unassigned</option>`+state.people.map(p=>`<option value="${p.id}" ${p.id===v?"selected":""}>${esc(p.name)}</option>`).join("");
+  const rows=T.map(t=>{
+    const di=dueInfo(t), open=openRow===t.id, ed=canEditTask(t);
+    return `<tr>
+      <td class="no">${esc(t.no)}</td>
+      <td><button class="expand" data-open="${t.id}" aria-expanded="${open}"><div class="t-title">${esc(t.title)}</div><div class="t-type">${esc(t.type)}${open?(isP?" | close":""):(isP?" | edit all fields":" | view outcome")}</div></button></td>
+      <td>${isP?`<select data-f="primary" data-id="${t.id}" aria-label="Primary owner">${opts(t.primary)}</select>`:`<span class="${t.primary?"":"muted"}">${esc(nameOf(t.primary))}</span>`}</td>
+      <td>${isP?`<select data-f="secondary" data-id="${t.id}" aria-label="Secondary owner">${opts(t.secondary)}</select>`:`<span class="${t.secondary?"":"muted"}">${t.secondary?esc(nameOf(t.secondary)):"None"}</span>`}</td>
+      <td>${isP?`<input type="date" data-f="due" data-id="${t.id}" value="${esc(t.due)}" aria-label="Expected timeline">`:""}<div class="due">${isP?"":esc(di.label)}${di.sub?`<small class="${di.cls}">${esc(di.sub)}</small>`:""}</div></td>
+      <td>${ed?`<select data-f="status" data-id="${t.id}" aria-label="Status">${STATUSES.map(s=>`<option ${s===t.status?"selected":""}>${s}</option>`).join("")}</select>`:`<span class="pill ${stCls(t.status)}">${esc(t.status)}</span>`}</td>
+    </tr>
+    ${open&&isP?editRow(t):""}
+    ${open&&!isP?`<tr class="detail"><td colspan="6"><div class="d">
+      <div><h4>Outcome</h4><p>${esc(t.outcome)||'<span class="muted">Not written yet</span>'}</p></div>
+      <div><h4>What it facilitates</h4><p>${esc(t.facilitates)||'<span class="muted">Not written yet</span>'}</p></div>
+      ${t.note?`<div style="grid-column:1/-1"><h4>Latest update${t.updatedBy?` from ${esc(nameOf(t.updatedBy))}`:""}${t.updated?`, ${esc(new Date(t.updated).toLocaleDateString("en-IN",{day:"numeric",month:"short"}))}`:""}</h4><p>${esc(t.note)}</p></div>`:""}
+    </div></td></tr>`:""}`;
+  }).join("");
+  $("#main").innerHTML=`${setupHTML()}
+  <section class="head"><h2>${esc(state.fn)}</h2><p>Handover of finance, accounts and banking from Nanjaraj to Ankitha. ${n} tasks tracked.</p></section>
+  <section class="progress" aria-label="Project progress">
+    <div class="big"><strong>${pct}%</strong><span>${done} of ${n} tasks complete${late?`, <b style="color:var(--warn)">${late} overdue</b>`:""}</span></div>
+    <div class="bar"><span style="width:${w(done)};background:var(--ok)"></span><span style="width:${w(ip)};background:var(--orange)"></span><span style="width:${w(oh)};background:var(--hold)"></span></div>
+    <div class="legend"><span><i style="background:var(--ok)"></i>Done ${done}</span><span><i style="background:var(--orange)"></i>In progress ${ip}</span><span><i style="background:var(--hold)"></i>On hold ${oh}</span><span><i style="background:var(--soft);border:1px solid var(--line)"></i>Not started ${ns}</span></div>
+  </section>
+  <section class="owners" aria-label="Pending by person">
+    ${state.people.map(p=>ownerCol(p.id)).join("")}
+    ${unassigned?`<div class="owner"><div class="n muted">Unassigned</div><div class="c">${unassigned}</div><div class="s">${isP?"Assign a primary owner below":"Awaiting allocation by Prequate"}</div></div>`:""}
+  </section>
+  <h3 class="sec">All tasks</h3>
+  <div class="scroll"><table>
+    <thead><tr><th>#</th><th>Sub-task / process</th><th>Primary</th><th>Secondary</th><th>Expected timeline</th><th>Status</th></tr></thead>
+    <tbody>${rows}</tbody></table></div>
+  ${footer()}
+  ${isP?adminHTML():""}`;
+  document.querySelectorAll("[data-open]").forEach(b=>b.onclick=()=>{ openRow=openRow===b.dataset.open?null:b.dataset.open; renderOverall(); updateStatus(); });
+  document.querySelectorAll("#main [data-f]").forEach(el=>el.onchange=()=>setField(el.dataset.id,el.dataset.f,el.value));
+  document.querySelectorAll("[data-del]").forEach(b=>b.onclick=()=>{ if(!confirm("Remove this task from the tracker?")) return; state.tasks=state.tasks.filter(t=>t.id!==b.dataset.del); renumber(); render(); });
+  document.querySelectorAll("[data-e]").forEach(el=>el.onchange=()=>setField(el.dataset.id,el.dataset.e,el.tagName==="SELECT"?el.value:el.value.trim(),true));
+  document.querySelectorAll("[data-mv]").forEach(b=>b.onclick=()=>{ const i=state.tasks.findIndex(t=>t.id===b.dataset.id), j=i+(+b.dataset.mv);
+    if(j<0||j>=state.tasks.length) return; [state.tasks[i],state.tasks[j]]=[state.tasks[j],state.tasks[i]]; renumber(); render(); });
+  bindSetup();
+  if(isP) bindAdmin();
+}
+function editRow(t){
+  const i=state.tasks.indexOf(t), last=i===state.tasks.length-1;
+  return `<tr class="detail"><td colspan="6"><div class="d edit">
+    <div style="grid-column:1/-1"><h4>Sub-task / process</h4><input type="text" data-e="title" data-id="${t.id}" value="${esc(t.title)}" style="width:100%"></div>
+    <div><h4>Outcome</h4><textarea data-e="outcome" data-id="${t.id}" rows="4">${esc(t.outcome)}</textarea></div>
+    <div><h4>What it facilitates</h4><textarea data-e="facilitates" data-id="${t.id}" rows="4">${esc(t.facilitates)}</textarea></div>
+    <div><h4>One-time / Continuous</h4><select data-e="type" data-id="${t.id}">${["Continuous","One-time"].map(x=>`<option ${x===t.type?"selected":""}>${x}</option>`).join("")}</select></div>
+    <div><h4>Latest update${t.updatedBy?` (last by ${esc(nameOf(t.updatedBy))})`:""}</h4><textarea data-e="note" data-id="${t.id}" rows="2" placeholder="Progress note shown to everyone">${esc(t.note)}</textarea></div>
+    <div style="grid-column:1/-1;display:flex;gap:10px;flex-wrap:wrap">
+      <button class="btn ghost" data-mv="-1" data-id="${t.id}" ${i===0?"disabled":""}>Move up</button>
+      <button class="btn ghost" data-mv="1" data-id="${t.id}" ${last?"disabled":""}>Move down</button>
+      <span style="flex:1"></span>
+      <button class="btn ghost" data-del="${t.id}">Remove this task</button>
+    </div>
+  </div></td></tr>`;
+}
+function setField(id,f,v,quiet){
+  const t=state.tasks.find(x=>x.id===id); if(!t) return;
+  if(f==="secondary"&&v&&t.primary===v){ toast("Secondary cannot be the same person as primary."); render(); return; }
+  t[f]=v;
+  if(f==="primary"&&v&&t.secondary===v) t.secondary="";
+  if(f==="status"||f==="note"){ t.updated=new Date().toISOString(); t.updatedBy=role; }
+  if(quiet){ scheduleSave(); return; }
+  render();
+}
+function renumber(){ state.tasks.forEach((t,i)=>t.no=i+1); }
+
+/* ---------- Prequate admin ---------- */
+function adminHTML(){
+  return `<section class="admin">
+    <div class="box"><h3>Add a task</h3><p>For items agreed in the meeting that are not yet on the list.</p>
+      <div class="row"><input type="text" id="nt-title" placeholder="Sub-task or process" style="flex:1;min-width:200px"></div>
+      <div class="row"><textarea id="nt-outcome" placeholder="Outcome: what Ankitha can do once this is complete"></textarea></div>
+      <div class="row"><textarea id="nt-fac" placeholder="What it facilitates"></textarea></div>
+      <div class="row"><select id="nt-type"><option>Continuous</option><option>One-time</option></select><button class="btn" id="nt-add">Add task</button></div>
+    </div>
+    <div class="box"><h3>People responsible</h3><p>Names that appear in the Primary and Secondary lists. Only people with a PIN can sign in.</p>
+      ${state.people.map(p=>{ const core=!!file.slots[p.id], used=state.tasks.some(t=>t.primary===p.id||t.secondary===p.id);
+        return `<div class="row"><input type="text" data-pn="${p.id}" value="${esc(p.name)}" style="flex:1;min-width:140px" aria-label="Name">
+          <span class="muted" style="font-size:12px;width:70px">${core?"Has PIN":"No PIN"}</span>
+          ${core?"":`<button class="btn ghost" data-prm="${p.id}" ${used?'disabled title="Reassign their tasks first"':""}>Remove</button>`}</div>`; }).join("")}
+      <div class="row" style="margin-top:14px"><input type="text" id="np-name" placeholder="Add a person, e.g. Accounts head" style="flex:1;min-width:160px"><button class="btn" id="np-add">Add person</button></div>
+    </div>
+    <div class="box"><h3>Access PINs</h3><p>Set a new 6 digit PIN for any person. Keep a record of every PIN: a lost PIN cannot be recovered, only replaced by Prequate.</p>
+      ${state.people.filter(p=>file.slots[p.id]).map(p=>`<div class="row"><label for="pin-${p.id}">${esc(p.name)}</label><input type="text" inputmode="numeric" maxlength="6" id="pin-${p.id}" placeholder="New PIN" style="width:92px"><button class="btn ghost" data-pin="${p.id}">Set PIN</button>${pendingSlots[p.id]?`<span class="muted" style="font-size:12px">Changed, not saved</span>`:""}</div>`).join("")}
+      <p style="margin-top:18px">Auto-save: ${token&&!tokenBad?`on. <a class="link" style="padding:0" href="${esc(tokenLink())}" target="_blank" rel="noopener">Create a replacement permission</a> before it expires, then use <button class="link" id="tk-renew" style="padding:0">Renew</button>.`:"off. Switch it on at the top of this page."}</p>
+    </div>
+  </section>`;
+}
+function bindAdmin(){
+  $("#nt-add").onclick=()=>{
+    const title=$("#nt-title").value.trim(); if(!title){ toast("Give the task a name first."); $("#nt-title").focus(); return; }
+    state.tasks.push({id:"t"+Date.now().toString(36),no:0,title,outcome:$("#nt-outcome").value.trim(),facilitates:$("#nt-fac").value.trim(),type:$("#nt-type").value,primary:"",secondary:"",due:"",status:"Not started",note:"",updated:"",updatedBy:"",custom:true});
+    renumber(); render(); toast("Task added.");
+  };
+  document.querySelectorAll("[data-pin]").forEach(b=>b.onclick=async()=>{
+    const id=b.dataset.pin, v=$("#pin-"+id).value.trim();
+    if(!/^\d{6}$/.test(v)){ toast("A PIN must be exactly 6 digits."); return; }
+    b.disabled=true; b.textContent="Setting";
+    const pk=await pinKey(v);
+    const slots=Object.assign({}, file.slots, pendingSlots);
+    for(const [who,slot] of Object.entries(slots)){
+      if(who!==id && await tryUnwrap(pk,who,slot)){ toast("That PIN is already in use by "+nameOf(who)+". Choose another."); render(); return; }
+    }
+    pendingSlots[id]=await wrap(pk,id); render(); toast("New PIN set for "+nameOf(id)+".");
+  });
+  document.querySelectorAll("[data-pn]").forEach(el=>el.onchange=()=>{ const v=el.value.trim(); const p=state.people.find(x=>x.id===el.dataset.pn);
+    if(!v){ el.value=p.name; toast("A name cannot be blank."); return; } p.name=v; render(); });
+  document.querySelectorAll("[data-prm]").forEach(b=>b.onclick=()=>{ state.people=state.people.filter(p=>p.id!==b.dataset.prm); render(); });
+  $("#np-add").onclick=()=>{ const v=$("#np-name").value.trim(); if(!v){ toast("Enter a name first."); return; }
+    if(state.people.some(p=>p.name.toLowerCase()===v.toLowerCase())){ toast(v+" is already on the list."); return; }
+    state.people.push({id:"p"+Date.now().toString(36), name:v}); render(); toast(v+" added."); };
+  const rn=$("#tk-renew"); if(rn) rn.onclick=()=>{ tokenBad=true; saveErr=""; render(); window.scrollTo(0,0); };
+}
+
+/* ---------- My tasks ---------- */
+function renderMine(){
+  const mine=state.tasks.filter(t=>t.primary===role||t.secondary===role);
+  const k=t=>t.due||"9999";
+  const pending=mine.filter(t=>t.status!=="Done").sort((a,b)=>k(a).localeCompare(k(b)));
+  const done=mine.filter(t=>t.status==="Done");
+  const late=pending.filter(t=>dueInfo(t).cls==="late").length;
+  const card=t=>{
+    const di=dueInfo(t), ed=canEditTask(t);
+    const r=t.primary===role?"You are primary"+(t.secondary?`, with ${esc(nameOf(t.secondary))} as secondary`:""):`You are secondary to ${esc(nameOf(t.primary))}`;
+    return `<article class="task ${t.status!=="Done"?di.cls:""}">
+      <div><div class="role">Task ${esc(t.no)} | ${r}</div><h4>${esc(t.title)}</h4><p class="oc">${esc(t.outcome)}</p></div>
+      <div class="side"><span class="pill ${stCls(t.status)}">${esc(t.status)}</span><div class="due">${esc(di.label)}${di.sub?`<small class="${di.cls}">${esc(di.sub)}</small>`:""}</div></div>
+      ${ed?`<div class="ctrl"><select data-m="status" data-id="${t.id}" aria-label="Update status">${STATUSES.map(s=>`<option ${s===t.status?"selected":""}>${s}</option>`).join("")}</select>
+        <div class="note"><textarea data-m="note" data-id="${t.id}" placeholder="Add an update: what moved, what is blocking, what you need">${esc(t.note)}</textarea></div></div>`
+        :t.note?`<div class="meta">Latest update: ${esc(t.note)}</div>`:""}
+    </article>`;
+  };
+  $("#main").innerHTML=`
+  <section class="head"><h2>${pending.length?`${pending.length} task${pending.length===1?"":"s"} pending with you`:"Nothing pending with you"}</h2>
+    <p>${esc(state.fn)}.${late?` <b style="color:var(--warn)">${late} overdue.</b>`:""} Sorted by expected timeline, earliest first.</p></section>
+  <div class="cards" style="margin-top:28px">${pending.length?pending.map(card).join(""):`<div class="empty">${mine.length?"Every task allocated to you is complete.":role==="prequate"?"No tasks are allocated to Prequate yet. Assign owners from the Overall project tab.":"No tasks have been allocated to you yet. Prequate will assign them after the review meeting."}</div>`}</div>
+  ${done.length?`<details class="done-list"><summary>Completed (${done.length})</summary><div class="cards" style="margin-top:14px">${done.map(card).join("")}</div></details>`:""}
+  ${footer()}`;
+  document.querySelectorAll("[data-m=status]").forEach(el=>el.onchange=()=>setField(el.dataset.id,"status",el.value));
+  document.querySelectorAll("[data-m=note]").forEach(el=>el.onchange=()=>setField(el.dataset.id,"note",el.value.trim()));
+  bindFooter();
+}
+
+
+render();
+})();
+
+</script>
+</body>
+</html>
