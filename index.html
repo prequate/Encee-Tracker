@@ -175,7 +175,18 @@ dialog label.chk{display:flex; gap:8px; align-items:center; font-size:13px; marg
 .loading{color:var(--grey); font-size:13px}
 </style>
 
-<style>.d.edit input[type=text],.d.edit textarea{width:100%;font-size:13.5px}.d.edit{padding-left:18px}</style>
+<style>
+.d.edit input[type=text],.d.edit textarea{width:100%;font-size:13.5px}.d.edit{padding-left:18px}
+.savestate{font-size:12.5px;color:var(--grey);padding:3px 10px;border-radius:20px;background:var(--soft)}
+.savestate.ok{color:var(--ok);background:var(--okbg)}
+.savestate.warn{color:var(--warn);background:var(--warnbg)}
+.setup{border:1.5px solid var(--orange);border-radius:10px;padding:22px 24px;margin-bottom:36px;background:var(--tint)}
+.setup h3{margin:0 0 4px;font-size:17px;font-weight:700}
+.setup p{margin:0 0 12px;color:var(--grey);font-size:13.5px;max-width:70ch}
+.setup ol{margin:0;padding-left:20px;font-size:14px;line-height:1.7}
+.setup a{color:var(--deep);font-weight:600}
+@media (max-width:760px){.savestate{order:5}}
+</style>
 </head>
 <body>
 <div id="app"></div>
@@ -183,8 +194,8 @@ dialog label.chk{display:flex; gap:8px; align-items:center; font-size:13px; marg
 <script>
 (function(){
 "use strict";
-/* Repository settings. Leave owner and repo blank on a <user>.github.io address and they are detected automatically.
-   Fill them in if you use a custom domain. */
+/* Repository settings. On a <user>.github.io address these are detected automatically.
+   Fill them in only if you move the tracker to a custom domain. */
 const CONFIG = { owner:"", repo:"", branch:"main", path:"data.json" };
 
 const $ = (s,el=document)=>el.querySelector(s);
@@ -195,15 +206,14 @@ const tob64 = u8 => { let s=""; const a=new Uint8Array(u8); for(let i=0;i<a.leng
 const utf8b64 = str => tob64(enc(str));
 const b64utf8 = b => new TextDecoder().decode(ub64(b));
 const clone = o => JSON.parse(JSON.stringify(o));
+const same = (a,b) => JSON.stringify(a)===JSON.stringify(b);
 const STATUSES = ["Not started","In progress","On hold","Done"];
 const stCls = s => ({"Not started":"st-ns","In progress":"st-ip","On hold":"st-oh","Done":"st-dn"}[s]||"st-ns");
 
-let file=null;            // the encrypted data.json as loaded
-let dkRaw=null, dk=null;  // data key after PIN unlock
-let saved=null, state=null, pendingSlots={};
-let role=null, view="overall", openRow=null, token=null, saving=false;
-
-try{ token = localStorage.getItem("encee_gh_token"); }catch(e){}
+let file=null, dkRaw=null, dk=null;
+let saved=null, state=null, pendingSlots={}, pendingSecret=null;
+let role=null, view="overall", openRow=null;
+let token=null, tokenBad=false, saving=false, saveTimer=null, saveErr="", lastSaveOk=0;
 
 function repo(){
   let {owner,repo,branch,path}=CONFIG;
@@ -215,100 +225,129 @@ function repo(){
   }
   return {owner,repo,branch,path};
 }
+function tokenLink(){
+  const r=repo();
+  const q=new URLSearchParams({name:"Encee tracker autosave",
+    description:"Lets the Encee transition tracker save changes. Under Repository access choose Only select repositories and pick "+(r.repo||"the tracker repository")+".",
+    expires_in:"366", contents:"write"});
+  if(r.owner) q.set("target_name", r.owner);
+  return "https://github.com/settings/personal-access-tokens/new?"+q.toString();
+}
 
 /* ---------- Crypto ---------- */
 async function pinKey(pin){
-  const base = await crypto.subtle.importKey("raw", enc(pin), "PBKDF2", false, ["deriveKey"]);
-  return crypto.subtle.deriveKey({name:"PBKDF2", salt:ub64(file.kdf.salt), iterations:file.kdf.iter, hash:"SHA-256"},
-    base, {name:"AES-GCM", length:256}, false, ["encrypt","decrypt"]);
+  const base=await crypto.subtle.importKey("raw",enc(pin),"PBKDF2",false,["deriveKey"]);
+  return crypto.subtle.deriveKey({name:"PBKDF2",salt:ub64(file.kdf.salt),iterations:file.kdf.iter,hash:"SHA-256"},base,{name:"AES-GCM",length:256},false,["encrypt","decrypt"]);
 }
-async function tryUnwrap(pk, who, slot){
-  try{ return new Uint8Array(await crypto.subtle.decrypt({name:"AES-GCM", iv:ub64(slot.iv), additionalData:enc(who)}, pk, ub64(slot.ct))); }
-  catch(e){ return null; }
+async function tryUnwrap(pk,who,slot){
+  try{ return new Uint8Array(await crypto.subtle.decrypt({name:"AES-GCM",iv:ub64(slot.iv),additionalData:enc(who)},pk,ub64(slot.ct))); }catch(e){ return null; }
 }
-async function wrap(pk, who){
-  const iv=crypto.getRandomValues(new Uint8Array(12));
-  const ct=await crypto.subtle.encrypt({name:"AES-GCM", iv, additionalData:enc(who)}, pk, dkRaw);
-  return {iv:tob64(iv), ct:tob64(ct)};
-}
-async function decryptData(f){
-  const pt=await crypto.subtle.decrypt({name:"AES-GCM", iv:ub64(f.data.iv)}, dk, ub64(f.data.ct));
-  return JSON.parse(new TextDecoder().decode(pt));
-}
-async function encryptData(obj){
-  const iv=crypto.getRandomValues(new Uint8Array(12));
-  const ct=await crypto.subtle.encrypt({name:"AES-GCM", iv}, dk, enc(JSON.stringify(obj)));
-  return {iv:tob64(iv), ct:tob64(ct)};
-}
+async function wrap(pk,who){ const iv=crypto.getRandomValues(new Uint8Array(12));
+  return {iv:tob64(iv), ct:tob64(await crypto.subtle.encrypt({name:"AES-GCM",iv,additionalData:enc(who)},pk,dkRaw))}; }
+async function decryptBox(box){ return JSON.parse(new TextDecoder().decode(await crypto.subtle.decrypt({name:"AES-GCM",iv:ub64(box.iv)},dk,ub64(box.ct)))); }
+async function encryptBox(obj){ const iv=crypto.getRandomValues(new Uint8Array(12));
+  return {iv:tob64(iv), ct:tob64(await crypto.subtle.encrypt({name:"AES-GCM",iv},dk,enc(JSON.stringify(obj))))}; }
+async function readToken(f){ try{ return f.secret ? (await decryptBox(f.secret)).token : null; }catch(e){ return null; } }
 
-/* ---------- Loading and saving ---------- */
-function apiUrl(){ const r=repo(); return `https://api.github.com/repos/${r.owner}/${r.repo}/contents/${r.path}?ref=${encodeURIComponent(r.branch)}`; }
-async function apiGet(){
-  const res=await fetch(apiUrl(),{headers:{Authorization:"Bearer "+token, Accept:"application/vnd.github+json"}, cache:"no-store"});
+/* ---------- GitHub ---------- */
+function apiUrl(){ const r=repo(); return `https://api.github.com/repos/${r.owner}/${r.repo}/contents/${r.path}`; }
+async function apiGet(tk){
+  const res=await fetch(apiUrl()+"?ref="+encodeURIComponent(repo().branch)+"&t="+Date.now(),{headers:{Authorization:"Bearer "+(tk||token),Accept:"application/vnd.github+json"},cache:"no-store"});
   if(!res.ok) throw {status:res.status};
   const j=await res.json(); return {sha:j.sha, file:JSON.parse(b64utf8(j.content))};
 }
-async function loadFile(){
-  if(token && repo().repo){ try{ return (await apiGet()).file; }catch(e){} }
+async function loadPublic(){
   const res=await fetch(repo().path+"?t="+Date.now(),{cache:"no-store"});
-  if(!res.ok) throw new Error("load");
-  return res.json();
+  if(!res.ok) throw new Error("load"); return res.json();
 }
-async function save(){
-  if(saving) return;
-  if(!token){ const ok=await askToken(); if(!ok) return; }
-  const r=repo();
-  if(!r.owner||!r.repo){ toast("Repository not set. Fill in CONFIG at the top of the page script."); return; }
-  saving=true; renderSaveBar();
-  try{
-    const remote=await apiGet();
-    if(remote.file.rev!==file.rev){
-      toast("Someone saved a newer version. Your changes were kept on screen; reload to compare.");
-      saving=false; renderSaveBar(); return;
-    }
-    const out=clone(state); out.updatedAt=new Date().toISOString(); out.updatedBy=role;
-    const next={format:1, rev:file.rev+1, kdf:file.kdf, slots:Object.assign({}, file.slots, pendingSlots), data:await encryptData(out)};
-    const res=await fetch(apiUrl().split("?")[0],{method:"PUT",
-      headers:{Authorization:"Bearer "+token, Accept:"application/vnd.github+json", "Content-Type":"application/json"},
-      body:JSON.stringify({message:`Tracker update by ${nameOf(role)} (rev ${next.rev})`, content:utf8b64(JSON.stringify(next,null,1)), sha:remote.sha, branch:r.branch})});
-    if(!res.ok) throw {status:res.status};
-    file=next; state=out; saved=clone(out); pendingSlots={};
-    toast("Saved. Others will see it within about a minute.");
-  }catch(e){
-    const s=e&&e.status;
-    if(s===401){ forgetToken(); toast("The GitHub access key was rejected. Add a valid key and save again."); }
-    else if(s===403||s===404){ toast("The access key cannot write to "+r.owner+"/"+r.repo+". Check its repository access and Contents permission."); }
-    else if(s===409){ toast("Someone saved a newer version. Reload latest and apply your change again."); }
-    else toast("Could not save. Check the connection and try again.");
-  }
-  saving=false; render();
-}
-async function reloadLatest(){
-  if(dirty() && !confirm("Reloading will discard your unsaved changes. Continue?")) return;
-  try{ const f=await loadFile(); const d=await decryptData(f); file=f; state=d; saved=clone(d); pendingSlots={}; render(); toast("Showing the latest saved version."); }
-  catch(e){ toast("Could not reload. Try again in a moment."); }
-}
-function forgetToken(){ token=null; try{ localStorage.removeItem("encee_gh_token"); }catch(e){} }
-function askToken(){
-  return new Promise(resolve=>{
-    const d=document.createElement("dialog");
-    d.innerHTML=`<h3>Add GitHub access key</h3>
-      <p>Saving writes to the tracker's repository. Paste the fine grained access key Prequate issued for this repository.</p>
-      <input type="password" id="tk" placeholder="github_pat_..." autocomplete="off">
-      <label class="chk"><input type="checkbox" id="tkr" checked> Remember on this device</label>
-      <div class="acts"><button class="btn ghost" id="tkc">Cancel</button><button class="btn" id="tko">Use this key</button></div>`;
-    document.body.appendChild(d); d.showModal(); $("#tk",d).focus();
-    const done=v=>{ d.close(); d.remove(); resolve(v); };
-    $("#tkc",d).onclick=()=>done(false);
-    $("#tko",d).onclick=()=>{ const v=$("#tk",d).value.trim(); if(!v) return;
-      token=v; if($("#tkr",d).checked){ try{ localStorage.setItem("encee_gh_token",v); }catch(e){} } done(true); };
-    d.addEventListener("cancel",()=>done(false));
+
+/* Three way merge: keep what someone else saved, apply what changed locally since `base`. */
+function mergeList(base,local,remote,key){
+  const bm=new Map(base.map(x=>[x[key],x])), lm=new Map(local.map(x=>[x[key],x]));
+  let out=remote.map(x=>clone(x)).filter(x=>!(bm.has(x[key])&&!lm.has(x[key])));
+  local.forEach(lx=>{
+    const bx=bm.get(lx[key]), rx=out.find(x=>x[key]===lx[key]);
+    if(!bx){ if(!rx) out.push(clone(lx)); return; }
+    if(!rx) return;
+    Object.keys(lx).forEach(k=>{ if(!same(lx[k],bx[k])) rx[k]=clone(lx[k]); });
   });
+  const bo=base.map(x=>x[key]).filter(id=>lm.has(id)), lo=local.map(x=>x[key]).filter(id=>bm.has(id));
+  if(!same(bo,lo)){ const idx=new Map(local.map((x,i)=>[x[key],i])); out.sort((a,b)=>(idx.has(a[key])?idx.get(a[key]):1e9)-(idx.has(b[key])?idx.get(b[key]):1e9)); }
+  return out;
 }
+function merge(base,local,remote){
+  const out=clone(remote);
+  if(local.fn!==base.fn) out.fn=local.fn;
+  out.people=mergeList(base.people,local.people,remote.people,"id");
+  out.tasks=mergeList(base.tasks,local.tasks,remote.tasks,"id");
+  out.tasks.forEach((t,i)=>t.no=i+1);
+  return out;
+}
+
+/* ---------- Auto-save ---------- */
+const dirty = () => !!state && (!same(state,saved) || Object.keys(pendingSlots).length>0 || !!pendingSecret);
+function scheduleSave(delay){
+  updateStatus();
+  if(!dirty() || !token || tokenBad) return;
+  clearTimeout(saveTimer); saveTimer=setTimeout(flush, delay==null?1200:delay);
+}
+async function flush(){
+  if(saving){ scheduleSave(800); return; }
+  if(!dirty() || !token || tokenBad) return;
+  saving=true; saveErr=""; updateStatus();
+  const snap=clone(state), slotsSnap=clone(pendingSlots), secretSnap=pendingSecret;
+  try{
+    let {sha, file:remote}=await apiGet();
+    let out=snap;
+    if(remote.rev!==file.rev){ const rs=await decryptBox(remote.data); out=merge(saved,snap,rs); }
+    out=clone(out); out.updatedAt=new Date().toISOString(); out.updatedBy=role;
+    const next={format:1, rev:(remote.rev||0)+1, kdf:remote.kdf, slots:Object.assign({},remote.slots,slotsSnap),
+      data:await encryptBox(out), secret:secretSnap||remote.secret};
+    const res=await fetch(apiUrl(),{method:"PUT",headers:{Authorization:"Bearer "+token,Accept:"application/vnd.github+json","Content-Type":"application/json"},
+      body:JSON.stringify({message:`Tracker update by ${nameOf(role)}`,content:utf8b64(JSON.stringify(next,null,1)),sha,branch:repo().branch})});
+    if(!res.ok) throw {status:res.status};
+    const moved=!same(state,snap);
+    state = moved ? merge(snap,state,out) : clone(out);
+    saved=clone(out); file=next;
+    Object.keys(slotsSnap).forEach(k=>{ if(same(pendingSlots[k],slotsSnap[k])) delete pendingSlots[k]; });
+    if(pendingSecret===secretSnap) pendingSecret=null;
+    lastSaveOk=Date.now(); saving=false;
+    if(!moved && !document.activeElement?.matches("input,textarea,select")) render(); else updateStatus();
+    if(dirty()) scheduleSave(300);
+    return;
+  }catch(e){
+    const s=e&&e.status; saving=false;
+    if(s===401){ tokenBad=true; saveErr="The GitHub permission has expired or was removed. Prequate needs to renew it."; }
+    else if(s===403||s===404){ tokenBad=true; saveErr="The GitHub permission cannot write to "+repo().repo+". Prequate needs to renew it."; }
+    else if(s===409||s===422){ scheduleSave(600); return; }
+    else { saveErr="offline"; scheduleSave(5000); }
+    updateStatus();
+    if(tokenBad && role==="prequate") render();
+  }
+}
+async function refresh(){
+  if(!role || saving || dirty() || !token || tokenBad) return;
+  if(document.activeElement?.matches("input,textarea,select")) return;
+  try{ const {file:f}=await apiGet(); if(f.rev!==file.rev){ const d=await decryptBox(f.data); if(dirty()) return; file=f; state=d; saved=clone(d); render(); } }catch(e){}
+}
+setInterval(refresh, 30000);
+document.addEventListener("visibilitychange",()=>{ if(!document.hidden) refresh(); });
+
+function statusText(){
+  if(!token) return role==="prequate" ? {t:"Auto-save is off",c:"warn"} : {t:"View only",c:""};
+  if(tokenBad) return {t:"Not saving",c:"warn"};
+  if(saving) return {t:"Saving",c:""};
+  if(saveErr==="offline") return {t:"Offline, will retry",c:"warn"};
+  if(dirty()) return {t:"Saving shortly",c:""};
+  return {t:"All changes saved",c:"ok"};
+}
+function updateStatus(){ const el=$("#savestate"); if(!el) return; const s=statusText(); el.textContent=s.t; el.className="savestate "+s.c; }
+
+/* Save before the page closes if anything is still waiting. */
+window.addEventListener("beforeunload",e=>{ if(dirty()){ flush(); e.preventDefault(); e.returnValue=""; } });
 
 /* ---------- Helpers ---------- */
 const nameOf = id => (state&&state.people.find(p=>p.id===id)||{}).name || "Unassigned";
-const dirty = () => !!state && (JSON.stringify(state)!==JSON.stringify(saved) || Object.keys(pendingSlots).length>0);
 function today(){ const d=new Date(); d.setHours(0,0,0,0); return d; }
 function dueInfo(t){
   if(!t.due) return {label:"No date set", cls:""};
@@ -322,7 +361,7 @@ function dueInfo(t){
   return {label, sub:pl(days)+" left", cls:""};
 }
 function toast(msg){ const t=$("#toast"); t.textContent=msg; t.classList.add("on"); clearTimeout(toast._t); toast._t=setTimeout(()=>t.classList.remove("on"),4200); }
-const editor = () => role==="prequate" || !!token;
+const editor = () => role==="prequate" || (!!token && !tokenBad);
 function canEditTask(t){ return editor() && (role==="prequate" || t.primary===role || t.secondary===role); }
 
 /* ---------- Login ---------- */
@@ -343,7 +382,7 @@ async function renderGate(){
   const msg=$("#pinmsg");
   if(!file){
     boxes.forEach(b=>b.disabled=true); msg.className="msg loading"; msg.textContent="Loading tracker";
-    try{ file=await loadFile(); }catch(e){ msg.className="msg"; msg.textContent="The tracker data could not be loaded. Check that data.json sits next to this page and refresh."; return; }
+    try{ file=await loadPublic(); }catch(e){ msg.className="msg"; msg.textContent="The tracker data could not be loaded. Check that data.json sits next to this page and refresh."; return; }
     boxes.forEach(b=>b.disabled=false); msg.className="msg"; msg.textContent="";
   }
   boxes[0].focus();
@@ -365,7 +404,7 @@ async function renderGate(){
         const raw=await tryUnwrap(pk,who,slot);
         if(raw){
           dkRaw=raw; dk=await crypto.subtle.importKey("raw",raw,{name:"AES-GCM"},false,["encrypt","decrypt"]);
-          state=await decryptData(file); saved=clone(state); role=who; view="overall"; render(); return;
+          state=await decryptBox(file.data); saved=clone(state); token=await readToken(file); tokenBad=false; role=who; view="overall"; render(); refresh(); return;
         }
       }
     }catch(e){}
@@ -384,6 +423,7 @@ function render(){
       <div class="wordmark"><span class="p">PRE</span><span class="q">QUATE</span></div>
       <div class="client">Encee Aromatics Private Limited</div>
       <div class="spacer"></div>
+      <div class="savestate" id="savestate"></div>
       <div class="who">Signed in as <b>${esc(nameOf(role))}</b></div>
       <button class="link" id="logout">Sign out</button>
     </div>
@@ -393,22 +433,52 @@ function render(){
     </nav>
   </header>
   <main id="main"></main>`;
-  $("#logout").onclick=()=>{ if(dirty()&&!confirm("You have unsaved changes. Sign out and discard them?")) return;
-    role=null; dk=null; dkRaw=null; state=null; saved=null; pendingSlots={}; render(); };
+  $("#logout").onclick=async()=>{
+    if(dirty()&&token&&!tokenBad){ clearTimeout(saveTimer); await flush(); }
+    if(dirty()&&!confirm("Some changes have not been saved yet. Sign out anyway?")) return;
+    role=null; dk=null; dkRaw=null; state=null; saved=null; token=null; pendingSlots={}; pendingSecret=null; render(); };
   document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{ view=b.dataset.v; render(); });
   view==="overall"?renderOverall():renderMine();
-  renderSaveBar();
+  scheduleSave();
 }
 function footer(){
-  const last = state.updatedAt ? `Last saved ${esc(new Date(state.updatedAt).toLocaleString("en-IN",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"}))}${state.updatedBy?` by ${esc(nameOf(state.updatedBy))}`:""}. ` : "";
-  return `<p class="muted" style="font-size:12.5px;margin-top:14px">${last}<button class="link" id="reload">Reload latest</button></p>
-  ${!editor()?`<div class="notice">You are viewing the tracker. To record updates here, <button class="link" id="addkey" style="padding:0">add an access key</button>, or send your update to Prequate.</div>`:""}`;
+  const last = state.updatedAt ? `Last saved ${esc(new Date(state.updatedAt).toLocaleString("en-IN",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"}))}${state.updatedBy?` by ${esc(nameOf(state.updatedBy))}`:""}.` : "";
+  const msg = !token && role!=="prequate" ? "Updates are switched off until Prequate turns on auto-save. You can still view everything."
+    : tokenBad && role!=="prequate" ? "Changes cannot be saved right now. Prequate has been asked to renew the connection." : "";
+  return `<p class="muted" style="font-size:12.5px;margin-top:14px">${last}</p>${msg?`<div class="notice">${msg}</div>`:""}`;
 }
-function bindFooter(){
-  $("#reload").onclick=reloadLatest;
-  const a=$("#addkey"); if(a) a.onclick=async()=>{ if(await askToken()) render(); };
+function bindFooter(){}
+function setupHTML(){
+  if(role!=="prequate" || (token && !tokenBad)) return "";
+  return `<section class="setup">
+    <h3>${tokenBad?"Renew auto-save":"Switch on auto-save"}</h3>
+    <p>${tokenBad?esc(saveErr)+" ":""}A one time step that takes about two minutes. After this, every change by anyone saves on its own. Nothing else is needed from Nanjaraj or Ankitha.</p>
+    <ol>
+      <li><a href="${esc(tokenLink())}" target="_blank" rel="noopener">Open the GitHub permission page</a>. The name, expiry and permission are already filled in.</li>
+      <li>Under <b>Repository access</b>, choose <b>Only select repositories</b> and pick <b>${esc(repo().repo||"your tracker repository")}</b>.</li>
+      <li>Scroll to the bottom, click <b>Generate token</b>, and copy the code that appears.</li>
+      <li>Paste it here.<div class="row" style="margin-top:8px"><input type="password" id="tk" placeholder="github_pat_..." autocomplete="off" style="flex:1;min-width:220px"><button class="btn" id="tk-go">Switch on auto-save</button></div></li>
+    </ol>
+  </section>`;
 }
-
+function bindSetup(){
+  const b=$("#tk-go"); if(!b) return;
+  b.onclick=async()=>{
+    const v=$("#tk").value.trim(); if(!v){ toast("Paste the code from GitHub first."); return; }
+    b.disabled=true; b.textContent="Checking";
+    try{ await apiGet(v); }
+    catch(e){
+      b.disabled=false; b.textContent="Switch on auto-save";
+      const s=e&&e.status;
+      toast(s===401?"GitHub did not accept that code. Copy the whole code and paste it again."
+        : s===403||s===404?"That code cannot reach "+repo().repo+". On GitHub, make sure you picked it under Repository access."
+        : "Could not reach GitHub. Check the connection and try again.");
+      return;
+    }
+    token=v; tokenBad=false; saveErr=""; pendingSecret=await encryptBox({token:v});
+    render(); scheduleSave(0); toast("Auto-save is on. Every change now saves on its own.");
+  };
+}
 /* ---------- Overall ---------- */
 function renderOverall(){
   const T=state.tasks, n=T.length, cnt=s=>T.filter(t=>t.status===s).length;
@@ -444,7 +514,7 @@ function renderOverall(){
       ${t.note?`<div style="grid-column:1/-1"><h4>Latest update${t.updatedBy?` from ${esc(nameOf(t.updatedBy))}`:""}${t.updated?`, ${esc(new Date(t.updated).toLocaleDateString("en-IN",{day:"numeric",month:"short"}))}`:""}</h4><p>${esc(t.note)}</p></div>`:""}
     </div></td></tr>`:""}`;
   }).join("");
-  $("#main").innerHTML=`
+  $("#main").innerHTML=`${setupHTML()}
   <section class="head"><h2>${esc(state.fn)}</h2><p>Handover of finance, accounts and banking from Nanjaraj to Ankitha. ${n} tasks tracked.</p></section>
   <section class="progress" aria-label="Project progress">
     <div class="big"><strong>${pct}%</strong><span>${done} of ${n} tasks complete${late?`, <b style="color:var(--warn)">${late} overdue</b>`:""}</span></div>
@@ -461,13 +531,13 @@ function renderOverall(){
     <tbody>${rows}</tbody></table></div>
   ${footer()}
   ${isP?adminHTML():""}`;
-  document.querySelectorAll("[data-open]").forEach(b=>b.onclick=()=>{ openRow=openRow===b.dataset.open?null:b.dataset.open; renderOverall(); renderSaveBar(); });
+  document.querySelectorAll("[data-open]").forEach(b=>b.onclick=()=>{ openRow=openRow===b.dataset.open?null:b.dataset.open; renderOverall(); updateStatus(); });
   document.querySelectorAll("#main [data-f]").forEach(el=>el.onchange=()=>setField(el.dataset.id,el.dataset.f,el.value));
   document.querySelectorAll("[data-del]").forEach(b=>b.onclick=()=>{ if(!confirm("Remove this task from the tracker?")) return; state.tasks=state.tasks.filter(t=>t.id!==b.dataset.del); renumber(); render(); });
   document.querySelectorAll("[data-e]").forEach(el=>el.onchange=()=>setField(el.dataset.id,el.dataset.e,el.tagName==="SELECT"?el.value:el.value.trim(),true));
   document.querySelectorAll("[data-mv]").forEach(b=>b.onclick=()=>{ const i=state.tasks.findIndex(t=>t.id===b.dataset.id), j=i+(+b.dataset.mv);
     if(j<0||j>=state.tasks.length) return; [state.tasks[i],state.tasks[j]]=[state.tasks[j],state.tasks[i]]; renumber(); render(); });
-  bindFooter();
+  bindSetup();
   if(isP) bindAdmin();
 }
 function editRow(t){
@@ -492,7 +562,7 @@ function setField(id,f,v,quiet){
   t[f]=v;
   if(f==="primary"&&v&&t.secondary===v) t.secondary="";
   if(f==="status"||f==="note"){ t.updated=new Date().toISOString(); t.updatedBy=role; }
-  if(quiet){ renderSaveBar(); return; }
+  if(quiet){ scheduleSave(); return; }
   render();
 }
 function renumber(){ state.tasks.forEach((t,i)=>t.no=i+1); }
@@ -513,9 +583,9 @@ function adminHTML(){
           ${core?"":`<button class="btn ghost" data-prm="${p.id}" ${used?'disabled title="Reassign their tasks first"':""}>Remove</button>`}</div>`; }).join("")}
       <div class="row" style="margin-top:14px"><input type="text" id="np-name" placeholder="Add a person, e.g. Accounts head" style="flex:1;min-width:160px"><button class="btn" id="np-add">Add person</button></div>
     </div>
-    <div class="box"><h3>Access PINs</h3><p>Set a new 6 digit PIN for any person. It takes effect once you save. Keep a record of every PIN: a lost PIN cannot be recovered, only replaced by Prequate.</p>
+    <div class="box"><h3>Access PINs</h3><p>Set a new 6 digit PIN for any person. Keep a record of every PIN: a lost PIN cannot be recovered, only replaced by Prequate.</p>
       ${state.people.filter(p=>file.slots[p.id]).map(p=>`<div class="row"><label for="pin-${p.id}">${esc(p.name)}</label><input type="text" inputmode="numeric" maxlength="6" id="pin-${p.id}" placeholder="New PIN" style="width:92px"><button class="btn ghost" data-pin="${p.id}">Set PIN</button>${pendingSlots[p.id]?`<span class="muted" style="font-size:12px">Changed, not saved</span>`:""}</div>`).join("")}
-      <p style="margin-top:18px">GitHub access key: ${token?`added on this device. <button class="link" id="tk-forget" style="padding:0">Remove it</button>`:`not added. <button class="link" id="tk-add" style="padding:0">Add key</button>`}</p>
+      <p style="margin-top:18px">Auto-save: ${token&&!tokenBad?`on. <a class="link" style="padding:0" href="${esc(tokenLink())}" target="_blank" rel="noopener">Create a replacement permission</a> before it expires, then use <button class="link" id="tk-renew" style="padding:0">Renew</button>.`:"off. Switch it on at the top of this page."}</p>
     </div>
   </section>`;
 }
@@ -523,7 +593,7 @@ function bindAdmin(){
   $("#nt-add").onclick=()=>{
     const title=$("#nt-title").value.trim(); if(!title){ toast("Give the task a name first."); $("#nt-title").focus(); return; }
     state.tasks.push({id:"t"+Date.now().toString(36),no:0,title,outcome:$("#nt-outcome").value.trim(),facilitates:$("#nt-fac").value.trim(),type:$("#nt-type").value,primary:"",secondary:"",due:"",status:"Not started",note:"",updated:"",updatedBy:"",custom:true});
-    renumber(); render(); toast("Task added. Save to publish it.");
+    renumber(); render(); toast("Task added.");
   };
   document.querySelectorAll("[data-pin]").forEach(b=>b.onclick=async()=>{
     const id=b.dataset.pin, v=$("#pin-"+id).value.trim();
@@ -534,16 +604,15 @@ function bindAdmin(){
     for(const [who,slot] of Object.entries(slots)){
       if(who!==id && await tryUnwrap(pk,who,slot)){ toast("That PIN is already in use by "+nameOf(who)+". Choose another."); render(); return; }
     }
-    pendingSlots[id]=await wrap(pk,id); render(); toast("New PIN set for "+nameOf(id)+". Save to apply it.");
+    pendingSlots[id]=await wrap(pk,id); render(); toast("New PIN set for "+nameOf(id)+".");
   });
   document.querySelectorAll("[data-pn]").forEach(el=>el.onchange=()=>{ const v=el.value.trim(); const p=state.people.find(x=>x.id===el.dataset.pn);
     if(!v){ el.value=p.name; toast("A name cannot be blank."); return; } p.name=v; render(); });
   document.querySelectorAll("[data-prm]").forEach(b=>b.onclick=()=>{ state.people=state.people.filter(p=>p.id!==b.dataset.prm); render(); });
   $("#np-add").onclick=()=>{ const v=$("#np-name").value.trim(); if(!v){ toast("Enter a name first."); return; }
     if(state.people.some(p=>p.name.toLowerCase()===v.toLowerCase())){ toast(v+" is already on the list."); return; }
-    state.people.push({id:"p"+Date.now().toString(36), name:v}); render(); toast(v+" added. Save to keep it."); };
-  const f=$("#tk-forget"); if(f) f.onclick=()=>{ forgetToken(); render(); toast("Access key removed from this device."); };
-  const a=$("#tk-add"); if(a) a.onclick=async()=>{ if(await askToken()) render(); };
+    state.people.push({id:"p"+Date.now().toString(36), name:v}); render(); toast(v+" added."); };
+  const rn=$("#tk-renew"); if(rn) rn.onclick=()=>{ tokenBad=true; saveErr=""; render(); window.scrollTo(0,0); };
 }
 
 /* ---------- My tasks ---------- */
@@ -575,19 +644,7 @@ function renderMine(){
   bindFooter();
 }
 
-/* ---------- Save bar ---------- */
-function renderSaveBar(){
-  let bar=document.querySelector(".savebar");
-  if(!bar){ bar=document.createElement("div"); bar.className="savebar";
-    bar.innerHTML=`<div class="in"><div class="txt">You have unsaved changes. Save to share them with everyone.</div><button class="btn ghost" id="discard">Discard</button><button class="btn" id="save">Save changes</button></div>`;
-    document.body.appendChild(bar);
-    $("#discard",bar).onclick=()=>{ state=clone(saved); pendingSlots={}; render(); };
-    $("#save",bar).onclick=save; }
-  bar.classList.toggle("on", dirty());
-  const b=$("#save",bar); b.disabled=saving; b.textContent=saving?"Saving":"Save changes";
-}
 
-window.addEventListener("beforeunload",e=>{ if(dirty()){ e.preventDefault(); e.returnValue=""; } });
 render();
 })();
 
