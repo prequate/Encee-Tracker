@@ -9,7 +9,7 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23161616'/%3E%3Ccircle cx='16' cy='16' r='6' fill='%23FF9633'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
   --paper:#FFFFFF; --ink:#161616; --grey:#707070; --soft:#9A9A9A; --line:#E8E8E8; --mist:#F6F6F5;
@@ -47,7 +47,6 @@ a{color:var(--deep); font-weight:600; text-underline-offset:3px}
 /* Wordmark */
 .wm{font-weight:700; font-size:19px; letter-spacing:.02em; line-height:1; white-space:nowrap}
 .wm span:first-child{color:var(--grey)} .wm span:last-child{color:var(--orange)}
-.wm-light span{color:#FFFFFF !important}
 
 /* Avatars */
 .av{display:inline-grid; place-items:center; width:38px; height:38px; border-radius:50%; font-weight:700; font-size:15px; flex:none}
@@ -90,27 +89,40 @@ select.sel{appearance:none; -webkit-appearance:none; padding-right:30px; cursor:
 .due.late{color:var(--late); font-weight:600}
 
 /* ---------- Login ---------- */
-.gate{min-height:100vh; min-height:100dvh; display:grid; grid-template-columns:minmax(320px,5fr) 7fr}
-.gate-side{background:var(--night); color:#fff; padding:48px 56px; display:flex; flex-direction:column; justify-content:space-between; gap:40px}
-.gate-client{color:var(--nighttext); font-size:14px; margin-bottom:14px}
+.gate{min-height:100vh; min-height:100dvh; display:grid; grid-template-columns:minmax(320px,5fr) 7fr; background:#FFFFFF; color:#161616}
+.gate-side{position:relative; isolation:isolate; overflow:hidden; background:#161616; color:#fff; padding:48px 56px;
+  display:flex; flex-direction:column; justify-content:space-between; gap:40px}
+.gate-side::before{content:""; position:absolute; inset:0; z-index:-1; pointer-events:none;
+  background:url("https://images.unsplash.com/photo-1490750967868-88aa4486c946?auto=format&fit=crop&w=1400&q=60") center 70%/cover no-repeat;
+  filter:grayscale(1) brightness(.85); opacity:.12;
+  -webkit-mask-image:linear-gradient(to top,#000 0%,rgba(0,0,0,.55) 45%,transparent 80%);
+  mask-image:linear-gradient(to top,#000 0%,rgba(0,0,0,.55) 45%,transparent 80%)}
+.gate-side .wm{font-size:20px}
+.gate-client{color:#B5B5B5; font-size:14px; margin-bottom:14px}
 .gate-title{font-family:var(--serif); font-weight:400; font-size:clamp(34px,4vw,52px); line-height:1.08; letter-spacing:0; max-width:14ch}
-.gate-sub{color:var(--nighttext); font-size:15px; margin-top:14px; max-width:34ch}
-.gate-line{display:flex; align-items:center; gap:14px; margin-top:36px; font-size:13px; color:var(--nighttext); max-width:380px}
-.gate-line i{flex:1; height:2px; background:linear-gradient(90deg,var(--nightline) 0 40%, var(--orange) 40% 100%); border-radius:2px; position:relative}
+.gate-line{display:flex; align-items:center; gap:14px; margin-top:36px; font-size:13px; color:#B5B5B5; max-width:380px}
+.gate-line i{flex:1; height:2px; background:#333333; border-radius:2px; position:relative}
+.gate-line i::before{content:""; position:absolute; left:40%; right:0; top:0; bottom:0; background:var(--orange); border-radius:2px}
 .gate-line i::after{content:""; position:absolute; left:40%; top:50%; width:10px; height:10px; margin:-5px 0 0 -5px; border-radius:50%; background:var(--orange)}
-.gate-foot{color:var(--nighttext); font-size:12.5px}
-.gate-main{display:grid; place-items:center; padding:40px 24px}
-.gate-form{width:100%; max-width:380px}
-.gate-form h2{font-size:26px; margin-bottom:8px}
-.gate-form p{color:var(--grey); margin-bottom:30px}
+.gate-foot{color:#B5B5B5; font-size:12.5px}
+.gate-main{position:relative; display:grid; grid-template-rows:1fr auto; justify-items:center; padding:48px 40px 32px; background:#F6F6F5}
+.gate-stack{align-self:center; width:100%; max-width:500px}
+.gate-form{width:100%; background:#FFFFFF; border:1px solid #E6E6E6; border-radius:16px; padding:44px 44px 30px}
+.gate-notes{list-style:none; margin:34px 0 0; padding:0; display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:28px}
+.gate-notes li{display:flex; flex-direction:column; font-size:13px; line-height:1.5}
+.gate-notes li::before{content:""; width:18px; height:2px; margin-bottom:14px; background:var(--orange); border-radius:2px}
+.gate-notes b{font-weight:600; color:#161616; font-size:13.5px; margin-bottom:4px}
+.gate-notes span{color:#7A7A7A}
+.gate-note{font-size:12.5px; color:#9A9A9A; text-align:center; max-width:500px; margin:32px 0 0; line-height:1.6}
+.gate-form h2{font-size:26px; margin-bottom:10px; color:#161616}
+.gate-form p{color:#707070; margin-bottom:30px; line-height:1.6}
 .wm-mobile{display:none; margin-bottom:40px}
-.pin{display:grid; grid-template-columns:repeat(6,minmax(0,1fr)); gap:10px}
-.pin input{width:100%; min-width:0; height:62px; min-height:0; padding:0; text-align:center; font-size:26px; font-weight:600; border-radius:8px; border-width:1.5px}
-.pin input:disabled{opacity:.5}
+.pin{display:grid; grid-template-columns:repeat(6,minmax(0,1fr)); gap:12px}
+.pin input{width:100%; min-width:0; height:62px; min-height:0; padding:0; text-align:center; font-size:26px; font-weight:600;
+  border-radius:8px; border:1.5px solid #E8E8E8; background:#FFFFFF; color:#161616}
+.pin input:focus{border-color:var(--orange); box-shadow:0 0 0 3px #FFF4EA; outline:none}
 .pin.bad input{border-color:var(--late)}
-.pin.bad{animation:shake .32s}
-@keyframes shake{25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
-.gate-msg{min-height:22px; margin-top:14px; font-size:13.5px; color:var(--grey)}
+.gate-msg{min-height:20px; margin-top:12px; font-size:13.5px; color:#707070}
 .gate-msg.bad{color:var(--late)}
 
 /* ---------- Top bar ---------- */
@@ -284,6 +296,11 @@ select.sel{appearance:none; -webkit-appearance:none; padding-right:30px; cursor:
   .gate{grid-template-columns:1fr}
   .gate-side{display:none}
   .wm-mobile{display:block}
+  .gate-main{padding:28px 18px 22px}
+  .gate-form{padding:30px 22px 24px}
+  .gate-notes{grid-template-columns:1fr; gap:18px; margin-top:28px}
+  .gate-notes li{display:grid; grid-template-columns:18px 1fr; column-gap:14px}
+  .gate-notes li::before{grid-row:span 2; margin:10px 0 0}
   .row.head{display:none}
   .row{grid-template-columns:30px 1fr 1fr; grid-template-areas:"no t t" ". p s" ". d st"; gap:12px 14px; padding:18px 0}
   .r-no{grid-area:no; align-self:start; padding-top:2px} .r-title{grid-area:t}
@@ -516,27 +533,36 @@ const fmtDate = (iso,opts) => new Date(iso).toLocaleDateString("en-IN",opts||{da
 let filt = {status:"all", person:""};
 const MARK = {"Not started":4, "In progress":50, "On hold":50, "Done":96};
 
+
 /* ---------- Login ---------- */
 async function renderGate(){
   $("#app").innerHTML=`
   <div class="gate">
     <aside class="gate-side">
-      <div class="wm wm-light" aria-label="Prequate"><span>PRE</span><span>QUATE</span></div>
+      <div class="wm" aria-label="Prequate"><span>PRE</span><span>QUATE</span></div>
       <div class="gate-copy">
-        <p class="gate-client">Encee Aromatics Private Limited</p>
+        <p class="gate-client">Encee Aromatics</p>
         <h1 class="gate-title">Transition Tracker</h1>
         <div class="gate-line" aria-hidden="true"><span>Nanjaraj</span><i></i><span>Ankitha</span></div>
       </div>
       <p class="gate-foot">Prepared by Prequate Advisory</p>
     </aside>
     <main class="gate-main">
-      <form class="gate-form" id="pinform" autocomplete="off" onsubmit="return false">
-        <div class="wm wm-mobile" aria-label="Prequate"><span>PRE</span><span>QUATE</span></div>
-        <h2>Enter your PIN</h2>
-        <p>Your six digit PIN opens the tracker and the tasks that sit with you.</p>
-        <div class="pin" id="pin">${[0,1,2,3,4,5].map(i=>`<input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" autocomplete="one-time-code" aria-label="PIN digit ${i+1}">`).join("")}</div>
-        <div class="gate-msg" id="pinmsg" role="status"></div>
-      </form>
+      <div class="gate-stack">
+        <form class="gate-form" id="pinform" autocomplete="off" onsubmit="return false">
+          <div class="wm wm-mobile" aria-label="Prequate"><span>PRE</span><span>QUATE</span></div>
+          <h2>Enter your PIN</h2>
+          <p>Your six digit PIN opens the tracker and the tasks that sit with you.</p>
+          <div class="pin" id="pin">${[0,1,2,3,4,5].map(i=>`<input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" autocomplete="one-time-code" aria-label="PIN digit ${i+1}">`).join("")}</div>
+          <div class="gate-msg" id="pinmsg" role="status"></div>
+        </form>
+        <ul class="gate-notes">
+          <li><b>Your tasks</b><span>What is pending with you, earliest deadline first.</span></li>
+          <li><b>Quick updates</b><span>Set a status or add a note in one tap.</span></li>
+          <li><b>Always saved</b><span>Every change saves on its own, for everyone.</span></li>
+        </ul>
+      </div>
+      <p class="gate-note">Only Nanjaraj, Ankitha and Prequate hold a PIN for this tracker. Forgotten yours? Prequate can set a new one.</p>
     </main>
   </div>`;
   const boxes=[...document.querySelectorAll("#pin input")], msg=$("#pinmsg");
@@ -546,6 +572,7 @@ async function renderGate(){
   let busy=false;
   const digits=()=>boxes.map(b=>b.value).join("");
   const fill=(start,str)=>{ str.replace(/\D/g,"").split("").slice(0,6-start).forEach((ch,k)=>boxes[start+k].value=ch); };
+  const grow=()=>{ boxes.forEach(b=>b.classList.toggle("has",!!b.value)); };
   const nextFocus=()=>{ const n=boxes.find(x=>!x.value); (n||boxes[5]).focus(); if(!n) check(); };
   boxes.forEach((b,i)=>{
     b.addEventListener("focus",()=>{ const first=boxes.findIndex(x=>!x.value); if(first>-1 && first<i) boxes[first].focus(); else b.select(); });
@@ -553,12 +580,12 @@ async function renderGate(){
       if(busy) return;
       const v=b.value.replace(/\D/g,""); b.value="";
       if(v) fill(i,v);
-      $("#pin").classList.remove("bad"); say("");
+      $("#pin").classList.remove("bad"); say(""); grow();
       if(v) nextFocus();
     });
-    b.addEventListener("paste",e=>{ const t=(e.clipboardData||window.clipboardData)?.getData("text")||""; if(/\d/.test(t)){ e.preventDefault(); boxes.forEach(x=>x.value=""); fill(0,t); nextFocus(); } });
+    b.addEventListener("paste",e=>{ const t=(e.clipboardData||window.clipboardData)?.getData("text")||""; if(/\d/.test(t)){ e.preventDefault(); boxes.forEach(x=>x.value=""); fill(0,t); grow(); nextFocus(); } });
     b.addEventListener("keydown",e=>{
-      if(e.key==="Backspace"){ if(b.value){ b.value=""; } else if(i>0){ boxes[i-1].value=""; boxes[i-1].focus(); } e.preventDefault(); }
+      if(e.key==="Backspace"){ if(b.value){ b.value=""; } else if(i>0){ boxes[i-1].value=""; boxes[i-1].focus(); } grow(); e.preventDefault(); }
       else if(e.key==="ArrowLeft"&&i>0) boxes[i-1].focus();
       else if(e.key==="ArrowRight"&&i<5) boxes[i+1].focus();
       else if(e.key==="Enter") check();
@@ -577,11 +604,13 @@ async function renderGate(){
         if(raw){
           dkRaw=raw; dk=await crypto.subtle.importKey("raw",raw,{name:"AES-GCM"},false,["encrypt","decrypt"]);
           state=await decryptBox(file.data); saved=clone(state); token=await readToken(file); tokenBad=false;
-          role=who; view=who==="prequate"?"overall":"mine"; filt={status:"all",person:""}; busy=false; render(); refresh(); return;
+          role=who; view=who==="prequate"?"overall":"mine"; filt={status:"all",person:""}; busy=false;
+          render(); refresh(); window.scrollTo(0,0); return;
         }
       }
     }catch(e){}
     busy=false; boxes.forEach(b=>b.value=""); $("#pin").classList.add("bad");
+    grow();
     say("That PIN does not match. Check the digits and try again.",true); boxes[0].focus();
   }
 }
