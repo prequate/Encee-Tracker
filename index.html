@@ -4,188 +4,308 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#161616">
 <title>Encee Aromatics | Transition Tracker</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23161616'/%3E%3Ccircle cx='16' cy='16' r='6' fill='%23FF9633'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#FFFFFF; --surface:#FFFFFF; --soft:#F6F6F6; --line:#E6E6E6;
-  --ink:#161616; --grey:#707070; --orange:#FF9633; --deep:#F96900;
-  --ok:#2E7D4F; --okbg:#E9F4EE; --warn:#B3261E; --warnbg:#FBEAE9; --hold:#8A6D00; --holdbg:#FBF3DC;
-  --tint:#FFF3E8;
+  --paper:#FFFFFF; --ink:#161616; --grey:#707070; --soft:#9A9A9A; --line:#E8E8E8; --mist:#F6F6F5;
+  --orange:#FF9633; --deep:#F96900; --tint:#FFF4EA;
+  --late:#C0392B; --latebg:#FCEDEB; --hold:#9A6B00; --holdbg:#FBF1D9;
+  --night:#161616; --night2:#222222; --nightline:#333333; --nighttext:#B5B5B5;
+  --sans:"Product Sans","Open Sans",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+  --serif:"DM Serif Display",Georgia,"Times New Roman",serif;
+  --r:10px; --r-sm:6px;
   box-sizing:border-box;
   padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
 }
-@media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]){
-    --bg:#161616; --surface:#1E1E1E; --soft:#232323; --line:#333333;
-    --ink:#F2F2F2; --grey:#A3A3A3; --tint:#2A1E14;
-    --okbg:#16291E; --warnbg:#2E1715; --holdbg:#2B2410; --ok:#6CC08E; --warn:#F08A82; --hold:#E0C25A;
-  }
-}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --paper:#161616; --ink:#F1F1F1; --grey:#A8A8A8; --soft:#808080; --line:#2E2E2E; --mist:#1E1E1E; --tint:#2A1D12;
+  --latebg:#2E1714; --late:#F08A7E; --holdbg:#2A220F; --hold:#E3C261; --night:#0F0F0F; --night2:#1A1A1A; --nightline:#2C2C2C;
+}}
 :root[data-theme="dark"]{
-  --bg:#161616; --surface:#1E1E1E; --soft:#232323; --line:#333333;
-  --ink:#F2F2F2; --grey:#A3A3A3; --tint:#2A1E14;
-  --okbg:#16291E; --warnbg:#2E1715; --holdbg:#2B2410; --ok:#6CC08E; --warn:#F08A82; --hold:#E0C25A;
+  --paper:#161616; --ink:#F1F1F1; --grey:#A8A8A8; --soft:#808080; --line:#2E2E2E; --mist:#1E1E1E; --tint:#2A1D12;
+  --latebg:#2E1714; --late:#F08A7E; --holdbg:#2A220F; --hold:#E3C261; --night:#0F0F0F; --night2:#1A1A1A; --nightline:#2C2C2C;
 }
 *,*::before,*::after{box-sizing:inherit}
-html{height:100%; scroll-padding-top:env(safe-area-inset-top,0px)}
-body{margin:0; min-height:100%; background:var(--bg); color:var(--ink);
-  font-family:"Product Sans","Open Sans",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
-  font-weight:300; font-size:15px; line-height:1.55; -webkit-font-smoothing:antialiased}
-button,input,select,textarea{font:inherit; color:inherit}
-button{cursor:pointer}
-:focus-visible{outline:2px solid var(--deep); outline-offset:2px}
-.wordmark{font-weight:700; letter-spacing:.02em; font-size:18px; line-height:1}
-.wordmark .p{color:var(--grey)} .wordmark .q{color:var(--orange)}
+html{height:100%; scroll-padding-top:calc(env(safe-area-inset-top,0px) + 120px)}
+body{margin:0; min-height:100%; background:var(--paper); color:var(--ink); font-family:var(--sans); font-weight:300;
+  font-size:15px; line-height:1.55; -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility}
+button,input,select,textarea{font:inherit; color:inherit; font-weight:400}
+button{cursor:pointer; background:none; border:0; padding:0}
+button:disabled{cursor:not-allowed; opacity:.45}
+:focus-visible{outline:2px solid var(--deep); outline-offset:2px; border-radius:4px}
+h1,h2,h3,h4{font-weight:700; margin:0; letter-spacing:-.01em}
+p{margin:0}
+a{color:var(--deep); font-weight:600; text-underline-offset:3px}
+.muted{color:var(--soft)}
+.wrap{max-width:1160px; margin:0 auto; padding-left:28px; padding-right:28px}
 
-/* Login */
-.gate{min-height:100vh; min-height:100dvh; display:grid; place-items:center; padding:32px 20px}
-.gate-card{width:100%; max-width:400px}
-.gate h1{font-size:28px; font-weight:700; line-height:1.2; margin:40px 0 6px}
-.gate p{color:var(--grey); margin:0 0 32px}
-.pin{display:flex; gap:10px; margin-bottom:14px}
-.pin input{width:100%; aspect-ratio:1/1.15; max-width:54px; text-align:center; font-size:24px; font-weight:600;
-  border:1.5px solid var(--line); border-radius:8px; background:var(--surface)}
-.pin input:focus{border-color:var(--orange); outline:none; box-shadow:0 0 0 3px var(--tint)}
-.pin.bad input{border-color:var(--warn)}
-.gate .msg{min-height:22px; font-size:13px; color:var(--warn)}
-.gate .foot{margin-top:48px; font-size:12px; color:var(--grey)}
+/* Wordmark */
+.wm{font-weight:700; font-size:19px; letter-spacing:.02em; line-height:1; white-space:nowrap}
+.wm span:first-child{color:var(--grey)} .wm span:last-child{color:var(--orange)}
+.wm-light span{color:#FFFFFF !important}
 
-/* App */
-.top{position:sticky; top:env(safe-area-inset-top,0px); z-index:5; background:var(--bg); border-bottom:1px solid var(--line)}
-.top-in{max-width:1120px; margin:0 auto; padding:16px 24px; display:flex; align-items:center; gap:20px; flex-wrap:wrap}
-.top .client{color:var(--grey); font-size:13px; border-left:1px solid var(--line); padding-left:16px}
-.top .spacer{flex:1}
-.who{font-size:13px; color:var(--grey)} .who b{color:var(--ink); font-weight:600}
-.link{background:none; border:0; color:var(--deep); font-weight:600; font-size:13px; padding:4px}
-.tabs{max-width:1120px; margin:0 auto; padding:0 24px; display:flex; gap:28px}
-.tab{background:none; border:0; padding:12px 0; font-weight:600; color:var(--grey); border-bottom:2px solid transparent; font-size:14px}
+/* Avatars */
+.av{display:inline-grid; place-items:center; width:38px; height:38px; border-radius:50%; font-weight:700; font-size:15px; flex:none}
+.av.sm{width:26px; height:26px; font-size:12px}
+.av.xs{width:22px; height:22px; font-size:11px}
+.t-grey{background:#707070; color:#fff} .t-orange{background:var(--orange); color:#161616} .t-ink{background:#161616; color:#fff}
+.t-line{background:var(--mist); color:var(--grey); box-shadow:inset 0 0 0 1px var(--line)}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .t-ink{background:#F1F1F1; color:#161616} }
+
+/* Buttons and fields */
+.btn{display:inline-flex; align-items:center; justify-content:center; gap:8px; min-height:40px; padding:0 18px; border-radius:var(--r-sm);
+  background:var(--ink); color:var(--paper); font-weight:600; font-size:14px; white-space:nowrap; transition:background .15s}
+.btn:hover:not(:disabled){background:var(--deep); color:#fff}
+.btn.ghost{background:transparent; color:var(--ink); box-shadow:inset 0 0 0 1px var(--line)}
+.btn.ghost:hover:not(:disabled){box-shadow:inset 0 0 0 1px var(--ink); background:transparent; color:var(--ink)}
+.btn.danger{background:transparent; color:var(--late); box-shadow:inset 0 0 0 1px var(--line)}
+.btn.danger:hover{background:var(--latebg); color:var(--late)}
+.txtbtn{color:var(--deep); font-weight:600; font-size:13.5px}
+.txtbtn:hover{text-decoration:underline; text-underline-offset:3px}
+input[type=text],input[type=password],input[type=date],textarea,.sel{width:100%; border:1px solid var(--line); border-radius:var(--r-sm); background:var(--paper);
+  padding:8px 11px; font-size:14px; min-height:40px; transition:border-color .15s, box-shadow .15s}
+textarea{resize:vertical; line-height:1.5}
+input:focus,textarea:focus,.sel:focus{outline:none; border-color:var(--orange); box-shadow:0 0 0 3px var(--tint)}
+select.sel{appearance:none; -webkit-appearance:none; padding-right:30px; cursor:pointer;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23707070' stroke-width='1.5'/%3E%3C/svg%3E");
+  background-repeat:no-repeat; background-position:right 11px center}
+::placeholder{color:var(--soft); opacity:1}
+
+/* Status */
+.pill{display:inline-flex; align-items:center; gap:6px; font-size:12.5px; font-weight:600; padding:4px 11px 4px 9px; border-radius:20px; white-space:nowrap}
+.pill::before{content:""; width:7px; height:7px; border-radius:50%; background:currentColor}
+.st-ns{color:var(--grey); background:var(--mist)}
+.st-ip{color:var(--deep); background:var(--tint)}
+.st-oh{color:var(--hold); background:var(--holdbg)}
+.st-dn{color:var(--paper); background:var(--ink)}
+.sel.st{font-weight:600; border-color:transparent}
+.sel.st.st-dn{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23ffffff' stroke-width='1.5'/%3E%3C/svg%3E")}
+.due{display:block; font-size:12.5px; color:var(--grey); font-weight:400}
+.due.soon{color:var(--deep); font-weight:600}
+.due.late{color:var(--late); font-weight:600}
+
+/* ---------- Login ---------- */
+.gate{min-height:100vh; min-height:100dvh; display:grid; grid-template-columns:minmax(320px,5fr) 7fr}
+.gate-side{background:var(--night); color:#fff; padding:48px 56px; display:flex; flex-direction:column; justify-content:space-between; gap:40px}
+.gate-client{color:var(--nighttext); font-size:14px; margin-bottom:14px}
+.gate-title{font-family:var(--serif); font-weight:400; font-size:clamp(34px,4vw,52px); line-height:1.08; letter-spacing:0; max-width:14ch}
+.gate-line{display:flex; align-items:center; gap:14px; margin-top:36px; font-size:13px; color:var(--nighttext); max-width:380px}
+.gate-line i{flex:1; height:2px; background:linear-gradient(90deg,var(--nightline) 0 40%, var(--orange) 40% 100%); border-radius:2px; position:relative}
+.gate-line i::after{content:""; position:absolute; left:40%; top:50%; width:10px; height:10px; margin:-5px 0 0 -5px; border-radius:50%; background:var(--orange)}
+.gate-foot{color:var(--nighttext); font-size:12.5px}
+.gate-main{display:grid; place-items:center; padding:40px 24px}
+.gate-form{width:100%; max-width:380px}
+.gate-form h2{font-size:26px; margin-bottom:8px}
+.gate-form p{color:var(--grey); margin-bottom:30px}
+.wm-mobile{display:none; margin-bottom:40px}
+.pin{display:grid; grid-template-columns:repeat(6,minmax(0,1fr)); gap:10px}
+.pin input{width:100%; min-width:0; height:62px; min-height:0; padding:0; text-align:center; font-size:26px; font-weight:600; border-radius:8px; border-width:1.5px}
+.pin input:disabled{opacity:.5}
+.pin.bad input{border-color:var(--late)}
+.pin.bad{animation:shake .32s}
+@keyframes shake{25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.gate-msg{min-height:22px; margin-top:14px; font-size:13.5px; color:var(--grey)}
+.gate-msg.bad{color:var(--late)}
+
+/* ---------- Top bar ---------- */
+.bar{position:sticky; top:env(safe-area-inset-top,0px); z-index:20; background:var(--paper); border-bottom:1px solid var(--line)}
+.bar-in{max-width:1160px; margin:0 auto; padding:16px 28px 12px; display:flex; align-items:center; gap:18px}
+.bar-client{color:var(--grey); font-size:13.5px; padding-left:18px; border-left:1px solid var(--line)}
+.bar-gap{flex:1}
+.bar-user{display:inline-flex; align-items:center; gap:9px; font-weight:600; font-size:14px}
+.savestate{font-size:12.5px; color:var(--grey); padding:4px 11px; border-radius:20px; background:var(--mist); white-space:nowrap}
+.savestate.ok{color:var(--grey)}
+.savestate.ok::before{content:""; display:inline-block; width:7px; height:7px; border-radius:50%; background:#3F9A64; margin-right:7px; vertical-align:1px}
+.savestate.warn{color:var(--late); background:var(--latebg)}
+.tabs{max-width:1160px; margin:0 auto; padding:0 28px; display:flex; gap:32px}
+.tab{padding:10px 0 12px; font-weight:600; font-size:14.5px; color:var(--grey); border-bottom:2px solid transparent; display:inline-flex; align-items:center; gap:8px}
+.tab:hover{color:var(--ink)}
 .tab[aria-selected="true"]{color:var(--ink); border-bottom-color:var(--orange)}
-main{max-width:1120px; margin:0 auto; padding:32px 24px 120px}
+.count{background:var(--orange); color:#161616; font-size:11.5px; font-weight:700; min-width:20px; height:20px; padding:0 6px; border-radius:10px; display:inline-grid; place-items:center}
 
-.head h2{font-size:26px; font-weight:700; margin:0 0 4px; line-height:1.25}
-.head p{margin:0; color:var(--grey)}
+/* ---------- Setup ---------- */
+.setup{margin-top:28px !important; display:grid; grid-template-columns:1fr; gap:14px; padding-top:24px !important; padding-bottom:24px !important;
+  border:1.5px solid var(--orange); border-radius:var(--r); background:var(--tint); max-width:1104px}
+.setup h3{font-size:18px; margin-bottom:4px}
+.setup p{color:var(--grey); font-size:14px; max-width:72ch}
+.setup ol{margin:0; padding-left:20px; font-size:14px; line-height:1.8; max-width:80ch}
+.setup-row{display:flex; gap:10px; flex-wrap:wrap}
+.setup-row input{flex:1; min-width:220px; width:auto}
 
-/* Progress line: the memorable element */
-.progress{margin:28px 0 36px}
-.bar{display:flex; height:10px; border-radius:5px; overflow:hidden; background:var(--soft)}
-.bar span{display:block; height:100%}
-.legend{display:flex; flex-wrap:wrap; gap:8px 22px; margin-top:12px; font-size:13px; color:var(--grey)}
-.legend i{display:inline-block; width:9px; height:9px; border-radius:2px; margin-right:6px; vertical-align:0}
-.big{display:flex; align-items:baseline; gap:10px; margin-bottom:14px}
-.big strong{font-size:44px; font-weight:700; line-height:1; color:var(--ink)}
-.big span{color:var(--grey)}
-
-.owners{display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); border:1px solid var(--line); border-radius:10px; overflow:hidden; margin-bottom:40px}
-.owner{padding:18px 20px; border-right:1px solid var(--line)}
-.owner:last-child{border-right:0}
-.owner .n{font-weight:600; font-size:14px}
-.owner .c{font-size:30px; font-weight:700; line-height:1.2; margin-top:6px}
-.owner .s{font-size:12.5px; color:var(--grey)}
-.owner .s.late{color:var(--warn); font-weight:600}
-
-h3.sec{font-size:15px; font-weight:700; margin:0 0 12px}
-.scroll{overflow-x:auto; border:1px solid var(--line); border-radius:10px}
-table{width:100%; border-collapse:collapse; min-width:820px; font-size:14px}
-th{text-align:left; font-weight:400; font-size:12.5px; color:var(--grey); padding:12px 14px; border-bottom:1px solid var(--line); background:var(--soft); white-space:nowrap}
-td{padding:14px; border-bottom:1px solid var(--line); vertical-align:top}
-tr:last-child td{border-bottom:0}
-td.no{color:var(--grey); width:36px; font-weight:400}
-.t-title{font-weight:600; line-height:1.35}
-.t-type{font-size:12px; color:var(--grey); margin-top:2px}
-.expand{background:none; border:0; padding:0; text-align:left; width:100%}
-.detail td{background:var(--soft); padding:0}
-.detail .d{padding:16px 18px 18px 50px; display:grid; grid-template-columns:1fr 1fr; gap:20px; font-size:13.5px}
-.detail h4{margin:0 0 4px; font-size:12.5px; font-weight:600; color:var(--grey)}
-.detail p{margin:0}
-.muted{color:var(--grey)}
-
-.pill{display:inline-block; font-size:12px; font-weight:600; padding:3px 9px; border-radius:20px; white-space:nowrap}
-.st-ns{background:var(--soft); color:var(--grey)}
-.st-ip{background:var(--tint); color:var(--deep)}
-.st-dn{background:var(--okbg); color:var(--ok)}
-.st-oh{background:var(--holdbg); color:var(--hold)}
-.due{font-size:13px; white-space:nowrap}
-.due small{display:block; font-size:12px; color:var(--grey)}
-.due small.late{color:var(--warn); font-weight:600}
-.due small.soon{color:var(--deep); font-weight:600}
-
-select,input[type=date],input[type=text],textarea{border:1px solid var(--line); border-radius:6px; background:var(--surface); padding:6px 8px; font-size:13px; font-weight:400; max-width:100%}
-textarea{width:100%; resize:vertical; min-height:54px}
-
-/* My tasks */
-.cards{display:grid; gap:14px}
-.task{border:1px solid var(--line); border-radius:10px; padding:20px 22px; display:grid; grid-template-columns:1fr auto; gap:6px 24px; background:var(--surface)}
-.task.late{border-left:3px solid var(--warn)}
-.task.soon{border-left:3px solid var(--orange)}
-.task .role{font-size:12px; color:var(--grey)}
-.task h4{margin:2px 0 8px; font-size:17px; font-weight:600; line-height:1.35}
-.task .oc{color:var(--grey); font-size:13.5px; margin:0; max-width:64ch}
-.task .side{text-align:right; display:flex; flex-direction:column; align-items:flex-end; gap:8px}
-.task .ctrl{grid-column:1/-1; display:flex; gap:12px; flex-wrap:wrap; align-items:flex-start; margin-top:10px; padding-top:14px; border-top:1px solid var(--line)}
-.task .ctrl .note{flex:1; min-width:220px}
-.task .meta{font-size:12px; color:var(--grey); grid-column:1/-1}
-.empty{border:1px dashed var(--line); border-radius:10px; padding:28px; color:var(--grey); text-align:center}
-details.done-list{margin-top:28px}
-details.done-list summary{cursor:pointer; font-weight:600; font-size:14px; color:var(--grey)}
-
-/* Admin */
-.admin{margin-top:48px; display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:24px}
-.box{border:1px solid var(--line); border-radius:10px; padding:20px 22px}
-.box h3{margin:0 0 4px; font-size:15px; font-weight:700}
-.box p{margin:0 0 14px; color:var(--grey); font-size:13px}
-.row{display:flex; gap:10px; align-items:center; margin-bottom:10px; flex-wrap:wrap}
-.row label{width:74px; font-size:13px; font-weight:400}
-.btn{border:0; border-radius:6px; padding:9px 16px; font-weight:600; font-size:13.5px; background:var(--orange); color:#161616}
-.btn:hover{background:var(--deep); color:#fff}
-.btn.ghost{background:none; border:1px solid var(--line); color:var(--ink)}
-.btn.ghost:hover{border-color:var(--orange); color:var(--deep); background:none}
-.btn[disabled]{opacity:.5; cursor:not-allowed}
-
-.savebar{position:fixed; left:0; right:0; bottom:0; z-index:10; background:var(--ink); color:var(--bg);
-  padding:14px 24px calc(14px + env(safe-area-inset-bottom,0px)); display:none}
-.savebar.on{display:block}
-.savebar .in{max-width:1120px; margin:0 auto; display:flex; gap:16px; align-items:center; flex-wrap:wrap}
-.savebar .txt{flex:1; font-size:14px}
-.savebar .btn.ghost{color:var(--bg); border-color:#555}
-.notice{margin-top:24px; font-size:13px; color:var(--grey); border-left:3px solid var(--orange); padding:8px 14px; background:var(--tint)}
-.toast{position:fixed; left:50%; transform:translateX(-50%); bottom:calc(84px + env(safe-area-inset-bottom,0px)); background:var(--ink); color:var(--bg); padding:10px 18px; border-radius:6px; font-size:13.5px; z-index:20; display:none}
-.toast.on{display:block}
-
-@media (max-width:760px){
-  .admin{grid-template-columns:1fr}
-  .detail .d{grid-template-columns:1fr; padding-left:18px}
-  .task{grid-template-columns:1fr}
-  .task .side{text-align:left; align-items:flex-start; flex-direction:row; gap:12px}
-  .top .client{display:none}
-  .owner{border-right:0; border-bottom:1px solid var(--line)}
+/* ---------- Handover band ---------- */
+.hand{background:var(--night); color:#fff; margin-top:28px}
+.hand-in{padding-top:44px; padding-bottom:36px}
+.hand-head{display:flex; justify-content:space-between; align-items:flex-end; gap:32px; flex-wrap:wrap}
+.hand-head h1{font-size:clamp(26px,3vw,34px); line-height:1.15}
+.hand-head p{color:var(--nighttext); margin-top:6px}
+.hand-score{text-align:right}
+.hand-score .big{font-family:var(--serif); font-size:clamp(56px,7vw,84px); line-height:.9; display:block}
+.hand-score .big small{font-size:.42em; color:var(--nighttext); margin-left:4px}
+.hand-score .cap{font-size:13px; color:var(--nighttext)}
+.track{position:relative; margin-top:40px; padding-top:calc(var(--lanes) * 40px + 8px)}
+.track-rail{height:4px; border-radius:2px; background:var(--nightline); position:relative; overflow:hidden}
+.track-fill{position:absolute; inset:0 auto 0 0; background:var(--orange); border-radius:2px}
+.mk{position:absolute; left:var(--x); bottom:calc(var(--lane) * 40px + 44px); transform:translateX(-50%);
+  width:32px; height:32px; border-radius:50%; font-size:13px; font-weight:700; display:grid; place-items:center;
+  background:var(--night2); color:#fff; box-shadow:inset 0 0 0 1.5px #555}
+.mk::after{content:""; position:absolute; left:50%; top:100%; width:1px; height:8px; background:#444}
+.mk.st-ip{background:var(--orange); color:#161616; box-shadow:none}
+.mk.st-oh{background:var(--night2); color:#E3C261; box-shadow:inset 0 0 0 1.5px #E3C261}
+.mk.st-dn{background:#fff; color:#161616; box-shadow:none}
+.mk.mk-late{box-shadow:0 0 0 3px var(--night), 0 0 0 5px #E0705F}
+.mk:hover{transform:translateX(-50%) scale(1.08)}
+.track-ends{display:flex; justify-content:space-between; align-items:center; margin-top:14px; font-size:13.5px; color:var(--nighttext); font-weight:400}
+.track-ends > span{display:inline-flex; align-items:center; gap:9px}
+.track-ends > span:first-child,.track-ends > span:last-child{color:#fff; font-weight:600}
+.track-ends .mid{font-size:12.5px}
+.hand-facts{display:flex; flex-wrap:wrap; gap:10px; margin-top:30px; padding-top:22px; border-top:1px solid var(--nightline)}
+.fact{color:var(--nighttext); font-size:14px; padding:7px 14px; border-radius:20px; box-shadow:inset 0 0 0 1px var(--nightline); text-align:left}
+.fact b{color:#fff; font-weight:700; margin-right:4px}
+.fact:hover{box-shadow:inset 0 0 0 1px #777}
+.fact.is-late{box-shadow:inset 0 0 0 1px #E0705F}
+.fact.is-late b{color:#F4A094}
+@media (prefers-reduced-motion:no-preference){
+  .mk{animation:slide .7s cubic-bezier(.2,.8,.2,1) both}
+  .track-fill{animation:grow .9s cubic-bezier(.2,.8,.2,1) both}
+  @keyframes slide{from{left:0; opacity:0}}
+  @keyframes grow{from{width:0}}
 }
-@media (prefers-reduced-motion:no-preference){ .bar span{transition:width .6s ease} }
-</style>
-<style>
-dialog{border:1px solid var(--line); border-radius:12px; padding:24px; max-width:460px; width:calc(100% - 40px); background:var(--surface); color:var(--ink)}
-dialog::backdrop{background:rgba(22,22,22,.55)}
-dialog h3{margin:0 0 6px; font-size:17px; font-weight:700}
-dialog p{margin:0 0 14px; color:var(--grey); font-size:13.5px}
-dialog input[type=password]{width:100%; padding:9px 10px; font-size:14px}
-dialog .acts{display:flex; gap:10px; justify-content:flex-end; margin-top:18px}
-dialog label.chk{display:flex; gap:8px; align-items:center; font-size:13px; margin-top:12px}
-.loading{color:var(--grey); font-size:13px}
-</style>
 
-<style>
-.d.edit input[type=text],.d.edit textarea{width:100%;font-size:13.5px}.d.edit{padding-left:18px}
-.savestate{font-size:12.5px;color:var(--grey);padding:3px 10px;border-radius:20px;background:var(--soft)}
-.savestate.ok{color:var(--ok);background:var(--okbg)}
-.savestate.warn{color:var(--warn);background:var(--warnbg)}
-.setup{border:1.5px solid var(--orange);border-radius:10px;padding:22px 24px;margin-bottom:36px;background:var(--tint)}
-.setup h3{margin:0 0 4px;font-size:17px;font-weight:700}
-.setup p{margin:0 0 12px;color:var(--grey);font-size:13.5px;max-width:70ch}
-.setup ol{margin:0;padding-left:20px;font-size:14px;line-height:1.7}
-.setup a{color:var(--deep);font-weight:600}
-@media (max-width:760px){.savestate{order:5}}
+/* ---------- People ---------- */
+.people{display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:0; margin-top:28px !important}
+.person{display:flex; gap:14px; align-items:flex-start; text-align:left; padding:18px 18px 18px 0; border-bottom:2px solid transparent; transition:border-color .15s}
+.person + .person{padding-left:18px; border-left:1px solid var(--line)}
+.person:hover{border-bottom-color:var(--line)}
+.person.on{border-bottom-color:var(--orange)}
+.pi{display:flex; flex-direction:column}
+.pn{font-weight:700; font-size:15px}
+.ps{font-size:14px; color:var(--grey)} .ps b{color:var(--ink); font-size:18px; font-weight:700; margin-right:3px}
+.px{font-size:12.5px; color:var(--soft); margin-top:2px}
+.px.late{color:var(--late); font-weight:600}
+
+/* ---------- Task list ---------- */
+.list{margin-top:36px}
+.list-head{display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap; margin-bottom:14px}
+.list-head h2{font-size:20px}
+.chips{display:flex; flex-wrap:wrap; gap:6px}
+.chip{font-size:13px; font-weight:600; color:var(--grey); padding:6px 13px; border-radius:20px; box-shadow:inset 0 0 0 1px var(--line)}
+.chip:hover{color:var(--ink)}
+.chip.on{background:var(--ink); color:var(--paper); box-shadow:none}
+.list-note{font-size:13.5px; color:var(--grey); margin-bottom:12px}
+.grid{border-top:1.5px solid var(--ink)}
+.row{display:grid; grid-template-columns:34px minmax(220px,2.6fr) minmax(130px,1fr) minmax(130px,1fr) minmax(150px,1.1fr) minmax(140px,1fr);
+  gap:14px; align-items:center; padding:14px 0; border-bottom:1px solid var(--line)}
+.row.head{font-size:12.5px; color:var(--grey); font-weight:400; padding:10px 0}
+.row.is-late .r-no{color:var(--late); font-weight:700}
+.row.open{border-bottom-color:transparent}
+.r-no{color:var(--soft); font-size:14px; font-weight:600; padding-left:4px}
+.r-title{text-align:left; display:flex; flex-direction:column; gap:2px}
+.r-title .tt{font-weight:600; font-size:15px; line-height:1.35}
+.r-title .ty{font-size:12.5px; color:var(--soft); display:flex; gap:10px}
+.r-title .more{color:var(--deep); font-weight:600}
+.r-title:hover .tt{color:var(--deep)}
+.r-cell{font-size:14px; min-width:0}
+.r-cell .sel{min-height:36px; padding-top:6px; padding-bottom:6px; font-size:13.5px}
+.who{display:inline-flex; align-items:center; gap:8px; font-weight:400}
+.dt{display:block}
+.detail{display:grid; grid-template-columns:1fr 1fr; gap:22px 32px; padding:18px 22px 22px 48px; background:var(--mist); border-bottom:1px solid var(--line); border-radius:0 0 var(--r) var(--r)}
+.detail h4{font-size:12.5px; font-weight:600; color:var(--grey); margin-bottom:5px}
+.detail p{font-size:14px; max-width:62ch}
+.detail .span{grid-column:1/-1}
+.detail.edit label{display:block}
+.acts{display:flex; gap:10px; flex-wrap:wrap; align-items:center}
+.grow{flex:1}
+.empty{padding:40px 20px; text-align:center; color:var(--grey); border-bottom:1px solid var(--line)}
+.empty.big{border:1px dashed var(--line); border-radius:var(--r); padding:56px 24px}
+.foot{font-size:12.5px; color:var(--soft); margin-top:14px}
+.notice{margin-top:16px; font-size:13.5px; color:var(--ink); background:var(--tint); border-left:3px solid var(--orange); padding:10px 14px; border-radius:0 var(--r-sm) var(--r-sm) 0; max-width:80ch}
+
+/* ---------- Settings ---------- */
+.admin{margin-top:64px; padding-bottom:40px}
+.admin h2{font-size:20px; margin-bottom:16px}
+.panels{display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:20px}
+.panel{background:var(--mist); border-radius:var(--r); padding:22px; display:flex; flex-direction:column; gap:10px}
+.panel h3{font-size:16px}
+.panel > p{font-size:13.5px; color:var(--grey); margin-bottom:6px}
+.panel .small{font-size:13px; color:var(--grey); margin-top:8px}
+.line{display:flex; gap:10px; align-items:center}
+.line input{flex:1; width:auto; min-width:0}
+.line .sel{width:auto}
+.line.add{margin-top:6px}
+.lbl{width:78px; flex:none; font-size:14px; font-weight:600}
+.pinfield{max-width:120px}
+.tag{font-size:12px; color:var(--grey); white-space:nowrap}
+
+/* ---------- My tasks ---------- */
+.mine{padding-top:40px; padding-bottom:64px}
+.mine-head h1{font-size:clamp(26px,3.2vw,36px); line-height:1.15; max-width:24ch}
+.mine-head p{color:var(--grey); margin-top:8px}
+.mine-head .late{color:var(--late); font-weight:600}
+.tasks{display:flex; flex-direction:column; margin-top:28px; border-top:1.5px solid var(--ink)}
+.task{display:grid; grid-template-columns:88px 1fr; gap:24px; padding:26px 0; border-bottom:1px solid var(--line)}
+.leaf{border-radius:var(--r); background:var(--mist); height:88px; display:flex; flex-direction:column; align-items:center; justify-content:center; line-height:1}
+.leaf .d{font-family:var(--serif); font-size:40px}
+.leaf .m{font-size:12.5px; color:var(--grey); margin-top:6px; font-weight:600}
+.leaf.soon{background:var(--tint)} .leaf.soon .d{color:var(--deep)}
+.leaf.late{background:var(--latebg)} .leaf.late .d,.leaf.late .m{color:var(--late)}
+.leaf.none .d{font-family:var(--sans); font-size:15px; font-weight:600; color:var(--grey)}
+.leaf.none .m{margin-top:3px; font-weight:400}
+.task-body{min-width:0; max-width:760px}
+.task-meta{font-size:12.5px; color:var(--grey); display:flex; flex-wrap:wrap; align-items:center; gap:8px}
+.sep{width:3px; height:3px; border-radius:50%; background:var(--soft)}
+.task h3{font-size:19px; line-height:1.3; margin:6px 0 8px}
+.task-oc{color:var(--grey); font-size:14.5px; max-width:68ch}
+.task .due{margin-top:8px; font-size:13.5px}
+.task-note{margin-top:10px; font-size:14px; border-left:2px solid var(--line); padding-left:12px}
+.task .pill{margin-top:14px}
+.task.is-done h3{color:var(--grey)}
+.seg{display:inline-flex; flex-wrap:wrap; margin-top:16px; border-radius:var(--r-sm); box-shadow:inset 0 0 0 1px var(--line); padding:3px; gap:3px}
+.seg button{font-size:13.5px; font-weight:600; color:var(--grey); padding:8px 14px; border-radius:4px}
+.seg button:hover:not(.on){color:var(--ink); background:var(--mist)}
+.seg button.on{box-shadow:none}
+.note{margin-top:12px; max-width:640px}
+.done{margin-top:36px}
+.done summary{cursor:pointer; font-weight:600; font-size:14.5px; color:var(--grey); padding:6px 0}
+.done summary:hover{color:var(--ink)}
+
+/* ---------- Toast ---------- */
+.toast{position:fixed; left:50%; bottom:calc(28px + env(safe-area-inset-bottom,0px)); transform:translate(-50%,12px); opacity:0; pointer-events:none;
+  background:var(--ink); color:var(--paper); padding:11px 18px; border-radius:8px; font-size:14px; font-weight:400; z-index:50; transition:opacity .2s, transform .2s; max-width:calc(100% - 40px)}
+.toast.on{opacity:1; transform:translate(-50%,0)}
+
+/* ---------- Small screens ---------- */
+@media (max-width:900px){
+  .gate{grid-template-columns:1fr}
+  .gate-side{display:none}
+  .wm-mobile{display:block}
+  .row.head{display:none}
+  .row{grid-template-columns:30px 1fr 1fr; grid-template-areas:"no t t" ". p s" ". d st"; gap:12px 14px; padding:18px 0}
+  .r-no{grid-area:no; align-self:start; padding-top:2px} .r-title{grid-area:t}
+  .r-p{grid-area:p} .r-s{grid-area:s} .r-d{grid-area:d} .r-st{grid-area:st}
+  .r-cell::before{content:attr(data-l); display:block; font-size:12px; color:var(--soft); margin-bottom:3px}
+  .detail{grid-template-columns:1fr; padding-left:18px}
+}
+@media (max-width:640px){
+  .wrap{padding-left:18px; padding-right:18px}
+  .bar-in{padding:14px 18px 10px; gap:12px; flex-wrap:wrap}
+  .bar-client,.bar-user span:last-child{display:none}
+  .savestate{order:4; font-size:12px}
+  .tabs{padding:0 18px; gap:24px}
+  .hand-score{text-align:left}
+  .track-ends .mid{display:none}
+  .person,.person + .person{padding:14px 0; border-left:0; border-bottom:1px solid var(--line)}
+  .task{grid-template-columns:64px 1fr; gap:16px}
+  .leaf{height:68px} .leaf .d{font-size:30px}
+  .seg{display:grid; grid-template-columns:1fr 1fr; width:100%}
+  .row{grid-template-columns:24px 1fr 1fr; gap:10px 12px}
+  .setup{width:calc(100% - 36px)}
+}
+
 </style>
 </head>
 <body>
@@ -251,9 +371,13 @@ async function readToken(f){ try{ return f.secret ? (await decryptBox(f.secret))
 
 /* ---------- GitHub ---------- */
 function apiUrl(){ const r=repo(); return `https://api.github.com/repos/${r.owner}/${r.repo}/contents/${r.path}`; }
+function timedFetch(url,opts,ms){
+  const ctl=new AbortController(); const t=setTimeout(()=>ctl.abort(), ms||8000);
+  return fetch(url,Object.assign({},opts,{signal:ctl.signal})).finally(()=>clearTimeout(t));
+}
 async function apiGet(tk,anon){
   const h={Accept:"application/vnd.github+json"}; const k=anon?null:(tk||token); if(k) h.Authorization="Bearer "+k;
-  const res=await fetch(apiUrl()+"?ref="+encodeURIComponent(repo().branch)+"&t="+Date.now(),{headers:h,cache:"no-store"});
+  const res=await timedFetch(apiUrl()+"?ref="+encodeURIComponent(repo().branch)+"&t="+Date.now(),{headers:h,cache:"no-store"});
   if(!res.ok) throw {status:res.status};
   const j=await res.json(); return {sha:j.sha, file:JSON.parse(b64utf8(j.content))};
 }
@@ -263,7 +387,7 @@ async function loadFresh(){
   return loadPublic();
 }
 async function loadPublic(){
-  const res=await fetch(repo().path+"?t="+Date.now(),{cache:"no-store"});
+  const res=await timedFetch(repo().path+"?t="+Date.now(),{cache:"no-store"},12000);
   if(!res.ok) throw new Error("load"); return res.json();
 }
 
@@ -382,101 +506,144 @@ function toast(msg){ const t=$("#toast"); t.textContent=msg; t.classList.add("on
 const editor = () => role==="prequate" || (!!token && !tokenBad);
 function canEditTask(t){ return editor() && (role==="prequate" || t.primary===role || t.secondary===role); }
 
+/* ---------- UI helpers ---------- */
+const initial = n => (n||"?").trim().charAt(0).toUpperCase();
+const ROLE_TONE = {nanjaraj:"t-grey", ankitha:"t-orange", prequate:"t-ink"};
+const tone = id => ROLE_TONE[id] || "t-line";
+const avatar = (id,size) => `<span class="av ${tone(id)} ${size||""}" aria-hidden="true">${esc(initial(nameOf(id)))}</span>`;
+const fmtDate = (iso,opts) => new Date(iso).toLocaleDateString("en-IN",opts||{day:"numeric",month:"short"});
+let filt = {status:"all", person:""};
+const MARK = {"Not started":4, "In progress":50, "On hold":50, "Done":96};
+
 /* ---------- Login ---------- */
 async function renderGate(){
-  document.querySelector(".savebar")?.remove();
   $("#app").innerHTML=`
-  <div class="gate"><div class="gate-card">
-    <div class="wordmark" aria-label="Prequate"><span class="p">PRE</span><span class="q">QUATE</span></div>
-    <h1>Encee Aromatics transition tracker</h1>
-    <p>Enter your 6 digit PIN to see the project and the tasks pending with you.</p>
-    <form id="pinform" autocomplete="off" onsubmit="return false">
-      <div class="pin" id="pin">${[0,1,2,3,4,5].map(i=>`<input inputmode="numeric" pattern="[0-9]*" maxlength="1" aria-label="PIN digit ${i+1}">`).join("")}</div>
-      <div class="msg" id="pinmsg"></div>
-    </form>
-    <div class="foot">Prepared by Prequate Advisory for Encee Aromatics Private Limited.</div>
-  </div></div>`;
-  const boxes=[...document.querySelectorAll("#pin input")];
-  const msg=$("#pinmsg");
-  if(!file){
-    boxes.forEach(b=>b.disabled=true); msg.className="msg loading"; msg.textContent="Loading tracker";
-    try{ file=await loadFresh(); }catch(e){ msg.className="msg"; msg.textContent="The tracker data could not be loaded. Check that data.json sits next to this page and refresh."; return; }
-    boxes.forEach(b=>b.disabled=false); msg.className="msg"; msg.textContent="";
-  }
-  boxes[0].focus();
+  <div class="gate">
+    <aside class="gate-side">
+      <div class="wm wm-light" aria-label="Prequate"><span>PRE</span><span>QUATE</span></div>
+      <div class="gate-copy">
+        <p class="gate-client">Encee Aromatics Private Limited</p>
+        <h1 class="gate-title">Finance, Accounts &amp; Banking handover</h1>
+        <div class="gate-line" aria-hidden="true"><span>Nanjaraj</span><i></i><span>Ankitha</span></div>
+      </div>
+      <p class="gate-foot">Prepared by Prequate Advisory</p>
+    </aside>
+    <main class="gate-main">
+      <form class="gate-form" id="pinform" autocomplete="off" onsubmit="return false">
+        <div class="wm wm-mobile" aria-label="Prequate"><span>PRE</span><span>QUATE</span></div>
+        <h2>Enter your PIN</h2>
+        <p>Your six digit PIN opens the tracker and the tasks that sit with you.</p>
+        <div class="pin" id="pin">${[0,1,2,3,4,5].map(i=>`<input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" autocomplete="one-time-code" aria-label="PIN digit ${i+1}">`).join("")}</div>
+        <div class="gate-msg" id="pinmsg" role="status"></div>
+      </form>
+    </main>
+  </div>`;
+  const boxes=[...document.querySelectorAll("#pin input")], msg=$("#pinmsg");
+  const say=(t,bad)=>{ msg.textContent=t; msg.classList.toggle("bad",!!bad); };
+  // Start loading the data in the background; the PIN boxes stay usable throughout.
+  getReady().catch(()=>{});
+  let busy=false;
+  const digits=()=>boxes.map(b=>b.value).join("");
+  const fill=(start,str)=>{ str.replace(/\D/g,"").split("").slice(0,6-start).forEach((ch,k)=>boxes[start+k].value=ch); };
+  const nextFocus=()=>{ const n=boxes.find(x=>!x.value); (n||boxes[5]).focus(); if(!n) check(); };
   boxes.forEach((b,i)=>{
+    b.addEventListener("focus",()=>{ const first=boxes.findIndex(x=>!x.value); if(first>-1 && first<i) boxes[first].focus(); else b.select(); });
     b.addEventListener("input",()=>{
-      const v=b.value.replace(/\D/g,"");
-      if(v.length>1) v.split("").slice(0,6-i).forEach((ch,k)=>boxes[i+k].value=ch); else b.value=v;
-      $("#pin").classList.remove("bad"); msg.className="msg"; msg.textContent="";
-      const next=boxes.find(x=>!x.value); if(next) next.focus(); else check();
+      if(busy) return;
+      const v=b.value.replace(/\D/g,""); b.value="";
+      if(v) fill(i,v);
+      $("#pin").classList.remove("bad"); say("");
+      if(v) nextFocus();
     });
-    b.addEventListener("keydown",e=>{ if(e.key==="Backspace"&&!b.value&&i>0){ boxes[i-1].focus(); boxes[i-1].value=""; } });
+    b.addEventListener("paste",e=>{ const t=(e.clipboardData||window.clipboardData)?.getData("text")||""; if(/\d/.test(t)){ e.preventDefault(); boxes.forEach(x=>x.value=""); fill(0,t); nextFocus(); } });
+    b.addEventListener("keydown",e=>{
+      if(e.key==="Backspace"){ if(b.value){ b.value=""; } else if(i>0){ boxes[i-1].value=""; boxes[i-1].focus(); } e.preventDefault(); }
+      else if(e.key==="ArrowLeft"&&i>0) boxes[i-1].focus();
+      else if(e.key==="ArrowRight"&&i<5) boxes[i+1].focus();
+      else if(e.key==="Enter") check();
+    });
   });
+  setTimeout(()=>boxes[0].focus(),50);
   async function check(){
-    const pin=boxes.map(b=>b.value).join(""); if(pin.length<6) return;
-    boxes.forEach(b=>b.disabled=true); msg.className="msg loading"; msg.textContent="Checking PIN";
+    const pin=digits(); if(pin.length<6||busy) return;
+    busy=true; say("Checking");
+    try{ await getReady(); }
+    catch(e){ busy=false; say("The tracker data did not load. Check the internet connection, then press Enter to try again.",true); boxes[5].focus(); return; }
     try{
       const pk=await pinKey(pin);
       for(const [who,slot] of Object.entries(file.slots)){
         const raw=await tryUnwrap(pk,who,slot);
         if(raw){
           dkRaw=raw; dk=await crypto.subtle.importKey("raw",raw,{name:"AES-GCM"},false,["encrypt","decrypt"]);
-          state=await decryptBox(file.data); saved=clone(state); token=await readToken(file); tokenBad=false; role=who; view="overall"; render(); refresh(); return;
+          state=await decryptBox(file.data); saved=clone(state); token=await readToken(file); tokenBad=false;
+          role=who; view=who==="prequate"?"overall":"mine"; filt={status:"all",person:""}; busy=false; render(); refresh(); return;
         }
       }
     }catch(e){}
-    boxes.forEach(b=>{b.disabled=false; b.value="";}); $("#pin").classList.add("bad");
-    msg.className="msg"; msg.textContent="That PIN does not match. Check the digits and try again."; boxes[0].focus();
+    busy=false; boxes.forEach(b=>b.value=""); $("#pin").classList.add("bad");
+    say("That PIN does not match. Check the digits and try again.",true); boxes[0].focus();
   }
 }
+let gateLoad=null;
+function getReady(){
+  if(file) return Promise.resolve(file);
+  if(!gateLoad) gateLoad=loadFresh().then(f=>(file=f)).catch(e=>{ gateLoad=null; throw e; });
+  return gateLoad;
+}
+window.addEventListener("error",e=>{ const m=$("#pinmsg"); if(m && !role){ m.textContent="Something went wrong loading the page. Refresh to try again."; m.classList.add("bad"); } });
 
 /* ---------- Shell ---------- */
 function render(){
   if(!role) return renderGate();
-  const pendingMine=state.tasks.filter(t=>(t.primary===role||t.secondary===role)&&t.status!=="Done").length;
+  const mineN=state.tasks.filter(t=>(t.primary===role||t.secondary===role)&&t.status!=="Done").length;
   $("#app").innerHTML=`
-  <header class="top">
-    <div class="top-in">
-      <div class="wordmark"><span class="p">PRE</span><span class="q">QUATE</span></div>
-      <div class="client">Encee Aromatics Private Limited</div>
-      <div class="spacer"></div>
-      <div class="savestate" id="savestate"></div>
-      <div class="who">Signed in as <b>${esc(nameOf(role))}</b></div>
-      <button class="link" id="logout">Sign out</button>
+  <header class="bar">
+    <div class="bar-in">
+      <div class="wm" aria-label="Prequate"><span>PRE</span><span>QUATE</span></div>
+      <span class="bar-client">Encee Aromatics</span>
+      <span class="bar-gap"></span>
+      <span class="savestate" id="savestate"></span>
+      <span class="bar-user">${avatar(role,"sm")}<span>${esc(nameOf(role))}</span></span>
+      <button class="txtbtn" id="logout">Sign out</button>
     </div>
-    <nav class="tabs" role="tablist">
+    <nav class="tabs" role="tablist" aria-label="Views">
       <button class="tab" role="tab" aria-selected="${view==="overall"}" data-v="overall">Overall project</button>
-      <button class="tab" role="tab" aria-selected="${view==="mine"}" data-v="mine">My tasks (${pendingMine})</button>
+      <button class="tab" role="tab" aria-selected="${view==="mine"}" data-v="mine">My tasks${mineN?`<span class="count">${mineN}</span>`:""}</button>
     </nav>
   </header>
-  <main id="main"></main>`;
+  <div id="main"></div>`;
   $("#logout").onclick=async()=>{
     if(dirty()&&token&&!tokenBad){ clearTimeout(saveTimer); await flush(); }
     if(dirty()&&!confirm("Some changes have not been saved yet. Sign out anyway?")) return;
     role=null; dk=null; dkRaw=null; state=null; saved=null; token=null; pendingSlots={}; pendingSecret=null; render(); };
-  document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{ view=b.dataset.v; render(); });
+  document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{ view=b.dataset.v; openRow=null; render(); window.scrollTo(0,0); });
   view==="overall"?renderOverall():renderMine();
   scheduleSave();
 }
-function footer(){
-  const last = state.updatedAt ? `Last saved ${esc(new Date(state.updatedAt).toLocaleString("en-IN",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"}))}${state.updatedBy?` by ${esc(nameOf(state.updatedBy))}`:""}.` : "";
-  const msg = !token && role!=="prequate" ? "Updates are switched off until Prequate turns on auto-save. You can still view everything."
-    : tokenBad && role!=="prequate" ? "Changes cannot be saved right now. Prequate has been asked to renew the connection." : "";
-  return `<p class="muted" style="font-size:12.5px;margin-top:14px">${last}</p>${msg?`<div class="notice">${msg}</div>`:""}`;
+function lastSaved(){
+  if(!state.updatedAt) return "";
+  return `Last saved ${esc(fmtDate(state.updatedAt,{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"}))}${state.updatedBy?` by ${esc(nameOf(state.updatedBy))}`:""}`;
 }
-function bindFooter(){}
+function viewNotice(){
+  if(!token && role!=="prequate") return "Updates are switched off until Prequate turns on auto-save. You can still see everything.";
+  if(tokenBad && role!=="prequate") return "Changes cannot be saved right now. Prequate has been asked to renew the connection.";
+  return "";
+}
+
+/* ---------- Setup (Prequate, one time) ---------- */
 function setupHTML(){
   if(role!=="prequate" || (token && !tokenBad)) return "";
-  return `<section class="setup">
-    <h3>${tokenBad?"Renew auto-save":"Switch on auto-save"}</h3>
-    <p>${tokenBad?esc(saveErr)+" ":""}A one time step that takes about two minutes. After this, every change by anyone saves on its own. Nothing else is needed from Nanjaraj or Ankitha.</p>
+  return `<section class="setup wrap">
+    <div>
+      <h3>${tokenBad?"Renew auto-save":"Switch on auto-save"}</h3>
+      <p>${tokenBad&&saveErr?esc(saveErr)+" ":""}A one time step of about two minutes. After it, every change by anyone saves on its own.</p>
+    </div>
     <ol>
-      <li><a href="${esc(tokenLink())}" target="_blank" rel="noopener">Open the GitHub permission page</a>. The name, expiry and permission are already filled in.</li>
-      <li>Under <b>Repository access</b>, choose <b>Only select repositories</b> and pick <b>${esc(repo().repo||"your tracker repository")}</b>.</li>
-      <li>Scroll to the bottom, click <b>Generate token</b>, and copy the code that appears.</li>
-      <li>Paste it here.<div class="row" style="margin-top:8px"><input type="password" id="tk" placeholder="github_pat_..." autocomplete="off" style="flex:1;min-width:220px"><button class="btn" id="tk-go">Switch on auto-save</button></div></li>
+      <li><a href="${esc(tokenLink())}" target="_blank" rel="noopener">Open the GitHub permission page</a>. The name and permission are filled in. Set Expiration to a date a year out.</li>
+      <li>Under Repository access, choose Only select repositories and pick ${esc(repo().repo||"the tracker repository")}.</li>
+      <li>Click Generate token, copy the code and paste it here.</li>
     </ol>
+    <div class="setup-row"><input type="password" id="tk" placeholder="github_pat_" autocomplete="off" aria-label="GitHub code"><button class="btn" id="tk-go">Switch on auto-save</button></div>
   </section>`;
 }
 function bindSetup(){
@@ -486,93 +653,157 @@ function bindSetup(){
     b.disabled=true; b.textContent="Checking";
     try{ await apiGet(v); }
     catch(e){
-      b.disabled=false; b.textContent="Switch on auto-save";
-      const s=e&&e.status;
+      b.disabled=false; b.textContent="Switch on auto-save"; const s=e&&e.status;
       toast(s===401?"GitHub did not accept that code. Copy the whole code and paste it again."
-        : s===403||s===404?"That code cannot reach "+repo().repo+". On GitHub, make sure you picked it under Repository access."
-        : "Could not reach GitHub. Check the connection and try again.");
+        : s===403||s===404?"That code cannot reach "+repo().repo+". On GitHub, check it is picked under Repository access."
+        : "GitHub could not be reached. Check the connection and try again.");
       return;
     }
     token=v; tokenBad=false; saveErr=""; pendingSecret=await encryptBox({token:v});
     render(); scheduleSave(0); toast("Auto-save is on. Every change now saves on its own.");
   };
 }
+
 /* ---------- Overall ---------- */
-function renderOverall(){
-  const T=state.tasks, n=T.length, cnt=s=>T.filter(t=>t.status===s).length;
-  const done=cnt("Done"), ip=cnt("In progress"), oh=cnt("On hold"), ns=cnt("Not started");
-  const pct=n?Math.round(done/n*100):0, w=x=>n?(x/n*100)+"%":"0%";
+function handoverHTML(){
+  const T=state.tasks, n=T.length, done=T.filter(t=>t.status==="Done").length;
   const late=T.filter(t=>t.status!=="Done"&&dueInfo(t).cls==="late").length;
+  const soon=T.filter(t=>t.status!=="Done"&&dueInfo(t).cls==="soon").length;
   const unassigned=T.filter(t=>!t.primary).length;
+  const pct=n?Math.round(done/n*100):0;
+  // Stack markers that share a position into lanes so none overlap.
+  const lanes={};
+  const marks=T.map(t=>{ const x=MARK[t.status]??4; const lane=(lanes[x]=(lanes[x]||0)+1)-1; return {t,x,lane}; });
+  const maxLane=Math.max(0,...marks.map(m=>m.lane));
+  return `<section class="hand">
+    <div class="wrap hand-in">
+      <div class="hand-head">
+        <div>
+          <h1>${esc(state.fn.replace(/^\d+\.\s*/,""))}</h1>
+          <p>Handover from Nanjaraj to Ankitha</p>
+        </div>
+        <div class="hand-score" aria-label="${done} of ${n} complete">
+          <span class="big">${done}<small>/${n}</small></span>
+          <span class="cap">processes handed over</span>
+        </div>
+      </div>
+      <div class="track" style="--lanes:${maxLane+1}">
+        <div class="track-rail"><span class="track-fill" style="width:${pct}%"></span></div>
+        ${marks.map(m=>`<button class="mk ${stCls(m.t.status)} ${dueInfo(m.t).cls==="late"&&m.t.status!=="Done"?"mk-late":""}" style="--x:${m.x}%;--lane:${m.lane}" data-jump="${m.t.id}" title="${esc(m.t.no+". "+m.t.title+" ("+m.t.status+")")}" aria-label="Task ${esc(m.t.no)}, ${esc(m.t.title)}, ${esc(m.t.status)}">${esc(m.t.no)}</button>`).join("")}
+        <div class="track-ends"><span>${avatar("nanjaraj","sm")}Nanjaraj</span><span class="mid">In progress</span><span>Ankitha${avatar("ankitha","sm")}</span></div>
+      </div>
+      <div class="hand-facts">
+        <button class="fact ${late?"is-late":""}" data-fs="late"><b>${late}</b> overdue</button>
+        <button class="fact" data-fs="soon"><b>${soon}</b> due in the next 14 days</button>
+        <button class="fact" data-fs="unassigned"><b>${unassigned}</b> not yet allocated</button>
+      </div>
+    </div>
+  </section>`;
+}
+function peopleHTML(){
+  const T=state.tasks;
+  return `<section class="wrap people" aria-label="Pending by person">
+    ${state.people.map(p=>{
+      const mine=T.filter(t=>t.primary===p.id&&t.status!=="Done");
+      const sec=T.filter(t=>t.secondary===p.id&&t.status!=="Done").length;
+      const lateN=mine.filter(t=>dueInfo(t).cls==="late").length;
+      const nx=mine.filter(t=>t.due).sort((a,b)=>a.due.localeCompare(b.due))[0];
+      const on=filt.person===p.id;
+      return `<button class="person ${on?"on":""}" data-fp="${p.id}" aria-pressed="${on}">
+        ${avatar(p.id)}
+        <span class="pi"><span class="pn">${esc(p.name)}</span>
+        <span class="ps"><b>${mine.length}</b> pending${sec?`, ${sec} as secondary`:""}</span>
+        <span class="px ${lateN?"late":""}">${lateN?`${lateN} overdue`:nx?`Next due ${esc(dueInfo(nx).label)}`:"Nothing due"}</span></span>
+      </button>`;}).join("")}
+  </section>`;
+}
+function passes(t){
+  const di=dueInfo(t);
+  if(filt.person && t.primary!==filt.person && t.secondary!==filt.person) return false;
+  switch(filt.status){
+    case "pending": return t.status!=="Done";
+    case "late": return t.status!=="Done"&&di.cls==="late";
+    case "soon": return t.status!=="Done"&&di.cls==="soon";
+    case "unassigned": return !t.primary;
+    case "done": return t.status==="Done";
+    default: return true;
+  }
+}
+function renderOverall(){
   const isP=role==="prequate";
-  const ownerCol=id=>{
-    const mine=T.filter(t=>t.primary===id&&t.status!=="Done");
-    const sec=T.filter(t=>t.secondary===id&&t.status!=="Done").length;
-    const lateN=mine.filter(t=>dueInfo(t).cls==="late").length;
-    const nx=mine.filter(t=>t.due).sort((a,b)=>a.due.localeCompare(b.due))[0];
-    return `<div class="owner"><div class="n">${esc(nameOf(id))}</div><div class="c">${mine.length}</div>
-      <div class="s">pending as primary${sec?`, ${sec} as secondary`:""}</div>
-      ${lateN?`<div class="s late">${lateN} overdue</div>`:nx?`<div class="s">Next due ${esc(dueInfo(nx).label)}</div>`:""}</div>`;
-  };
+  const shown=state.tasks.filter(passes);
+  const F=[["all","All"],["pending","Pending"],["late","Overdue"],["soon","Due soon"],["unassigned","Not allocated"],["done","Done"]];
   const opts=v=>`<option value="">Unassigned</option>`+state.people.map(p=>`<option value="${p.id}" ${p.id===v?"selected":""}>${esc(p.name)}</option>`).join("");
-  const rows=T.map(t=>{
-    const di=dueInfo(t), open=openRow===t.id, ed=canEditTask(t);
-    return `<tr>
-      <td class="no">${esc(t.no)}</td>
-      <td><button class="expand" data-open="${t.id}" aria-expanded="${open}"><div class="t-title">${esc(t.title)}</div><div class="t-type">${esc(t.type)}${open?(isP?" | close":""):(isP?" | edit all fields":" | view outcome")}</div></button></td>
-      <td>${isP?`<select data-f="primary" data-id="${t.id}" aria-label="Primary owner">${opts(t.primary)}</select>`:`<span class="${t.primary?"":"muted"}">${esc(nameOf(t.primary))}</span>`}</td>
-      <td>${isP?`<select data-f="secondary" data-id="${t.id}" aria-label="Secondary owner">${opts(t.secondary)}</select>`:`<span class="${t.secondary?"":"muted"}">${t.secondary?esc(nameOf(t.secondary)):"None"}</span>`}</td>
-      <td>${isP?`<input type="date" data-f="due" data-id="${t.id}" value="${esc(t.due)}" aria-label="Expected timeline">`:""}<div class="due">${isP?"":esc(di.label)}${di.sub?`<small class="${di.cls}">${esc(di.sub)}</small>`:""}</div></td>
-      <td>${ed?`<select data-f="status" data-id="${t.id}" aria-label="Status">${STATUSES.map(s=>`<option ${s===t.status?"selected":""}>${s}</option>`).join("")}</select>`:`<span class="pill ${stCls(t.status)}">${esc(t.status)}</span>`}</td>
-    </tr>
-    ${open&&isP?editRow(t):""}
-    ${open&&!isP?`<tr class="detail"><td colspan="6"><div class="d">
-      <div><h4>Outcome</h4><p>${esc(t.outcome)||'<span class="muted">Not written yet</span>'}</p></div>
-      <div><h4>What it facilitates</h4><p>${esc(t.facilitates)||'<span class="muted">Not written yet</span>'}</p></div>
-      ${t.note?`<div style="grid-column:1/-1"><h4>Latest update${t.updatedBy?` from ${esc(nameOf(t.updatedBy))}`:""}${t.updated?`, ${esc(new Date(t.updated).toLocaleDateString("en-IN",{day:"numeric",month:"short"}))}`:""}</h4><p>${esc(t.note)}</p></div>`:""}
-    </div></td></tr>`:""}`;
+  const rows=shown.map(t=>{
+    const di=dueInfo(t), open=openRow===t.id, ed=canEditTask(t), late=di.cls==="late"&&t.status!=="Done";
+    return `<div class="row ${open?"open":""} ${late?"is-late":""}" id="row-${t.id}">
+      <span class="r-no">${esc(t.no)}</span>
+      <button class="r-title" data-open="${t.id}" aria-expanded="${open}">
+        <span class="tt">${esc(t.title)}</span>
+        <span class="ty">${esc(t.type)}<span class="more">${open?"Close":isP?"Edit details":"Outcome"}</span></span>
+      </button>
+      <span class="r-cell r-p" data-l="Primary">${isP?`<select class="sel" data-f="primary" data-id="${t.id}" aria-label="Primary">${opts(t.primary)}</select>`:t.primary?`<span class="who">${avatar(t.primary,"xs")}${esc(nameOf(t.primary))}</span>`:`<span class="muted">Unassigned</span>`}</span>
+      <span class="r-cell r-s" data-l="Secondary">${isP?`<select class="sel" data-f="secondary" data-id="${t.id}" aria-label="Secondary">${opts(t.secondary)}</select>`:t.secondary?`<span class="who">${avatar(t.secondary,"xs")}${esc(nameOf(t.secondary))}</span>`:`<span class="muted">None</span>`}</span>
+      <span class="r-cell r-d" data-l="Timeline">${isP?`<input class="sel" type="date" data-f="due" data-id="${t.id}" value="${esc(t.due)}" aria-label="Expected timeline">`:`<span class="dt">${esc(di.label)}</span>`}${di.sub?`<span class="due ${di.cls}">${esc(di.sub)}</span>`:""}</span>
+      <span class="r-cell r-st" data-l="Status">${ed?`<select class="sel st ${stCls(t.status)}" data-f="status" data-id="${t.id}" aria-label="Status">${STATUSES.map(s=>`<option ${s===t.status?"selected":""}>${s}</option>`).join("")}</select>`:`<span class="pill ${stCls(t.status)}">${esc(t.status)}</span>`}</span>
+    </div>
+    ${open?(isP?editHTML(t):detailHTML(t)):""}`;
   }).join("");
-  $("#main").innerHTML=`${setupHTML()}
-  <section class="head"><h2>${esc(state.fn)}</h2><p>Handover of finance, accounts and banking from Nanjaraj to Ankitha. ${n} tasks tracked.</p></section>
-  <section class="progress" aria-label="Project progress">
-    <div class="big"><strong>${pct}%</strong><span>${done} of ${n} tasks complete${late?`, <b style="color:var(--warn)">${late} overdue</b>`:""}</span></div>
-    <div class="bar"><span style="width:${w(done)};background:var(--ok)"></span><span style="width:${w(ip)};background:var(--orange)"></span><span style="width:${w(oh)};background:var(--hold)"></span></div>
-    <div class="legend"><span><i style="background:var(--ok)"></i>Done ${done}</span><span><i style="background:var(--orange)"></i>In progress ${ip}</span><span><i style="background:var(--hold)"></i>On hold ${oh}</span><span><i style="background:var(--soft);border:1px solid var(--line)"></i>Not started ${ns}</span></div>
+  $("#main").innerHTML=`
+  ${setupHTML()}
+  ${handoverHTML()}
+  ${peopleHTML()}
+  <section class="wrap list">
+    <div class="list-head">
+      <h2>All tasks</h2>
+      <div class="chips" role="group" aria-label="Filter tasks">${F.map(([k,l])=>`<button class="chip ${filt.status===k?"on":""}" data-fs="${k}" aria-pressed="${filt.status===k}">${l}</button>`).join("")}</div>
+    </div>
+    ${filt.person||filt.status!=="all"?`<p class="list-note">Showing ${shown.length} of ${state.tasks.length}${filt.person?` for ${esc(nameOf(filt.person))}`:""}. <button class="txtbtn" id="clearf">Show all</button></p>`:""}
+    <div class="grid" role="list">
+      <div class="row head" aria-hidden="true"><span></span><span>Sub-task / process</span><span>Primary</span><span>Secondary</span><span>Expected timeline</span><span>Status</span></div>
+      ${rows||`<div class="empty">No tasks match this view.</div>`}
+    </div>
+    <p class="foot">${lastSaved()}</p>
+    ${viewNotice()?`<p class="notice">${viewNotice()}</p>`:""}
   </section>
-  <section class="owners" aria-label="Pending by person">
-    ${state.people.map(p=>ownerCol(p.id)).join("")}
-    ${unassigned?`<div class="owner"><div class="n muted">Unassigned</div><div class="c">${unassigned}</div><div class="s">${isP?"Assign a primary owner below":"Awaiting allocation by Prequate"}</div></div>`:""}
-  </section>
-  <h3 class="sec">All tasks</h3>
-  <div class="scroll"><table>
-    <thead><tr><th>#</th><th>Sub-task / process</th><th>Primary</th><th>Secondary</th><th>Expected timeline</th><th>Status</th></tr></thead>
-    <tbody>${rows}</tbody></table></div>
-  ${footer()}
   ${isP?adminHTML():""}`;
   document.querySelectorAll("[data-open]").forEach(b=>b.onclick=()=>{ openRow=openRow===b.dataset.open?null:b.dataset.open; renderOverall(); updateStatus(); });
   document.querySelectorAll("#main [data-f]").forEach(el=>el.onchange=()=>setField(el.dataset.id,el.dataset.f,el.value));
-  document.querySelectorAll("[data-del]").forEach(b=>b.onclick=()=>{ if(!confirm("Remove this task from the tracker?")) return; state.tasks=state.tasks.filter(t=>t.id!==b.dataset.del); renumber(); render(); });
   document.querySelectorAll("[data-e]").forEach(el=>el.onchange=()=>setField(el.dataset.id,el.dataset.e,el.tagName==="SELECT"?el.value:el.value.trim(),true));
+  document.querySelectorAll("[data-fs]").forEach(b=>b.onclick=()=>{ filt.status = filt.status===b.dataset.fs&&b.classList.contains("fact")?"all":b.dataset.fs; renderOverall(); updateStatus();
+    if(b.classList.contains("fact")) $(".list").scrollIntoView({behavior:"smooth"}); });
+  document.querySelectorAll("[data-fp]").forEach(b=>b.onclick=()=>{ filt.person=filt.person===b.dataset.fp?"":b.dataset.fp; renderOverall(); updateStatus(); });
+  document.querySelectorAll("[data-jump]").forEach(b=>b.onclick=()=>{ filt={status:"all",person:""}; openRow=b.dataset.jump; renderOverall(); updateStatus();
+    const r=$("#row-"+b.dataset.jump); if(r) r.scrollIntoView({behavior:"smooth",block:"center"}); });
+  const cf=$("#clearf"); if(cf) cf.onclick=()=>{ filt={status:"all",person:""}; renderOverall(); updateStatus(); };
+  document.querySelectorAll("[data-del]").forEach(b=>b.onclick=()=>{ if(!confirm("Remove this task from the tracker?")) return; state.tasks=state.tasks.filter(t=>t.id!==b.dataset.del); openRow=null; renumber(); render(); });
   document.querySelectorAll("[data-mv]").forEach(b=>b.onclick=()=>{ const i=state.tasks.findIndex(t=>t.id===b.dataset.id), j=i+(+b.dataset.mv);
     if(j<0||j>=state.tasks.length) return; [state.tasks[i],state.tasks[j]]=[state.tasks[j],state.tasks[i]]; renumber(); render(); });
   bindSetup();
   if(isP) bindAdmin();
 }
-function editRow(t){
+function detailHTML(t){
+  return `<div class="detail">
+    <div><h4>Outcome</h4><p>${esc(t.outcome)||'<span class="muted">Not written yet</span>'}</p></div>
+    <div><h4>What it facilitates</h4><p>${esc(t.facilitates)||'<span class="muted">Not written yet</span>'}</p></div>
+    ${t.note?`<div class="span"><h4>Latest update${t.updatedBy?` from ${esc(nameOf(t.updatedBy))}`:""}${t.updated?`, ${esc(fmtDate(t.updated))}`:""}</h4><p>${esc(t.note)}</p></div>`:""}
+  </div>`;
+}
+function editHTML(t){
   const i=state.tasks.indexOf(t), last=i===state.tasks.length-1;
-  return `<tr class="detail"><td colspan="6"><div class="d edit">
-    <div style="grid-column:1/-1"><h4>Sub-task / process</h4><input type="text" data-e="title" data-id="${t.id}" value="${esc(t.title)}" style="width:100%"></div>
-    <div><h4>Outcome</h4><textarea data-e="outcome" data-id="${t.id}" rows="4">${esc(t.outcome)}</textarea></div>
-    <div><h4>What it facilitates</h4><textarea data-e="facilitates" data-id="${t.id}" rows="4">${esc(t.facilitates)}</textarea></div>
-    <div><h4>One-time / Continuous</h4><select data-e="type" data-id="${t.id}">${["Continuous","One-time"].map(x=>`<option ${x===t.type?"selected":""}>${x}</option>`).join("")}</select></div>
-    <div><h4>Latest update${t.updatedBy?` (last by ${esc(nameOf(t.updatedBy))})`:""}</h4><textarea data-e="note" data-id="${t.id}" rows="2" placeholder="Progress note shown to everyone">${esc(t.note)}</textarea></div>
-    <div style="grid-column:1/-1;display:flex;gap:10px;flex-wrap:wrap">
+  return `<div class="detail edit">
+    <label class="span"><h4>Sub-task / process</h4><input type="text" data-e="title" data-id="${t.id}" value="${esc(t.title)}"></label>
+    <label><h4>Outcome</h4><textarea data-e="outcome" data-id="${t.id}" rows="4">${esc(t.outcome)}</textarea></label>
+    <label><h4>What it facilitates</h4><textarea data-e="facilitates" data-id="${t.id}" rows="4">${esc(t.facilitates)}</textarea></label>
+    <label><h4>One-time or continuous</h4><select class="sel" data-e="type" data-id="${t.id}">${["Continuous","One-time"].map(x=>`<option ${x===t.type?"selected":""}>${x}</option>`).join("")}</select></label>
+    <label><h4>Latest update${t.updatedBy?`, last from ${esc(nameOf(t.updatedBy))}`:""}</h4><textarea data-e="note" data-id="${t.id}" rows="2" placeholder="Progress note everyone can see">${esc(t.note)}</textarea></label>
+    <div class="span acts">
       <button class="btn ghost" data-mv="-1" data-id="${t.id}" ${i===0?"disabled":""}>Move up</button>
       <button class="btn ghost" data-mv="1" data-id="${t.id}" ${last?"disabled":""}>Move down</button>
-      <span style="flex:1"></span>
-      <button class="btn ghost" data-del="${t.id}">Remove this task</button>
+      <span class="grow"></span>
+      <button class="btn danger" data-del="${t.id}">Remove task</button>
     </div>
-  </div></td></tr>`;
+  </div>`;
 }
 function setField(id,f,v,quiet){
   const t=state.tasks.find(x=>x.id===id); if(!t) return;
@@ -585,25 +816,33 @@ function setField(id,f,v,quiet){
 }
 function renumber(){ state.tasks.forEach((t,i)=>t.no=i+1); }
 
-/* ---------- Prequate admin ---------- */
+/* ---------- Prequate settings ---------- */
 function adminHTML(){
-  return `<section class="admin">
-    <div class="box"><h3>Add a task</h3><p>For items agreed in the meeting that are not yet on the list.</p>
-      <div class="row"><input type="text" id="nt-title" placeholder="Sub-task or process" style="flex:1;min-width:200px"></div>
-      <div class="row"><textarea id="nt-outcome" placeholder="Outcome: what Ankitha can do once this is complete"></textarea></div>
-      <div class="row"><textarea id="nt-fac" placeholder="What it facilitates"></textarea></div>
-      <div class="row"><select id="nt-type"><option>Continuous</option><option>One-time</option></select><button class="btn" id="nt-add">Add task</button></div>
-    </div>
-    <div class="box"><h3>People responsible</h3><p>Names that appear in the Primary and Secondary lists. Only people with a PIN can sign in.</p>
-      ${state.people.map(p=>{ const core=!!file.slots[p.id], used=state.tasks.some(t=>t.primary===p.id||t.secondary===p.id);
-        return `<div class="row"><input type="text" data-pn="${p.id}" value="${esc(p.name)}" style="flex:1;min-width:140px" aria-label="Name">
-          <span class="muted" style="font-size:12px;width:70px">${core?"Has PIN":"No PIN"}</span>
-          ${core?"":`<button class="btn ghost" data-prm="${p.id}" ${used?'disabled title="Reassign their tasks first"':""}>Remove</button>`}</div>`; }).join("")}
-      <div class="row" style="margin-top:14px"><input type="text" id="np-name" placeholder="Add a person, e.g. Accounts head" style="flex:1;min-width:160px"><button class="btn" id="np-add">Add person</button></div>
-    </div>
-    <div class="box"><h3>Access PINs</h3><p>Set a new 6 digit PIN for any person. Keep a record of every PIN: a lost PIN cannot be recovered, only replaced by Prequate.</p>
-      ${state.people.filter(p=>file.slots[p.id]).map(p=>`<div class="row"><label for="pin-${p.id}">${esc(p.name)}</label><input type="text" inputmode="numeric" maxlength="6" id="pin-${p.id}" placeholder="New PIN" style="width:92px"><button class="btn ghost" data-pin="${p.id}">Set PIN</button>${pendingSlots[p.id]?`<span class="muted" style="font-size:12px">Changed, not saved</span>`:""}</div>`).join("")}
-      <p style="margin-top:18px">Auto-save: ${token&&!tokenBad?`on. <a class="link" style="padding:0" href="${esc(tokenLink())}" target="_blank" rel="noopener">Create a replacement permission</a> before it expires, then use <button class="link" id="tk-renew" style="padding:0">Renew</button>.`:"off. Switch it on at the top of this page."}</p>
+  return `<section class="wrap admin">
+    <h2>Tracker settings</h2>
+    <div class="panels">
+      <div class="panel">
+        <h3>Add a task</h3>
+        <p>For items agreed in a meeting that are not on the list yet.</p>
+        <input type="text" id="nt-title" placeholder="Sub-task or process">
+        <textarea id="nt-outcome" rows="3" placeholder="Outcome: what Ankitha can do once this is complete"></textarea>
+        <textarea id="nt-fac" rows="2" placeholder="What it facilitates"></textarea>
+        <div class="line"><select class="sel" id="nt-type" aria-label="Type"><option>Continuous</option><option>One-time</option></select><button class="btn" id="nt-add">Add task</button></div>
+      </div>
+      <div class="panel">
+        <h3>People responsible</h3>
+        <p>Names in the Primary and Secondary lists. Only people with a PIN can sign in.</p>
+        ${state.people.map(p=>{ const core=!!file.slots[p.id], used=state.tasks.some(t=>t.primary===p.id||t.secondary===p.id);
+          return `<div class="line">${avatar(p.id,"sm")}<input type="text" data-pn="${p.id}" value="${esc(p.name)}" aria-label="Name">
+            ${core?`<span class="tag">Has PIN</span>`:`<button class="txtbtn" data-prm="${p.id}" ${used?'disabled title="Reassign their tasks first"':""}>Remove</button>`}</div>`; }).join("")}
+        <div class="line add"><input type="text" id="np-name" placeholder="Add a person, for example Accounts head"><button class="btn ghost" id="np-add">Add</button></div>
+      </div>
+      <div class="panel">
+        <h3>Access PINs</h3>
+        <p>Set a new six digit PIN for anyone. Keep a record: a lost PIN can be replaced but not recovered.</p>
+        ${state.people.filter(p=>file.slots[p.id]).map(p=>`<div class="line"><label for="pin-${p.id}" class="lbl">${esc(p.name)}</label><input type="text" inputmode="numeric" maxlength="6" id="pin-${p.id}" placeholder="New PIN" class="pinfield"><button class="btn ghost" data-pin="${p.id}">Set</button></div>`).join("")}
+        <p class="small">${token&&!tokenBad?`Auto-save is on. Before the GitHub permission expires, <a href="${esc(tokenLink())}" target="_blank" rel="noopener">create a new one</a> and <button class="txtbtn" id="tk-renew">renew</button>.`:"Auto-save is off. Switch it on at the top of this page."}</p>
+      </div>
     </div>
   </section>`;
 }
@@ -611,11 +850,11 @@ function bindAdmin(){
   $("#nt-add").onclick=()=>{
     const title=$("#nt-title").value.trim(); if(!title){ toast("Give the task a name first."); $("#nt-title").focus(); return; }
     state.tasks.push({id:"t"+Date.now().toString(36),no:0,title,outcome:$("#nt-outcome").value.trim(),facilitates:$("#nt-fac").value.trim(),type:$("#nt-type").value,primary:"",secondary:"",due:"",status:"Not started",note:"",updated:"",updatedBy:"",custom:true});
-    renumber(); render(); toast("Task added.");
+    renumber(); filt={status:"all",person:""}; render(); toast("Task added.");
   };
   document.querySelectorAll("[data-pin]").forEach(b=>b.onclick=async()=>{
     const id=b.dataset.pin, v=$("#pin-"+id).value.trim();
-    if(!/^\d{6}$/.test(v)){ toast("A PIN must be exactly 6 digits."); return; }
+    if(!/^\d{6}$/.test(v)){ toast("A PIN must be exactly six digits."); return; }
     b.disabled=true; b.textContent="Setting";
     const pk=await pinKey(v);
     const slots=Object.assign({}, file.slots, pendingSlots);
@@ -640,28 +879,43 @@ function renderMine(){
   const pending=mine.filter(t=>t.status!=="Done").sort((a,b)=>k(a).localeCompare(k(b)));
   const done=mine.filter(t=>t.status==="Done");
   const late=pending.filter(t=>dueInfo(t).cls==="late").length;
+  const leaf=t=>{
+    if(!t.due) return `<div class="leaf none"><span class="d">No</span><span class="m">date</span></div>`;
+    const d=new Date(t.due+"T00:00:00"), di=dueInfo(t);
+    return `<div class="leaf ${t.status==="Done"?"":di.cls}"><span class="d">${d.getDate()}</span><span class="m">${d.toLocaleDateString("en-IN",{month:"short"})} ${String(d.getFullYear()).slice(2)}</span></div>`;
+  };
   const card=t=>{
     const di=dueInfo(t), ed=canEditTask(t);
-    const r=t.primary===role?"You are primary"+(t.secondary?`, with ${esc(nameOf(t.secondary))} as secondary`:""):`You are secondary to ${esc(nameOf(t.primary))}`;
-    return `<article class="task ${t.status!=="Done"?di.cls:""}">
-      <div><div class="role">Task ${esc(t.no)} | ${r}</div><h4>${esc(t.title)}</h4><p class="oc">${esc(t.outcome)}</p></div>
-      <div class="side"><span class="pill ${stCls(t.status)}">${esc(t.status)}</span><div class="due">${esc(di.label)}${di.sub?`<small class="${di.cls}">${esc(di.sub)}</small>`:""}</div></div>
-      ${ed?`<div class="ctrl"><select data-m="status" data-id="${t.id}" aria-label="Update status">${STATUSES.map(s=>`<option ${s===t.status?"selected":""}>${s}</option>`).join("")}</select>
-        <div class="note"><textarea data-m="note" data-id="${t.id}" placeholder="Add an update: what moved, what is blocking, what you need">${esc(t.note)}</textarea></div></div>`
-        :t.note?`<div class="meta">Latest update: ${esc(t.note)}</div>`:""}
+    const r=t.primary===role?(t.secondary?`With ${esc(nameOf(t.secondary))} as secondary`:"You lead this"):`Supporting ${esc(nameOf(t.primary))}`;
+    return `<article class="task ${t.status==="Done"?"is-done":di.cls}">
+      ${leaf(t)}
+      <div class="task-body">
+        <p class="task-meta">Task ${esc(t.no)}<span class="sep"></span>${r}<span class="sep"></span>${esc(t.type)}</p>
+        <h3>${esc(t.title)}</h3>
+        <p class="task-oc">${esc(t.outcome)}</p>
+        ${di.sub&&t.status!=="Done"?`<p class="due ${di.cls}">${esc(di.sub)}</p>`:""}
+        ${ed?`<div class="seg" role="group" aria-label="Status">${STATUSES.map(s=>`<button class="${s===t.status?"on "+stCls(s):""}" data-st="${s}" data-id="${t.id}" aria-pressed="${s===t.status}">${s}</button>`).join("")}</div>
+          <textarea class="note" data-m="note" data-id="${t.id}" rows="2" placeholder="Add an update: what moved, what is blocked, what you need">${esc(t.note)}</textarea>`
+          :`<span class="pill ${stCls(t.status)}">${esc(t.status)}</span>${t.note?`<p class="task-note">${esc(t.note)}</p>`:""}`}
+      </div>
     </article>`;
   };
+  const first=nameOf(role);
   $("#main").innerHTML=`
-  <section class="head"><h2>${pending.length?`${pending.length} task${pending.length===1?"":"s"} pending with you`:"Nothing pending with you"}</h2>
-    <p>${esc(state.fn)}.${late?` <b style="color:var(--warn)">${late} overdue.</b>`:""} Sorted by expected timeline, earliest first.</p></section>
-  <div class="cards" style="margin-top:28px">${pending.length?pending.map(card).join(""):`<div class="empty">${mine.length?"Every task allocated to you is complete.":role==="prequate"?"No tasks are allocated to Prequate yet. Assign owners from the Overall project tab.":"No tasks have been allocated to you yet. Prequate will assign them after the review meeting."}</div>`}</div>
-  ${done.length?`<details class="done-list"><summary>Completed (${done.length})</summary><div class="cards" style="margin-top:14px">${done.map(card).join("")}</div></details>`:""}
-  ${footer()}`;
-  document.querySelectorAll("[data-m=status]").forEach(el=>el.onchange=()=>setField(el.dataset.id,"status",el.value));
-  document.querySelectorAll("[data-m=note]").forEach(el=>el.onchange=()=>setField(el.dataset.id,"note",el.value.trim()));
-  bindFooter();
+  <section class="wrap mine">
+    <div class="mine-head">
+      <h1>${pending.length?`${pending.length} ${pending.length===1?"task is":"tasks are"} with you, ${esc(first)}`:`Nothing is pending with you, ${esc(first)}`}</h1>
+      <p>${late?`<span class="late">${late} overdue.</span> `:""}Earliest deadline first.</p>
+    </div>
+    <div class="tasks">${pending.length?pending.map(card).join(""):`<div class="empty big">${mine.length?"Every task allocated to you is complete.":role==="prequate"?"No tasks are allocated to Prequate yet. Allocate owners in Overall project.":"No tasks are allocated to you yet. Prequate allocates them after the review meeting."}</div>`}</div>
+    ${done.length?`<details class="done"><summary>Completed tasks (${done.length})</summary><div class="tasks">${done.map(card).join("")}</div></details>`:""}
+    <p class="foot">${lastSaved()}</p>
+    ${viewNotice()?`<p class="notice">${viewNotice()}</p>`:""}
+  </section>`;
+  document.querySelectorAll("[data-st]").forEach(b=>b.onclick=()=>{ if(b.classList.contains("on")) return; setField(b.dataset.id,"status",b.dataset.st);
+    toast(b.dataset.st==="Done"?"Marked as done.":"Status set to "+b.dataset.st.toLowerCase()+"."); });
+  document.querySelectorAll("[data-m=note]").forEach(el=>el.onchange=()=>setField(el.dataset.id,"note",el.value.trim(),true));
 }
-
 
 render();
 })();
