@@ -287,6 +287,72 @@ select.sel{appearance:none; -webkit-appearance:none; padding-right:30px; cursor:
 .done summary{cursor:pointer; font-weight:600; font-size:14.5px; color:var(--grey); padding:6px 0}
 .done summary:hover{color:var(--ink)}
 
+
+/* ---------- Departments ---------- */
+.depts{display:flex; gap:10px; margin-top:24px !important; overflow-x:auto; scrollbar-width:none}
+.depts::-webkit-scrollbar{display:none}
+.dept{flex:none; text-align:left; padding:12px 16px; border-radius:var(--r); box-shadow:inset 0 0 0 1px var(--line); display:flex; flex-direction:column; gap:2px; min-width:180px}
+.dept span{font-weight:600; font-size:14px; color:var(--ink)}
+.dept small{font-size:12.5px; color:var(--grey)}
+.dept:hover{box-shadow:inset 0 0 0 1px var(--ink)}
+.dept.on{background:var(--ink); box-shadow:none}
+.dept.on span{color:var(--paper)} .dept.on small{color:#BDBDBD}
+.depts + .hand{margin-top:16px}
+.hand-empty{color:var(--nighttext); margin-top:28px}
+.pn em{display:block; font-style:normal; font-weight:400; font-size:12px; color:var(--soft)}
+.r-title .stc{color:var(--grey)}
+
+/* ---------- Steps ---------- */
+.steps h4{margin-bottom:8px}
+.step{display:grid; grid-template-columns:38px minmax(0,2.4fr) minmax(0,1fr) minmax(0,1fr) minmax(0,1fr) 140px; gap:12px; align-items:center;
+  padding:10px 0; border-top:1px solid var(--line); font-size:13.5px}
+.step:first-of-type{border-top:0}
+.step .sn{color:var(--soft); font-weight:600; font-size:12.5px}
+.step .stt{line-height:1.4}
+.step.is-mine .stt{font-weight:600}
+.step.is-done .stt{color:var(--grey); text-decoration:line-through; text-decoration-color:var(--soft)}
+.step.is-late .sn{color:var(--late)}
+.step .sel{min-height:34px; padding-top:5px; padding-bottom:5px; font-size:13px}
+.step.edit{grid-template-columns:38px minmax(0,2.4fr) minmax(0,1fr) minmax(0,1fr) 140px 130px 60px}
+.step.edit input[type=text]{min-height:34px; padding:5px 9px; font-size:13.5px}
+.step-add{display:flex; gap:10px; margin-top:10px}
+.step-add input{flex:1}
+.danger-t{color:var(--late)}
+.remarks{background:var(--paper); border-left:3px solid var(--orange); padding:10px 14px; border-radius:0 var(--r-sm) var(--r-sm) 0}
+
+/* ---------- My tasks: steps ---------- */
+.task-rem{margin-top:10px; font-size:14px; color:var(--ink); background:var(--mist); border-left:3px solid var(--orange); padding:8px 12px; border-radius:0 var(--r-sm) var(--r-sm) 0; max-width:68ch}
+.task-rem b{font-weight:600; margin-right:6px}
+.mysteps{margin-top:16px; border-top:1px solid var(--line)}
+.ms{display:grid; grid-template-columns:34px 1fr 150px; gap:12px; align-items:center; padding:10px 0; border-bottom:1px solid var(--line); font-size:14px}
+.ms .sn{color:var(--soft); font-weight:600; font-size:12.5px}
+.ms .stt{display:flex; flex-direction:column; gap:2px; line-height:1.4; color:var(--grey)}
+.ms .stt small{font-size:12.5px; color:var(--soft)}
+.ms .stt small .due{display:inline; font-size:12.5px}
+.ms.is-mine .stt{color:var(--ink); font-weight:600}
+.ms.is-mine .stt small{font-weight:400}
+.ms.is-done .stt{text-decoration:line-through; text-decoration-color:var(--soft); color:var(--grey)}
+.ms .sel{min-height:34px; padding-top:5px; padding-bottom:5px; font-size:13px}
+.ms .pill{justify-self:start}
+.lbl-s{font-size:12.5px; color:var(--grey); margin-top:18px}
+.lbl-s + .seg{margin-top:6px}
+@media (max-width:900px){
+  .step,.step.edit{grid-template-columns:30px minmax(0,1fr) minmax(0,1fr); grid-template-areas:"n t t" ". p s" ". d st"; gap:8px 10px; align-items:start}
+  .step.edit{grid-template-areas:"n t t" ". p s" ". d st" ". x x"}
+  .step .sn{grid-area:n} .step .stt,.step .st-title{grid-area:t}
+  .step > :nth-child(3){grid-area:p} .step > :nth-child(4){grid-area:s} .step > :nth-child(5){grid-area:d} .step > :nth-child(6){grid-area:st}
+  .step.edit > :nth-child(7){grid-area:x; justify-self:start}
+  .step .sw::before,.step .sd::before{content:attr(data-l); display:block; font-size:11.5px; color:var(--soft)}
+}
+@media (max-width:640px){
+  .dept{min-width:160px; padding:10px 14px}
+  .step.edit{grid-template-columns:minmax(0,1fr) minmax(0,1fr); grid-template-areas:"n n" "t t" "p s" "d st" "x x"}
+  .step.edit .sel{padding-left:8px; padding-right:24px; background-position:right 7px center}
+  .detail.edit{padding:14px 12px 16px}
+  .ms{grid-template-columns:28px 1fr; grid-template-areas:"n t" ". c"}
+  .ms .sn{grid-area:n} .ms .stt{grid-area:t} .ms > :nth-child(3){grid-area:c; justify-self:start; max-width:180px}
+}
+
 /* ---------- Toast ---------- */
 .toast{position:fixed; left:50%; bottom:calc(28px + env(safe-area-inset-bottom,0px)); transform:translate(-50%,12px); opacity:0; pointer-events:none;
   background:var(--ink); color:var(--paper); padding:11px 18px; border-radius:8px; font-size:14px; font-weight:400; z-index:50; transition:opacity .2s, transform .2s; max-width:calc(100% - 40px)}
@@ -460,10 +526,114 @@ function mergeList(base,local,remote,key){
 function merge(base,local,remote){
   const out=clone(remote);
   if(local.fn!==base.fn) out.fn=local.fn;
+  out.schema=Math.max(local.schema||1, remote.schema||1);
+  out.depts=mergeList(base.depts||[],local.depts||[],remote.depts||[],"id");
   out.people=mergeList(base.people,local.people,remote.people,"id");
   out.tasks=mergeList(base.tasks,local.tasks,remote.tasks,"id");
-  out.tasks.forEach((t,i)=>t.no=i+1);
+  numberTasks(out);
   return out;
+}
+function numberTasks(s){ const n={}; s.tasks.forEach(t=>{ const d=t.dept||"fin"; n[d]=(n[d]||0)+1; t.no=n[d]; }); }
+
+/* ---------- One-time upgrade: departments, sub-steps, remarks ---------- */
+const S=(id,title,primary,secondary,due,status)=>({id,title,primary:primary||"",secondary:secondary||"",due:due||"",status:status||"Not started"});
+const T=(o)=>Object.assign({type:"One-time",primary:"",secondary:"",due:"",status:"Not started",outcome:"",facilitates:"",how:"",doneMeans:"",remarks:"",note:"",updated:"",updatedBy:"",steps:[]},o);
+function migrate(s){
+  let changed=false;
+  if((s.schema||1)<2){ upgrade2(s); changed=true; }
+  if(s.schema<3){ upgrade3(s); changed=true; }
+  if(s.schema<4){ upgrade4(s); changed=true; }
+  if(s.schema<5){ upgrade5(s); changed=true; }
+  if(s.schema<6){ upgrade6(s); changed=true; }
+  return changed;
+}
+/* Version 6: fold the account list into the sit-down with Nagendra */
+function upgrade6(s){
+  const t=s.tasks.find(x=>x.id==="s1");
+  if(t&&t.steps){
+    const st=t.steps.find(x=>x.id==="s1f");
+    if(st) st.title="Sit-down with Nagendra on every client, working from the list of all accounts split into export and domestic: 3-year history, credit terms, relationship, flags raised, and the timelines that matter to each client";
+    t.steps=t.steps.filter(x=>x.id!=="s1a");
+  }
+  s.schema=6;
+}
+/* Version 5: drop the background-sessions step, which repeats the sit-down with Nagendra */
+function upgrade5(s){
+  const t=s.tasks.find(x=>x.id==="s1");
+  if(t&&t.steps) t.steps=t.steps.filter(x=>x.id!=="s1c");
+  s.schema=5;
+}
+/* Version 4: the sit-down with Nagendra comes first in Sales Task 1 */
+function upgrade4(s){
+  const t=s.tasks.find(x=>x.id==="s1");
+  if(t&&t.steps){ const i=t.steps.findIndex(x=>x.id==="s1f"); if(i>0){ const [st]=t.steps.splice(i,1); t.steps.unshift(st); } }
+  s.schema=4;
+}
+/* Version 3: Ankitha's sit-down with Nagendra on every client, inside Sales Task 1 */
+function upgrade3(s){
+  const t=s.tasks.find(x=>x.id==="s1");
+  if(t){
+    t.steps=t.steps||[];
+    if(!t.steps.some(x=>x.id==="s1f")){
+      const nag=(s.people.find(p=>p.name.trim().toLowerCase()==="nagendra")||{}).id||"";
+      const step=S("s1f","Sit-down with Nagendra on every client: 3-year history, credit terms, the relationship, flags raised, and the timelines that matter to each client","ankitha",nag);
+      const at=t.steps.findIndex(x=>x.id==="s1c");
+      t.steps.splice(at>-1?at+1:t.steps.length,0,step);
+    }
+  }
+  s.schema=3;
+}
+function upgrade2(s){
+  s.depts=[{id:"fin",name:(s.fn||"Finance, Accounts & Banking").replace(/^\d+\.\s*/,""),kind:"handover"},
+           {id:"sales",name:"Sales, Client Relationships & Pricing",kind:"handover"},
+           {id:"pq",name:"Prequate Workstream",kind:"internal"}];
+  s.tasks.forEach(t=>{ if(!t.dept) t.dept="fin"; if(!t.steps) t.steps=[]; if(t.remarks==null) t.remarks=""; });
+  const pid=(name,role)=>{ let p=s.people.find(x=>x.name.trim().toLowerCase()===name.toLowerCase());
+    if(!p){ p={id:name.toLowerCase(),name,role}; s.people.push(p); } else if(!p.role) p.role=role; return p.id; };
+  const NAG=pid("Nagendra","Sales"), DHA=pid("Dharmaraj","Accounts");
+  const have=new Set(s.tasks.map(t=>t.id));
+  const add=t=>{ if(!have.has(t.id)) s.tasks.push(t); };
+  add(T({id:"s1",dept:"sales",title:"Account & Division Mapping",primary:"ankitha",secondary:NAG,due:"2026-10-03",
+    outcome:"Every account is mapped by division (Ambrettolide, IBQ, Kephalis, Jasmine, Farm), split into export and domestic, and Ankitha knows which clients drive revenue in each division.",
+    facilitates:"Enables her to prioritise client attention and sales effort where revenue concentrates.",
+    remarks:"Meeting schedules exist; Ankitha gets background understanding on each client. A client cheat sheet is needed.",
+    steps:[S("s1a","List of all accounts, split into export and domestic",NAG,"ankitha"),
+           S("s1b","Draft a one-page cheat sheet per client (who drafts: to be confirmed)","",""),
+           S("s1c","Background sessions: Nagendra briefs Ankitha client by client, using the existing meeting schedule",NAG,"ankitha"),
+           S("s1d","Nanju reviews the cheat sheets for accuracy","nanjaraj","ankitha"),
+           S("s1e","Ankitha signs off the final account map","ankitha",NAG)]}));
+  add(T({id:"s2",dept:"sales",title:"Client Handover: All Accounts to Ankitha",type:"Continuous",primary:"nanjaraj",secondary:"ankitha",due:"2026-12-31",
+    outcome:"Every account moves to Ankitha. She takes over the relationship and negotiation history, and each client has met her in person, at a conference, or through an online introduction.",
+    facilitates:"Gives her direct ownership of the client relationships that carry the business and reduces client dependence on Nanju.",
+    doneMeans:"Ankitha has met or been introduced to every client on the Task 1 list.",
+    remarks:"Happens during the scheduled meetings.",
+    steps:[S("s2a","Choose how each client is introduced: in person, conference, or online","ankitha",""),
+           S("s2b","Nanju formally introduces Ankitha as the new point of contact to every client","nanjaraj","ankitha"),
+           S("s2c","Nanju hands over the relationship and negotiation history for each client","nanjaraj","ankitha"),
+           S("s2d","Ankitha meets or is introduced to every client; each one is ticked off on the account list","ankitha","nanjaraj")]}));
+  add(T({id:"s3",dept:"sales",title:"Pricing Logic & Price Ranges",type:"Continuous",primary:"ankitha",secondary:DHA,
+    outcome:"Price ranges are set by division and product line. Ankitha approves any price within the agreed range without referring to Nanju.",
+    facilitates:"Enables consistent pricing decisions that protect margin as quoting authority moves to her.",
+    remarks:"Depends on the costing sheets for next year's planning. The team is working on these, due 30 Sep.",
+    steps:[S("s3a","Costing sheets for next year's planning completed",DHA,"ankitha","2026-09-30","In progress"),
+           S("s3b","Ankitha shares the costing sheets with Prequate","ankitha",""),
+           S("s3c","Nanju decides the price range for each division and product line","nanjaraj","ankitha"),
+           S("s3d","Price ranges are written up in one document","ankitha",DHA),
+           S("s3e","Authority recorded in the Approval Matrix: Ankitha approves within the range, and anything outside it goes to Nanju","ankitha","nanjaraj")]}));
+  add(T({id:"s4",dept:"sales",title:"Client Simulation Meetings",primary:"nanjaraj",secondary:"ankitha",due:"2026-10-18",
+    outcome:"Ankitha is tested on real client scenarios before she runs renewals and negotiations alone. Each client's commercial terms (credit periods, rebates, seasonal price adjustments) are written down in one place.",
+    facilitates:"Enables her to honour existing commitments and negotiate renewals from a known baseline.",
+    how:"Nanju plays the client, Ankitha represents Encee Aromatics, and Prequate moderates or observes silently.",
+    remarks:"The meeting schedule will be agreed once Task 1 is done on 3 Oct.",
+    steps:[S("s4a","Nanju writes notes on each client's terms and history","nanjaraj","","2026-10-03"),
+           S("s4b","Nanju prepares tough-client scenarios, from general knowledge of each division to very technical questions, for example on IBQ","nanjaraj","","2026-10-03"),
+           S("s4c","Agree the simulation schedule once Task 1 is done","nanjaraj","ankitha"),
+           S("s4d","Run the simulation sessions: Nanju as client, Ankitha as Encee, Prequate moderating","nanjaraj","ankitha","2026-10-18")]}));
+  add(T({id:"p1",dept:"pq",title:"Work on the new MIS",primary:"prequate"}));
+  add(T({id:"p2",dept:"pq",title:"Become part of the weekly meetings",type:"Continuous",primary:"prequate"}));
+  add(T({id:"p3",dept:"pq",title:"Schedule the call with Forex",primary:"prequate"}));
+  add(T({id:"p4",dept:"pq",title:"Work on the new documentation tool",primary:"prequate"}));
+  s.schema=2; numberTasks(s);
 }
 
 /* ---------- Auto-save ---------- */
@@ -518,7 +688,7 @@ async function refresh(force){
     if(useToken) f=(await apiGet()).file; else { lastAnon=Date.now(); f=await loadFresh(); }
     if(f.rev!==file.rev || (!token && f.secret)){
       const d=await decryptBox(f.data); if(dirty()) return;
-      file=f; state=d; saved=clone(d);
+      file=f; saved=clone(d); migrate(d); state=d;
       if(!token){ token=await readToken(f); tokenBad=false; }
       render();
     }
@@ -638,7 +808,7 @@ async function renderGate(){
         const raw=await tryUnwrap(pk,who,slot);
         if(raw){
           dkRaw=raw; dk=await crypto.subtle.importKey("raw",raw,{name:"AES-GCM"},false,["encrypt","decrypt"]);
-          state=await decryptBox(file.data); saved=clone(state); token=await readToken(file); tokenBad=false;
+          state=await decryptBox(file.data); saved=clone(state); migrate(state); token=await readToken(file); tokenBad=false;
           role=who; view=who==="prequate"?"overall":"mine"; filt={status:"all",person:""}; busy=false;
           render(); refresh(); window.scrollTo(0,0); return;
         }
@@ -660,7 +830,7 @@ window.addEventListener("error",e=>{ const m=$("#pinmsg"); if(m && !role){ m.tex
 /* ---------- Shell ---------- */
 function render(){
   if(!role) return renderGate();
-  const mineN=state.tasks.filter(t=>(t.primary===role||t.secondary===role)&&t.status!=="Done").length;
+  const mineN=myItems().filter(t=>t.status!=="Done").length;
   $("#app").innerHTML=`
   <header class="bar">
     <div class="bar-in">
@@ -729,34 +899,50 @@ function bindSetup(){
   };
 }
 
+/* ---------- Departments and steps ---------- */
+let curDept="fin";
+const depts=()=>state.depts&&state.depts.length?state.depts:[{id:"fin",name:(state.fn||"Finance").replace(/^\d+\.\s*/,""),kind:"handover"}];
+const deptOf=t=>t.dept||"fin";
+const deptById=id=>depts().find(d=>d.id===id)||depts()[0];
+const tasksIn=d=>state.tasks.filter(t=>deptOf(t)===d);
+const stepsOf=t=>t.steps||[];
+const stepsDone=t=>stepsOf(t).filter(s=>s.status==="Done").length;
+const involved=(t,id)=>t.primary===id||t.secondary===id||stepsOf(t).some(s=>s.primary===id||s.secondary===id);
+function myItems(){ return state.tasks.filter(t=>involved(t,role)); }
+function canEditStep(s,t){ if(role==="prequate") return true; if(!token||tokenBad) return false;
+  return s.primary===role||s.secondary===role||t.primary===role||t.secondary===role; }
+function renumber(){ numberTasks(state); }
+function stepDue(s){ if(!s.due) return {label:"",cls:""}; return dueInfo(s); }
+const personOpts=(v,blank)=>`<option value="">${blank||"Unassigned"}</option>`+state.people.map(p=>`<option value="${p.id}" ${p.id===v?"selected":""}>${esc(p.name)}</option>`).join("");
+const whoLabel=id=>id?`<span class="who">${avatar(id,"xs")}${esc(nameOf(id))}</span>`:`<span class="muted">None</span>`;
+
 /* ---------- Overall ---------- */
+function deptNavHTML(){
+  const D=depts(); if(D.length<2) return "";
+  return `<nav class="wrap depts" aria-label="Departments">${D.map(d=>{
+    const T=tasksIn(d.id), open=T.filter(t=>t.status!=="Done").length;
+    return `<button class="dept ${d.id===curDept?"on":""}" data-dept="${d.id}" aria-pressed="${d.id===curDept}"><span>${esc(d.name)}</span><small>${open} open</small></button>`;}).join("")}</nav>`;
+}
 function handoverHTML(){
-  const T=state.tasks, n=T.length, done=T.filter(t=>t.status==="Done").length;
+  const d=deptById(curDept), T=tasksIn(d.id), n=T.length, done=T.filter(t=>t.status==="Done").length;
   const late=T.filter(t=>t.status!=="Done"&&dueInfo(t).cls==="late").length;
   const soon=T.filter(t=>t.status!=="Done"&&dueInfo(t).cls==="soon").length;
   const unassigned=T.filter(t=>!t.primary).length;
-  const pct=n?Math.round(done/n*100):0;
-  // Stack markers that share a position into lanes so none overlap.
+  const pct=n?Math.round(done/n*100):0, internal=d.kind==="internal";
   const lanes={};
   const marks=T.map(t=>{ const x=MARK[t.status]??4; const lane=(lanes[x]=(lanes[x]||0)+1)-1; return {t,x,lane}; });
   const maxLane=Math.max(0,...marks.map(m=>m.lane));
   return `<section class="hand">
     <div class="wrap hand-in">
       <div class="hand-head">
-        <div>
-          <h1>${esc(state.fn.replace(/^\d+\.\s*/,""))}</h1>
-          <p>Handover from Nanjaraj to Ankitha</p>
-        </div>
-        <div class="hand-score" aria-label="${done} of ${n} complete">
-          <span class="big">${done}<small>/${n}</small></span>
-          <span class="cap">processes handed over</span>
-        </div>
+        <div><h1>${esc(d.name)}</h1><p>${internal?"Prequate's own tasks on this engagement":"Handover from Nanjaraj to Ankitha"}</p></div>
+        <div class="hand-score"><span class="big">${done}<small>/${n}</small></span><span class="cap">${internal?"tasks complete":"processes handed over"}</span></div>
       </div>
-      <div class="track" style="--lanes:${maxLane+1}">
+      ${n?`<div class="track" style="--lanes:${maxLane+1}">
         <div class="track-rail"><span class="track-fill" style="width:${pct}%"></span></div>
         ${marks.map(m=>`<button class="mk ${stCls(m.t.status)} ${dueInfo(m.t).cls==="late"&&m.t.status!=="Done"?"mk-late":""}" style="--x:${m.x}%;--lane:${m.lane}" data-jump="${m.t.id}" title="${esc(m.t.no+". "+m.t.title+" ("+m.t.status+")")}" aria-label="Task ${esc(m.t.no)}, ${esc(m.t.title)}, ${esc(m.t.status)}">${esc(m.t.no)}</button>`).join("")}
-        <div class="track-ends"><span>${avatar("nanjaraj","sm")}Nanjaraj</span><span class="mid">In progress</span><span>Ankitha${avatar("ankitha","sm")}</span></div>
-      </div>
+        <div class="track-ends">${internal?`<span>Not started</span><span class="mid">In progress</span><span>Done</span>`:`<span>${avatar("nanjaraj","sm")}Nanjaraj</span><span class="mid">In progress</span><span>Ankitha${avatar("ankitha","sm")}</span>`}</div>
+      </div>`:`<p class="hand-empty">No tasks in this department yet.</p>`}
       <div class="hand-facts">
         <button class="fact ${late?"is-late":""}" data-fs="late"><b>${late}</b> overdue</button>
         <button class="fact" data-fs="soon"><b>${soon}</b> due in the next 14 days</button>
@@ -766,25 +952,28 @@ function handoverHTML(){
   </section>`;
 }
 function peopleHTML(){
-  const T=state.tasks;
+  const T=tasksIn(curDept);
+  const core=new Set(["nanjaraj","ankitha","prequate"]);
+  const list=state.people.filter(p=>core.has(p.id)||T.some(t=>involved(t,p.id)));
   return `<section class="wrap people" aria-label="Pending by person">
-    ${state.people.map(p=>{
+    ${list.map(p=>{
       const mine=T.filter(t=>t.primary===p.id&&t.status!=="Done");
       const sec=T.filter(t=>t.secondary===p.id&&t.status!=="Done").length;
+      const st=T.reduce((a,t)=>a+stepsOf(t).filter(s=>(s.primary===p.id)&&s.status!=="Done").length,0);
       const lateN=mine.filter(t=>dueInfo(t).cls==="late").length;
       const nx=mine.filter(t=>t.due).sort((a,b)=>a.due.localeCompare(b.due))[0];
       const on=filt.person===p.id;
       return `<button class="person ${on?"on":""}" data-fp="${p.id}" aria-pressed="${on}">
         ${avatar(p.id)}
-        <span class="pi"><span class="pn">${esc(p.name)}</span>
-        <span class="ps"><b>${mine.length}</b> pending${sec?`, ${sec} as secondary`:""}</span>
+        <span class="pi"><span class="pn">${esc(p.name)}${p.role?` <em>${esc(p.role)}</em>`:""}</span>
+        <span class="ps"><b>${mine.length}</b> task${mine.length===1?"":"s"}${st?`, ${st} step${st===1?"":"s"}`:""}${sec?`, ${sec} as secondary`:""}</span>
         <span class="px ${lateN?"late":""}">${lateN?`${lateN} overdue`:nx?`Next due ${esc(dueInfo(nx).label)}`:"Nothing due"}</span></span>
       </button>`;}).join("")}
   </section>`;
 }
 function passes(t){
   const di=dueInfo(t);
-  if(filt.person && t.primary!==filt.person && t.secondary!==filt.person) return false;
+  if(filt.person && !involved(t,filt.person)) return false;
   switch(filt.status){
     case "pending": return t.status!=="Done";
     case "late": return t.status!=="Done"&&di.cls==="late";
@@ -796,19 +985,19 @@ function passes(t){
 }
 function renderOverall(){
   const isP=role==="prequate";
-  const shown=state.tasks.filter(passes);
+  if(!depts().some(d=>d.id===curDept)) curDept=depts()[0].id;
+  const all=tasksIn(curDept), shown=all.filter(passes);
   const F=[["all","All"],["pending","Pending"],["late","Overdue"],["soon","Due soon"],["unassigned","Not allocated"],["done","Done"]];
-  const opts=v=>`<option value="">Unassigned</option>`+state.people.map(p=>`<option value="${p.id}" ${p.id===v?"selected":""}>${esc(p.name)}</option>`).join("");
   const rows=shown.map(t=>{
-    const di=dueInfo(t), open=openRow===t.id, ed=canEditTask(t), late=di.cls==="late"&&t.status!=="Done";
+    const di=dueInfo(t), open=openRow===t.id, ed=canEditTask(t), late=di.cls==="late"&&t.status!=="Done", S=stepsOf(t);
     return `<div class="row ${open?"open":""} ${late?"is-late":""}" id="row-${t.id}">
       <span class="r-no">${esc(t.no)}</span>
       <button class="r-title" data-open="${t.id}" aria-expanded="${open}">
         <span class="tt" data-no="${esc(t.no)}">${esc(t.title)}</span>
-        <span class="ty">${esc(t.type)}<span class="more">${open?"Close":isP?"Edit details":"Outcome"}</span></span>
+        <span class="ty">${esc(t.type)}${S.length?`<span class="stc">${stepsDone(t)} of ${S.length} steps done</span>`:""}<span class="more">${open?"Close":isP?"Edit details":"Details"}</span></span>
       </button>
-      <span class="r-cell r-p" data-l="Primary">${isP?`<select class="sel" data-f="primary" data-id="${t.id}" aria-label="Primary">${opts(t.primary)}</select>`:t.primary?`<span class="who">${avatar(t.primary,"xs")}${esc(nameOf(t.primary))}</span>`:`<span class="muted">Unassigned</span>`}</span>
-      <span class="r-cell r-s" data-l="Secondary">${isP?`<select class="sel" data-f="secondary" data-id="${t.id}" aria-label="Secondary">${opts(t.secondary)}</select>`:t.secondary?`<span class="who">${avatar(t.secondary,"xs")}${esc(nameOf(t.secondary))}</span>`:`<span class="muted">None</span>`}</span>
+      <span class="r-cell r-p" data-l="Primary">${isP?`<select class="sel" data-f="primary" data-id="${t.id}" aria-label="Primary">${personOpts(t.primary)}</select>`:t.primary?whoLabel(t.primary):`<span class="muted">Unassigned</span>`}</span>
+      <span class="r-cell r-s" data-l="Secondary">${isP?`<select class="sel" data-f="secondary" data-id="${t.id}" aria-label="Secondary">${personOpts(t.secondary,"None")}</select>`:whoLabel(t.secondary)}</span>
       <span class="r-cell r-d" data-l="Timeline">${isP?`<input class="sel" type="date" data-f="due" data-id="${t.id}" value="${esc(t.due)}" aria-label="Expected timeline">`:`<span class="dt">${esc(di.label)}</span>`}${di.sub?`<span class="due ${di.cls}">${esc(di.sub)}</span>`:""}</span>
       <span class="r-cell r-st" data-l="Status">${ed?`<select class="sel st ${stCls(t.status)}" data-f="status" data-id="${t.id}" aria-label="Status">${STATUSES.map(s=>`<option ${s===t.status?"selected":""}>${s}</option>`).join("")}</select>`:`<span class="pill ${stCls(t.status)}">${esc(t.status)}</span>`}</span>
     </div>
@@ -816,6 +1005,7 @@ function renderOverall(){
   }).join("");
   $("#main").innerHTML=`
   ${setupHTML()}
+  ${deptNavHTML()}
   ${handoverHTML()}
   ${peopleHTML()}
   <section class="wrap list">
@@ -823,7 +1013,7 @@ function renderOverall(){
       <h2>All tasks</h2>
       <div class="chips" role="group" aria-label="Filter tasks">${F.map(([k,l])=>`<button class="chip ${filt.status===k?"on":""}" data-fs="${k}" aria-pressed="${filt.status===k}">${l}</button>`).join("")}</div>
     </div>
-    ${filt.person||filt.status!=="all"?`<p class="list-note">Showing ${shown.length} of ${state.tasks.length}${filt.person?` for ${esc(nameOf(filt.person))}`:""}. <button class="txtbtn" id="clearf">Show all</button></p>`:""}
+    ${filt.person||filt.status!=="all"?`<p class="list-note">Showing ${shown.length} of ${all.length}${filt.person?` involving ${esc(nameOf(filt.person))}`:""}. <button class="txtbtn" id="clearf">Show all</button></p>`:""}
     <div class="grid" role="list">
       <div class="row head" aria-hidden="true"><span></span><span>Sub-task / process</span><span>Primary</span><span>Secondary</span><span>Expected timeline</span><span>Status</span></div>
       ${rows||`<div class="empty">No tasks match this view.</div>`}
@@ -832,34 +1022,93 @@ function renderOverall(){
     ${viewNotice()?`<p class="notice">${viewNotice()}</p>`:""}
   </section>
   ${isP?adminHTML():""}`;
-  document.querySelectorAll("[data-open]").forEach(b=>b.onclick=()=>{ openRow=openRow===b.dataset.open?null:b.dataset.open; renderOverall(); updateStatus(); });
+  const again=()=>{ renderOverall(); updateStatus(); };
+  document.querySelectorAll("[data-dept]").forEach(b=>b.onclick=()=>{ curDept=b.dataset.dept; openRow=null; filt={status:"all",person:""}; again(); });
+  document.querySelectorAll("[data-open]").forEach(b=>b.onclick=()=>{ openRow=openRow===b.dataset.open?null:b.dataset.open; again(); });
   document.querySelectorAll("#main [data-f]").forEach(el=>el.onchange=()=>setField(el.dataset.id,el.dataset.f,el.value));
   document.querySelectorAll("[data-e]").forEach(el=>el.onchange=()=>setField(el.dataset.id,el.dataset.e,el.tagName==="SELECT"?el.value:el.value.trim(),true));
-  document.querySelectorAll("[data-fs]").forEach(b=>b.onclick=()=>{ filt.status = filt.status===b.dataset.fs&&b.classList.contains("fact")?"all":b.dataset.fs; renderOverall(); updateStatus();
+  document.querySelectorAll("[data-fs]").forEach(b=>b.onclick=()=>{ filt.status = filt.status===b.dataset.fs&&b.classList.contains("fact")?"all":b.dataset.fs; again();
     if(b.classList.contains("fact")) $(".list").scrollIntoView({behavior:"smooth"}); });
-  document.querySelectorAll("[data-fp]").forEach(b=>b.onclick=()=>{ filt.person=filt.person===b.dataset.fp?"":b.dataset.fp; renderOverall(); updateStatus(); });
-  document.querySelectorAll("[data-jump]").forEach(b=>b.onclick=()=>{ filt={status:"all",person:""}; openRow=b.dataset.jump; renderOverall(); updateStatus();
+  document.querySelectorAll("[data-fp]").forEach(b=>b.onclick=()=>{ filt.person=filt.person===b.dataset.fp?"":b.dataset.fp; again(); });
+  document.querySelectorAll("[data-jump]").forEach(b=>b.onclick=()=>{ filt={status:"all",person:""}; openRow=b.dataset.jump; again();
     const r=$("#row-"+b.dataset.jump); if(r) r.scrollIntoView({behavior:"smooth",block:"center"}); });
-  const cf=$("#clearf"); if(cf) cf.onclick=()=>{ filt={status:"all",person:""}; renderOverall(); updateStatus(); };
+  const cf=$("#clearf"); if(cf) cf.onclick=()=>{ filt={status:"all",person:""}; again(); };
   document.querySelectorAll("[data-del]").forEach(b=>b.onclick=()=>{ if(!confirm("Remove this task from the tracker?")) return; state.tasks=state.tasks.filter(t=>t.id!==b.dataset.del); openRow=null; renumber(); render(); });
-  document.querySelectorAll("[data-mv]").forEach(b=>b.onclick=()=>{ const i=state.tasks.findIndex(t=>t.id===b.dataset.id), j=i+(+b.dataset.mv);
-    if(j<0||j>=state.tasks.length) return; [state.tasks[i],state.tasks[j]]=[state.tasks[j],state.tasks[i]]; renumber(); render(); });
+  document.querySelectorAll("[data-mv]").forEach(b=>b.onclick=()=>{
+    const T=tasksIn(curDept), i=T.findIndex(t=>t.id===b.dataset.id), j=i+(+b.dataset.mv); if(j<0||j>=T.length) return;
+    const a=state.tasks.indexOf(T[i]), c=state.tasks.indexOf(T[j]); [state.tasks[a],state.tasks[c]]=[state.tasks[c],state.tasks[a]]; renumber(); render(); });
+  bindSteps();
   bindSetup();
   if(isP) bindAdmin();
 }
+function textBlock(h,v){ return v?`<div><h4>${h}</h4><p>${esc(v)}</p></div>`:""; }
+function stepsHTML(t,editing){
+  const S=stepsOf(t); if(!S.length&&!editing) return "";
+  const rows=S.map((s,k)=>{
+    const di=stepDue(s), ed=canEditStep(s,t), mine=s.primary===role||s.secondary===role, late=di.cls==="late"&&s.status!=="Done";
+    if(editing) return `<div class="step edit">
+      <span class="sn">${t.no}.${k+1}</span>
+      <input type="text" class="st-title" data-s="title" data-t="${t.id}" data-id="${s.id}" value="${esc(s.title)}" aria-label="Step">
+      <select class="sel" data-s="primary" data-t="${t.id}" data-id="${s.id}" aria-label="Step primary">${personOpts(s.primary)}</select>
+      <select class="sel" data-s="secondary" data-t="${t.id}" data-id="${s.id}" aria-label="Step secondary">${personOpts(s.secondary,"None")}</select>
+      <input type="date" class="sel" data-s="due" data-t="${t.id}" data-id="${s.id}" value="${esc(s.due)}" aria-label="Step date">
+      <select class="sel st ${stCls(s.status)}" data-s="status" data-t="${t.id}" data-id="${s.id}" aria-label="Step status">${STATUSES.map(x=>`<option ${x===s.status?"selected":""}>${x}</option>`).join("")}</select>
+      <button class="txtbtn danger-t" data-sdel="${s.id}" data-t="${t.id}" aria-label="Remove step">Remove</button>
+    </div>`;
+    return `<div class="step ${mine?"is-mine":""} ${s.status==="Done"?"is-done":""} ${late?"is-late":""}">
+      <span class="sn">${t.no}.${k+1}</span>
+      <span class="stt">${esc(s.title)}</span>
+      <span class="sw" data-l="Primary">${s.primary?whoLabel(s.primary):`<span class="muted">To be confirmed</span>`}</span>
+      <span class="sw" data-l="Secondary">${whoLabel(s.secondary)}</span>
+      <span class="sd" data-l="By">${s.due?`${esc(di.label)}${di.sub&&s.status!=="Done"?`<span class="due ${di.cls}">${esc(di.sub)}</span>`:""}`:`<span class="muted">Task deadline</span>`}</span>
+      <span class="ss">${ed?`<select class="sel st ${stCls(s.status)}" data-s="status" data-t="${t.id}" data-id="${s.id}" aria-label="Step status">${STATUSES.map(x=>`<option ${x===s.status?"selected":""}>${x}</option>`).join("")}</select>`:`<span class="pill ${stCls(s.status)}">${esc(s.status)}</span>`}</span>
+    </div>`;
+  }).join("");
+  return `<div class="span steps">
+    <h4>Steps${S.length?` <span class="muted">${stepsDone(t)} of ${S.length} done</span>`:""}</h4>
+    ${rows}
+    ${editing?`<div class="step-add"><input type="text" id="ns-${t.id}" placeholder="Add a step"><button class="btn ghost" data-sadd="${t.id}">Add step</button></div>`:""}
+  </div>`;
+}
+function bindSteps(){
+  document.querySelectorAll("[data-s]").forEach(el=>el.onchange=()=>{
+    const q=el.dataset.s==="title"; setStep(el.dataset.t,el.dataset.id,el.dataset.s,q?el.value.trim():el.value,q); });
+  document.querySelectorAll("[data-sdel]").forEach(b=>b.onclick=()=>{ const t=state.tasks.find(x=>x.id===b.dataset.t); if(!t) return;
+    t.steps=stepsOf(t).filter(s=>s.id!==b.dataset.sdel); render(); });
+  document.querySelectorAll("[data-sadd]").forEach(b=>b.onclick=()=>{ const t=state.tasks.find(x=>x.id===b.dataset.sadd); const inp=$("#ns-"+t.id); const v=inp.value.trim();
+    if(!v){ toast("Write the step first."); inp.focus(); return; }
+    t.steps=stepsOf(t).concat([{id:"st"+Date.now().toString(36),title:v,primary:"",secondary:"",due:"",status:"Not started"}]); render(); });
+}
+function setStep(tid,sid,f,v,quiet){
+  const t=state.tasks.find(x=>x.id===tid); if(!t) return; const s=stepsOf(t).find(x=>x.id===sid); if(!s) return;
+  if(f==="secondary"&&v&&s.primary===v){ toast("Secondary cannot be the same person as primary."); render(); return; }
+  s[f]=v; if(f==="primary"&&v&&s.secondary===v) s.secondary="";
+  t.steps=stepsOf(t).slice();
+  if(f==="status"){ t.updated=new Date().toISOString(); t.updatedBy=role; }
+  if(quiet){ scheduleSave(); return; }
+  render();
+}
 function detailHTML(t){
   return `<div class="detail">
-    <div><h4>Outcome</h4><p>${esc(t.outcome)||'<span class="muted">Not written yet</span>'}</p></div>
-    <div><h4>What it facilitates</h4><p>${esc(t.facilitates)||'<span class="muted">Not written yet</span>'}</p></div>
+    ${textBlock("Outcome",t.outcome)||`<div><h4>Outcome</h4><p class="muted">Not written yet</p></div>`}
+    ${textBlock("What it facilitates",t.facilitates)}
+    ${textBlock("How it works",t.how)}
+    ${textBlock("Done means",t.doneMeans)}
+    ${t.remarks?`<div class="span remarks"><h4>Remarks</h4><p>${esc(t.remarks)}</p></div>`:""}
+    ${stepsHTML(t,false)}
     ${t.note?`<div class="span"><h4>Latest update${t.updatedBy?` from ${esc(nameOf(t.updatedBy))}`:""}${t.updated?`, ${esc(fmtDate(t.updated))}`:""}</h4><p>${esc(t.note)}</p></div>`:""}
   </div>`;
 }
 function editHTML(t){
-  const i=state.tasks.indexOf(t), last=i===state.tasks.length-1;
+  const T=tasksIn(deptOf(t)), i=T.indexOf(t), last=i===T.length-1;
   return `<div class="detail edit">
     <label class="span"><h4>Sub-task / process</h4><input type="text" data-e="title" data-id="${t.id}" value="${esc(t.title)}"></label>
     <label><h4>Outcome</h4><textarea data-e="outcome" data-id="${t.id}" rows="4">${esc(t.outcome)}</textarea></label>
     <label><h4>What it facilitates</h4><textarea data-e="facilitates" data-id="${t.id}" rows="4">${esc(t.facilitates)}</textarea></label>
+    <label><h4>How it works</h4><textarea data-e="how" data-id="${t.id}" rows="2" placeholder="Optional">${esc(t.how)}</textarea></label>
+    <label><h4>Done means</h4><textarea data-e="doneMeans" data-id="${t.id}" rows="2" placeholder="Optional">${esc(t.doneMeans)}</textarea></label>
+    <label class="span"><h4>Remarks</h4><textarea data-e="remarks" data-id="${t.id}" rows="2" placeholder="Remarks everyone can see">${esc(t.remarks)}</textarea></label>
+    ${stepsHTML(t,true)}
     <label><h4>One-time or continuous</h4><select class="sel" data-e="type" data-id="${t.id}">${["Continuous","One-time"].map(x=>`<option ${x===t.type?"selected":""}>${x}</option>`).join("")}</select></label>
     <label><h4>Latest update${t.updatedBy?`, last from ${esc(nameOf(t.updatedBy))}`:""}</h4><textarea data-e="note" data-id="${t.id}" rows="2" placeholder="Progress note everyone can see">${esc(t.note)}</textarea></label>
     <div class="span acts">
@@ -879,27 +1128,27 @@ function setField(id,f,v,quiet){
   if(quiet){ scheduleSave(); return; }
   render();
 }
-function renumber(){ state.tasks.forEach((t,i)=>t.no=i+1); }
 
 /* ---------- Prequate settings ---------- */
 function adminHTML(){
+  const d=deptById(curDept);
   return `<section class="wrap admin">
     <h2>Tracker settings</h2>
     <div class="panels">
       <div class="panel">
         <h3>Add a task</h3>
-        <p>For items agreed in a meeting that are not on the list yet.</p>
+        <p>Adds to ${esc(d.name)}. Steps can be added once the task exists.</p>
         <input type="text" id="nt-title" placeholder="Sub-task or process">
-        <textarea id="nt-outcome" rows="3" placeholder="Outcome: what Ankitha can do once this is complete"></textarea>
+        <textarea id="nt-outcome" rows="3" placeholder="Outcome: what should be true once this is complete"></textarea>
         <textarea id="nt-fac" rows="2" placeholder="What it facilitates"></textarea>
         <div class="line"><select class="sel" id="nt-type" aria-label="Type"><option>Continuous</option><option>One-time</option></select><button class="btn" id="nt-add">Add task</button></div>
       </div>
       <div class="panel">
         <h3>People responsible</h3>
         <p>Names in the Primary and Secondary lists. Only people with a PIN can sign in.</p>
-        ${state.people.map(p=>{ const core=!!file.slots[p.id], used=state.tasks.some(t=>t.primary===p.id||t.secondary===p.id);
+        ${state.people.map(p=>{ const core=!!file.slots[p.id], used=state.tasks.some(t=>involved(t,p.id));
           return `<div class="line">${avatar(p.id,"sm")}<input type="text" data-pn="${p.id}" value="${esc(p.name)}" aria-label="Name">
-            ${core?`<span class="tag">Has PIN</span>`:`<button class="txtbtn" data-prm="${p.id}" ${used?'disabled title="Reassign their tasks first"':""}>Remove</button>`}</div>`; }).join("")}
+            ${core?`<span class="tag">Has PIN</span>`:`<span class="tag">${esc(p.role||"No PIN")}</span><button class="txtbtn" data-prm="${p.id}" ${used?'disabled title="Reassign their tasks first"':""}>Remove</button>`}</div>`; }).join("")}
         <div class="line add"><input type="text" id="np-name" placeholder="Add a person, for example Accounts head"><button class="btn ghost" id="np-add">Add</button></div>
       </div>
       <div class="panel">
@@ -914,7 +1163,7 @@ function adminHTML(){
 function bindAdmin(){
   $("#nt-add").onclick=()=>{
     const title=$("#nt-title").value.trim(); if(!title){ toast("Give the task a name first."); $("#nt-title").focus(); return; }
-    state.tasks.push({id:"t"+Date.now().toString(36),no:0,title,outcome:$("#nt-outcome").value.trim(),facilitates:$("#nt-fac").value.trim(),type:$("#nt-type").value,primary:"",secondary:"",due:"",status:"Not started",note:"",updated:"",updatedBy:"",custom:true});
+    state.tasks.push({id:"t"+Date.now().toString(36),dept:curDept,no:0,title,outcome:$("#nt-outcome").value.trim(),facilitates:$("#nt-fac").value.trim(),how:"",doneMeans:"",remarks:"",steps:[],type:$("#nt-type").value,primary:"",secondary:"",due:"",status:"Not started",note:"",updated:"",updatedBy:"",custom:true});
     renumber(); filt={status:"all",person:""}; render(); toast("Task added.");
   };
   document.querySelectorAll("[data-pin]").forEach(b=>b.onclick=async()=>{
@@ -939,7 +1188,7 @@ function bindAdmin(){
 
 /* ---------- My tasks ---------- */
 function renderMine(){
-  const mine=state.tasks.filter(t=>t.primary===role||t.secondary===role);
+  const mine=myItems();
   const k=t=>t.due||"9999";
   const pending=mine.filter(t=>t.status!=="Done").sort((a,b)=>k(a).localeCompare(k(b)));
   const done=mine.filter(t=>t.status==="Done");
@@ -950,16 +1199,24 @@ function renderMine(){
     return `<div class="leaf ${t.status==="Done"?"":di.cls}"><span class="d">${d.getDate()}</span><span class="m">${d.toLocaleDateString("en-IN",{month:"short"})} ${String(d.getFullYear()).slice(2)}</span></div>`;
   };
   const card=t=>{
-    const di=dueInfo(t), ed=canEditTask(t);
-    const r=t.primary===role?(t.secondary?`With ${esc(nameOf(t.secondary))} as secondary`:"You lead this"):`Supporting ${esc(nameOf(t.primary))}`;
+    const di=dueInfo(t), owner=t.primary===role||t.secondary===role, ed=owner&&canEditTask(t), S=stepsOf(t);
+    const myS=S.filter(s=>s.primary===role||s.secondary===role);
+    const r=t.primary===role?(t.secondary?`You lead, with ${esc(nameOf(t.secondary))}`:"You lead this"):t.secondary===role?`Supporting ${esc(nameOf(t.primary))}`:`${myS.length} step${myS.length===1?"":"s"} with you`;
     return `<article class="task ${t.status==="Done"?"is-done":di.cls}">
       ${leaf(t)}
       <div class="task-body">
-        <p class="task-meta">Task ${esc(t.no)}<span class="sep"></span>${r}<span class="sep"></span>${esc(t.type)}</p>
+        <p class="task-meta">${esc(deptById(deptOf(t)).name)}<span class="sep"></span>Task ${esc(t.no)}<span class="sep"></span>${r}</p>
         <h3>${esc(t.title)}</h3>
-        <p class="task-oc">${esc(t.outcome)}</p>
+        ${t.outcome?`<p class="task-oc">${esc(t.outcome)}</p>`:""}
+        ${t.remarks?`<p class="task-rem"><b>Remarks</b> ${esc(t.remarks)}</p>`:""}
         ${di.sub&&t.status!=="Done"?`<p class="due ${di.cls}">${esc(di.sub)}</p>`:""}
-        ${ed?`<div class="seg" role="group" aria-label="Status">${STATUSES.map(s=>`<button class="${s===t.status?"on "+stCls(s):""}" data-st="${s}" data-id="${t.id}" aria-pressed="${s===t.status}">${s}</button>`).join("")}</div>
+        ${S.length?`<div class="mysteps">${S.map((s,k)=>{ const m=s.primary===role||s.secondary===role, sd=stepDue(s), e=canEditStep(s,t);
+          return `<div class="ms ${m?"is-mine":""} ${s.status==="Done"?"is-done":""}">
+            <span class="sn">${t.no}.${k+1}</span>
+            <span class="stt">${esc(s.title)}<small>${s.primary?esc(nameOf(s.primary)):"To be confirmed"}${s.secondary?`, with ${esc(nameOf(s.secondary))}`:""}${s.due?`, by ${esc(sd.label)}`:""}${sd.sub&&s.status!=="Done"&&s.due?` <span class="due ${sd.cls}">${esc(sd.sub)}</span>`:""}</small></span>
+            ${e&&(m||owner)?`<select class="sel st ${stCls(s.status)}" data-s="status" data-t="${t.id}" data-id="${s.id}" aria-label="Step status">${STATUSES.map(x=>`<option ${x===s.status?"selected":""}>${x}</option>`).join("")}</select>`:`<span class="pill ${stCls(s.status)}">${esc(s.status)}</span>`}
+          </div>`;}).join("")}</div>`:""}
+        ${ed?`<p class="lbl-s">Task status</p><div class="seg" role="group" aria-label="Status">${STATUSES.map(s=>`<button class="${s===t.status?"on "+stCls(s):""}" data-st="${s}" data-id="${t.id}" aria-pressed="${s===t.status}">${s}</button>`).join("")}</div>
           <textarea class="note" data-m="note" data-id="${t.id}" rows="2" placeholder="Add an update: what moved, what is blocked, what you need">${esc(t.note)}</textarea>`
           :`<span class="pill ${stCls(t.status)}">${esc(t.status)}</span>${t.note?`<p class="task-note">${esc(t.note)}</p>`:""}`}
       </div>
@@ -970,9 +1227,9 @@ function renderMine(){
   <section class="wrap mine">
     <div class="mine-head">
       <h1>${pending.length?`${pending.length} ${pending.length===1?"task is":"tasks are"} with you, ${esc(first)}`:`Nothing is pending with you, ${esc(first)}`}</h1>
-      <p>${late?`<span class="late">${late} overdue.</span> `:""}Earliest deadline first.</p>
+      <p>${late?`<span class="late">${late} overdue.</span> `:""}Across all departments, earliest deadline first.</p>
     </div>
-    <div class="tasks">${pending.length?pending.map(card).join(""):`<div class="empty big">${mine.length?"Every task allocated to you is complete.":role==="prequate"?"No tasks are allocated to Prequate yet. Allocate owners in Overall project.":"No tasks are allocated to you yet. Prequate allocates them after the review meeting."}</div>`}</div>
+    <div class="tasks">${pending.length?pending.map(card).join(""):`<div class="empty big">${mine.length?"Every task allocated to you is complete.":"No tasks are allocated to you yet. Prequate allocates them after the review meeting."}</div>`}</div>
     ${done.length?`<details class="done"><summary>Completed tasks (${done.length})</summary><div class="tasks">${done.map(card).join("")}</div></details>`:""}
     <p class="foot">${lastSaved()}</p>
     ${viewNotice()?`<p class="notice">${viewNotice()}</p>`:""}
@@ -980,6 +1237,7 @@ function renderMine(){
   document.querySelectorAll("[data-st]").forEach(b=>b.onclick=()=>{ if(b.classList.contains("on")) return; setField(b.dataset.id,"status",b.dataset.st);
     toast(b.dataset.st==="Done"?"Marked as done.":"Status set to "+b.dataset.st.toLowerCase()+"."); });
   document.querySelectorAll("[data-m=note]").forEach(el=>el.onchange=()=>setField(el.dataset.id,"note",el.value.trim(),true));
+  bindSteps();
 }
 
 render();
