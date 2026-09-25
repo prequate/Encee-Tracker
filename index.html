@@ -254,6 +254,7 @@ select.sel{appearance:none; -webkit-appearance:none; padding-right:30px; cursor:
 .lbl{width:78px; flex:none; font-size:14px; font-weight:600}
 .pinfield{max-width:120px}
 .tag{font-size:12px; color:var(--grey); white-space:nowrap}
+.dname{flex:1; font-size:14px; font-weight:600; min-width:0}
 
 /* ---------- My tasks ---------- */
 .mine{padding-top:40px; padding-bottom:64px}
@@ -545,7 +546,13 @@ function migrate(s){
   if(s.schema<4){ upgrade4(s); changed=true; }
   if(s.schema<5){ upgrade5(s); changed=true; }
   if(s.schema<6){ upgrade6(s); changed=true; }
+  if(s.schema<7){ upgrade7(s); changed=true; }
   return changed;
+}
+/* Version 7: hide Finance, Accounts & Banking for now (kept, not deleted) */
+function upgrade7(s){
+  (s.depts||[]).forEach(d=>{ if(d.id==="fin") d.hidden=true; });
+  s.schema=7;
 }
 /* Version 6: fold the account list into the sit-down with Nagendra */
 function upgrade6(s){
@@ -900,15 +907,17 @@ function bindSetup(){
 }
 
 /* ---------- Departments and steps ---------- */
-let curDept="fin";
-const depts=()=>state.depts&&state.depts.length?state.depts:[{id:"fin",name:(state.fn||"Finance").replace(/^\d+\.\s*/,""),kind:"handover"}];
+let curDept="";
+const allDepts=()=>state.depts&&state.depts.length?state.depts:[{id:"fin",name:(state.fn||"Finance").replace(/^\d+\.\s*/,""),kind:"handover"}];
+const depts=()=>{ const v=allDepts().filter(d=>!d.hidden); return v.length?v:allDepts().slice(0,1); };
+const visibleDept=id=>depts().some(d=>d.id===id);
 const deptOf=t=>t.dept||"fin";
-const deptById=id=>depts().find(d=>d.id===id)||depts()[0];
+const deptById=id=>allDepts().find(d=>d.id===id)||depts()[0];
 const tasksIn=d=>state.tasks.filter(t=>deptOf(t)===d);
 const stepsOf=t=>t.steps||[];
 const stepsDone=t=>stepsOf(t).filter(s=>s.status==="Done").length;
 const involved=(t,id)=>t.primary===id||t.secondary===id||stepsOf(t).some(s=>s.primary===id||s.secondary===id);
-function myItems(){ return state.tasks.filter(t=>involved(t,role)); }
+function myItems(){ return state.tasks.filter(t=>visibleDept(deptOf(t))&&involved(t,role)); }
 function canEditStep(s,t){ if(role==="prequate") return true; if(!token||tokenBad) return false;
   return s.primary===role||s.secondary===role||t.primary===role||t.secondary===role; }
 function renumber(){ numberTasks(state); }
@@ -1144,6 +1153,11 @@ function adminHTML(){
         <div class="line"><select class="sel" id="nt-type" aria-label="Type"><option>Continuous</option><option>One-time</option></select><button class="btn" id="nt-add">Add task</button></div>
       </div>
       <div class="panel">
+        <h3>Departments</h3>
+        <p>Hidden departments keep all their tasks and can be shown again at any time.</p>
+        ${allDepts().map(d=>`<div class="line"><span class="dname">${esc(d.name)}</span><span class="tag">${d.hidden?"Hidden":"Shown"}</span><button class="btn ghost" data-dtog="${d.id}">${d.hidden?"Show":"Hide"}</button></div>`).join("")}
+      </div>
+      <div class="panel">
         <h3>People responsible</h3>
         <p>Names in the Primary and Secondary lists. Only people with a PIN can sign in.</p>
         ${state.people.map(p=>{ const core=!!file.slots[p.id], used=state.tasks.some(t=>involved(t,p.id));
@@ -1184,6 +1198,9 @@ function bindAdmin(){
     if(state.people.some(p=>p.name.toLowerCase()===v.toLowerCase())){ toast(v+" is already on the list."); return; }
     state.people.push({id:"p"+Date.now().toString(36), name:v}); render(); toast(v+" added."); };
   const rn=$("#tk-renew"); if(rn) rn.onclick=()=>{ tokenBad=true; saveErr=""; render(); window.scrollTo(0,0); };
+  document.querySelectorAll("[data-dtog]").forEach(b=>b.onclick=()=>{ const d=allDepts().find(x=>x.id===b.dataset.dtog); if(!d) return;
+    if(!d.hidden && allDepts().filter(x=>!x.hidden).length===1){ toast("At least one department has to stay visible."); return; }
+    d.hidden=!d.hidden; state.depts=allDepts().slice(); if(d.hidden&&curDept===d.id) curDept=""; render(); toast(d.name+(d.hidden?" hidden.":" shown.")); });
 }
 
 /* ---------- My tasks ---------- */
