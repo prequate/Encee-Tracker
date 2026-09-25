@@ -258,7 +258,7 @@ select.sel{appearance:none; -webkit-appearance:none; padding-right:30px; cursor:
 
 /* ---------- My tasks ---------- */
 .mine{padding-top:40px; padding-bottom:64px}
-.mine-head h1{font-size:clamp(26px,3.2vw,36px); line-height:1.15; max-width:24ch}
+.mine-head h1{font-size:clamp(26px,3.2vw,36px); line-height:1.15; max-width:30ch}
 .mine-head p{color:var(--grey); margin-top:8px}
 .mine-head .late{color:var(--late); font-weight:600}
 .tasks{display:flex; flex-direction:column; margin-top:28px; border-top:1.5px solid var(--ink)}
@@ -352,6 +352,43 @@ select.sel{appearance:none; -webkit-appearance:none; padding-right:30px; cursor:
   .detail.edit{padding:14px 12px 16px}
   .ms{grid-template-columns:28px 1fr; grid-template-areas:"n t" ". c"}
   .ms .sn{grid-area:n} .ms .stt{grid-area:t} .ms > :nth-child(3){grid-area:c; justify-self:start; max-width:180px}
+}
+
+/* ---------- My tasks: to-do list ---------- */
+.grp{font-size:14px; font-weight:700; margin:34px 0 4px; display:flex; align-items:center; gap:8px; color:var(--ink)}
+.grp span{font-size:12px; font-weight:700; background:var(--mist); color:var(--grey); border-radius:10px; padding:1px 8px}
+.grp.late{color:var(--late)} .grp.late span{background:var(--latebg); color:var(--late)}
+.acts{list-style:none; margin:0; padding:0; border-top:1.5px solid var(--ink)}
+.act{display:grid; grid-template-columns:34px minmax(0,1fr); gap:16px; padding:18px 0; border-bottom:1px solid var(--line); width:100%}
+.tick{width:28px; height:28px; border-radius:50%; box-shadow:inset 0 0 0 2px #C9C9C9; margin-top:1px; position:relative; transition:box-shadow .15s, background .15s}
+.tick:hover:not(:disabled){box-shadow:inset 0 0 0 2px var(--orange)}
+.tick.on{background:var(--ink); box-shadow:none}
+.tick.on::after{content:""; position:absolute; left:10px; top:6px; width:6px; height:11px; border:solid #fff; border-width:0 2px 2px 0; transform:rotate(45deg)}
+.tick:disabled{opacity:.35}
+.act-title{font-size:16.5px; font-weight:600; line-height:1.4; color:var(--ink); max-width:70ch}
+.act.is-done .act-title{color:var(--grey); text-decoration:line-through; text-decoration-color:var(--soft)}
+.act-meta{display:flex; flex-wrap:wrap; gap:6px 14px; margin-top:5px; font-size:13.5px; color:var(--grey)}
+.when{font-weight:600; color:var(--ink)}
+.when.soon{color:var(--deep)} .when.late{color:var(--late)}
+.flag{font-size:12px; font-weight:600; padding:1px 8px; border-radius:10px}
+.flag.ip{background:var(--tint); color:var(--deep)} .flag.oh{background:var(--holdbg); color:var(--hold)}
+.act-from{font-size:12.5px; color:var(--soft); margin-top:4px}
+.act-from b{font-weight:600; color:var(--grey)}
+.act-links{display:flex; gap:18px; margin-top:10px}
+.txtbtn.quiet{color:var(--grey); font-weight:600}
+.more-box{margin-top:12px; background:var(--mist); border-radius:var(--r); padding:14px 16px; display:flex; flex-direction:column; gap:10px; font-size:14px; max-width:720px}
+.more-box b{font-weight:600; display:block; font-size:12.5px; color:var(--grey); margin-bottom:2px}
+.mini{margin:0; padding-left:20px; display:flex; flex-direction:column; gap:4px}
+.mini li span{color:var(--soft); font-size:12.5px}
+.mini li.is-done{color:var(--grey); text-decoration:line-through}
+.note-l{display:block} .note-l textarea{margin-top:4px}
+.sup-list ul{list-style:none; padding:0; margin:10px 0 0}
+.sup{display:flex; flex-direction:column; gap:2px; padding:10px 0; border-bottom:1px solid var(--line)}
+.sup-title{font-size:14.5px}
+.sup-meta{font-size:12.5px; color:var(--soft)}
+@media (max-width:640px){
+  .act{grid-template-columns:30px 1fr; gap:12px}
+  .act-title{font-size:15.5px}
 }
 
 /* ---------- Toast ---------- */
@@ -547,7 +584,16 @@ function migrate(s){
   if(s.schema<5){ upgrade5(s); changed=true; }
   if(s.schema<6){ upgrade6(s); changed=true; }
   if(s.schema<7){ upgrade7(s); changed=true; }
+  if(s.schema<8){ upgrade8(s); changed=true; }
   return changed;
+}
+/* Version 8: use the name Nanjaraj everywhere instead of Nanju */
+function upgrade8(s){
+  const fix=v=>typeof v==="string"?v.replace(/\bNanju\b/g,"Nanjaraj"):v;
+  s.tasks.forEach(t=>{ ["title","outcome","facilitates","how","doneMeans","remarks","note"].forEach(k=>t[k]=fix(t[k]));
+    (t.steps||[]).forEach(st=>st.title=fix(st.title)); });
+  s.people.forEach(p=>p.name=fix(p.name));
+  s.schema=8;
 }
 /* Version 7: hide Finance, Accounts & Banking for now (kept, not deleted) */
 function upgrade7(s){
@@ -607,35 +653,35 @@ function upgrade2(s){
     steps:[S("s1a","List of all accounts, split into export and domestic",NAG,"ankitha"),
            S("s1b","Draft a one-page cheat sheet per client (who drafts: to be confirmed)","",""),
            S("s1c","Background sessions: Nagendra briefs Ankitha client by client, using the existing meeting schedule",NAG,"ankitha"),
-           S("s1d","Nanju reviews the cheat sheets for accuracy","nanjaraj","ankitha"),
+           S("s1d","Nanjaraj reviews the cheat sheets for accuracy","nanjaraj","ankitha"),
            S("s1e","Ankitha signs off the final account map","ankitha",NAG)]}));
   add(T({id:"s2",dept:"sales",title:"Client Handover: All Accounts to Ankitha",type:"Continuous",primary:"nanjaraj",secondary:"ankitha",due:"2026-12-31",
     outcome:"Every account moves to Ankitha. She takes over the relationship and negotiation history, and each client has met her in person, at a conference, or through an online introduction.",
-    facilitates:"Gives her direct ownership of the client relationships that carry the business and reduces client dependence on Nanju.",
+    facilitates:"Gives her direct ownership of the client relationships that carry the business and reduces client dependence on Nanjaraj.",
     doneMeans:"Ankitha has met or been introduced to every client on the Task 1 list.",
     remarks:"Happens during the scheduled meetings.",
     steps:[S("s2a","Choose how each client is introduced: in person, conference, or online","ankitha",""),
-           S("s2b","Nanju formally introduces Ankitha as the new point of contact to every client","nanjaraj","ankitha"),
-           S("s2c","Nanju hands over the relationship and negotiation history for each client","nanjaraj","ankitha"),
+           S("s2b","Nanjaraj formally introduces Ankitha as the new point of contact to every client","nanjaraj","ankitha"),
+           S("s2c","Nanjaraj hands over the relationship and negotiation history for each client","nanjaraj","ankitha"),
            S("s2d","Ankitha meets or is introduced to every client; each one is ticked off on the account list","ankitha","nanjaraj")]}));
   add(T({id:"s3",dept:"sales",title:"Pricing Logic & Price Ranges",type:"Continuous",primary:"ankitha",secondary:DHA,
-    outcome:"Price ranges are set by division and product line. Ankitha approves any price within the agreed range without referring to Nanju.",
+    outcome:"Price ranges are set by division and product line. Ankitha approves any price within the agreed range without referring to Nanjaraj.",
     facilitates:"Enables consistent pricing decisions that protect margin as quoting authority moves to her.",
     remarks:"Depends on the costing sheets for next year's planning. The team is working on these, due 30 Sep.",
     steps:[S("s3a","Costing sheets for next year's planning completed",DHA,"ankitha","2026-09-30","In progress"),
            S("s3b","Ankitha shares the costing sheets with Prequate","ankitha",""),
-           S("s3c","Nanju decides the price range for each division and product line","nanjaraj","ankitha"),
+           S("s3c","Nanjaraj decides the price range for each division and product line","nanjaraj","ankitha"),
            S("s3d","Price ranges are written up in one document","ankitha",DHA),
-           S("s3e","Authority recorded in the Approval Matrix: Ankitha approves within the range, and anything outside it goes to Nanju","ankitha","nanjaraj")]}));
+           S("s3e","Authority recorded in the Approval Matrix: Ankitha approves within the range, and anything outside it goes to Nanjaraj","ankitha","nanjaraj")]}));
   add(T({id:"s4",dept:"sales",title:"Client Simulation Meetings",primary:"nanjaraj",secondary:"ankitha",due:"2026-10-18",
     outcome:"Ankitha is tested on real client scenarios before she runs renewals and negotiations alone. Each client's commercial terms (credit periods, rebates, seasonal price adjustments) are written down in one place.",
     facilitates:"Enables her to honour existing commitments and negotiate renewals from a known baseline.",
-    how:"Nanju plays the client, Ankitha represents Encee Aromatics, and Prequate moderates or observes silently.",
+    how:"Nanjaraj plays the client, Ankitha represents Encee Aromatics, and Prequate moderates or observes silently.",
     remarks:"The meeting schedule will be agreed once Task 1 is done on 3 Oct.",
-    steps:[S("s4a","Nanju writes notes on each client's terms and history","nanjaraj","","2026-10-03"),
-           S("s4b","Nanju prepares tough-client scenarios, from general knowledge of each division to very technical questions, for example on IBQ","nanjaraj","","2026-10-03"),
+    steps:[S("s4a","Nanjaraj writes notes on each client's terms and history","nanjaraj","","2026-10-03"),
+           S("s4b","Nanjaraj prepares tough-client scenarios, from general knowledge of each division to very technical questions, for example on IBQ","nanjaraj","","2026-10-03"),
            S("s4c","Agree the simulation schedule once Task 1 is done","nanjaraj","ankitha"),
-           S("s4d","Run the simulation sessions: Nanju as client, Ankitha as Encee, Prequate moderating","nanjaraj","ankitha","2026-10-18")]}));
+           S("s4d","Run the simulation sessions: Nanjaraj as client, Ankitha as Encee, Prequate moderating","nanjaraj","ankitha","2026-10-18")]}));
   add(T({id:"p1",dept:"pq",title:"Work on the new MIS",primary:"prequate"}));
   add(T({id:"p2",dept:"pq",title:"Become part of the weekly meetings",type:"Continuous",primary:"prequate"}));
   add(T({id:"p3",dept:"pq",title:"Schedule the call with Forex",primary:"prequate"}));
@@ -837,7 +883,7 @@ window.addEventListener("error",e=>{ const m=$("#pinmsg"); if(m && !role){ m.tex
 /* ---------- Shell ---------- */
 function render(){
   if(!role) return renderGate();
-  const mineN=myItems().filter(t=>t.status!=="Done").length;
+  const mineN=openActionCount();
   $("#app").innerHTML=`
   <header class="bar">
     <div class="bar-in">
@@ -1203,58 +1249,101 @@ function bindAdmin(){
     d.hidden=!d.hidden; state.depts=allDepts().slice(); if(d.hidden&&curDept===d.id) curDept=""; render(); toast(d.name+(d.hidden?" hidden.":" shown.")); });
 }
 
-/* ---------- My tasks ---------- */
+/* ---------- My tasks: a plain to-do list ---------- */
+let openAct=null;
+function myActions(){
+  const act=[], sup=[];
+  state.tasks.filter(t=>visibleDept(deptOf(t))).forEach(t=>{
+    const S=stepsOf(t);
+    if(S.length){
+      S.forEach((s,k)=>{
+        const item={key:t.id+":"+s.id, t, s, no:t.no+"."+(k+1), title:s.title, due:s.due||t.due, status:s.status,
+          lead:s.primary, helper:s.secondary};
+        if(s.primary===role) act.push(item); else if(s.secondary===role) sup.push(item);
+      });
+    } else {
+      const item={key:t.id, t, s:null, no:String(t.no), title:t.title, due:t.due, status:t.status, lead:t.primary, helper:t.secondary};
+      if(t.primary===role) act.push(item); else if(t.secondary===role) sup.push(item);
+    }
+  });
+  return {act,sup};
+}
+function openActionCount(){ return myActions().act.filter(a=>a.status!=="Done").length; }
+function daysTo(iso){ if(!iso) return null; return Math.round((new Date(iso+"T00:00:00")-today())/86400000); }
+function whenText(a){
+  const d=daysTo(a.due); if(d===null) return {txt:"No date set",cls:""};
+  const date=new Date(a.due+"T00:00:00").toLocaleDateString("en-IN",{day:"numeric",month:"short"});
+  if(a.status==="Done") return {txt:"Done",cls:""};
+  if(d<0) return {txt:`${-d} day${d===-1?"":"s"} late, was due ${date}`,cls:"late"};
+  if(d===0) return {txt:"Due today",cls:"soon"};
+  if(d===1) return {txt:"Due tomorrow",cls:"soon"};
+  if(d<=7) return {txt:`Due in ${d} days, ${date}`,cls:"soon"};
+  return {txt:`Due ${date}`,cls:""};
+}
 function renderMine(){
-  const mine=myItems();
-  const k=t=>t.due||"9999";
-  const pending=mine.filter(t=>t.status!=="Done").sort((a,b)=>k(a).localeCompare(k(b)));
-  const done=mine.filter(t=>t.status==="Done");
-  const late=pending.filter(t=>dueInfo(t).cls==="late").length;
-  const leaf=t=>{
-    if(!t.due) return `<div class="leaf none"><span class="d">No</span><span class="m">date</span></div>`;
-    const d=new Date(t.due+"T00:00:00"), di=dueInfo(t);
-    return `<div class="leaf ${t.status==="Done"?"":di.cls}"><span class="d">${d.getDate()}</span><span class="m">${d.toLocaleDateString("en-IN",{month:"short"})} ${String(d.getFullYear()).slice(2)}</span></div>`;
-  };
-  const card=t=>{
-    const di=dueInfo(t), owner=t.primary===role||t.secondary===role, ed=owner&&canEditTask(t), S=stepsOf(t);
-    const myS=S.filter(s=>s.primary===role||s.secondary===role);
-    const r=t.primary===role?(t.secondary?`You lead, with ${esc(nameOf(t.secondary))}`:"You lead this"):t.secondary===role?`Supporting ${esc(nameOf(t.primary))}`:`${myS.length} step${myS.length===1?"":"s"} with you`;
-    return `<article class="task ${t.status==="Done"?"is-done":di.cls}">
-      ${leaf(t)}
-      <div class="task-body">
-        <p class="task-meta">${esc(deptById(deptOf(t)).name)}<span class="sep"></span>Task ${esc(t.no)}<span class="sep"></span>${r}</p>
-        <h3>${esc(t.title)}</h3>
-        ${t.outcome?`<p class="task-oc">${esc(t.outcome)}</p>`:""}
-        ${t.remarks?`<p class="task-rem"><b>Remarks</b> ${esc(t.remarks)}</p>`:""}
-        ${di.sub&&t.status!=="Done"?`<p class="due ${di.cls}">${esc(di.sub)}</p>`:""}
-        ${S.length?`<div class="mysteps">${S.map((s,k)=>{ const m=s.primary===role||s.secondary===role, sd=stepDue(s), e=canEditStep(s,t);
-          return `<div class="ms ${m?"is-mine":""} ${s.status==="Done"?"is-done":""}">
-            <span class="sn">${t.no}.${k+1}</span>
-            <span class="stt">${esc(s.title)}<small>${s.primary?esc(nameOf(s.primary)):"To be confirmed"}${s.secondary?`, with ${esc(nameOf(s.secondary))}`:""}${s.due?`, by ${esc(sd.label)}`:""}${sd.sub&&s.status!=="Done"&&s.due?` <span class="due ${sd.cls}">${esc(sd.sub)}</span>`:""}</small></span>
-            ${e&&(m||owner)?`<select class="sel st ${stCls(s.status)}" data-s="status" data-t="${t.id}" data-id="${s.id}" aria-label="Step status">${STATUSES.map(x=>`<option ${x===s.status?"selected":""}>${x}</option>`).join("")}</select>`:`<span class="pill ${stCls(s.status)}">${esc(s.status)}</span>`}
-          </div>`;}).join("")}</div>`:""}
-        ${ed?`<p class="lbl-s">Task status</p><div class="seg" role="group" aria-label="Status">${STATUSES.map(s=>`<button class="${s===t.status?"on "+stCls(s):""}" data-st="${s}" data-id="${t.id}" aria-pressed="${s===t.status}">${s}</button>`).join("")}</div>
-          <textarea class="note" data-m="note" data-id="${t.id}" rows="2" placeholder="Add an update: what moved, what is blocked, what you need">${esc(t.note)}</textarea>`
-          :`<span class="pill ${stCls(t.status)}">${esc(t.status)}</span>${t.note?`<p class="task-note">${esc(t.note)}</p>`:""}`}
+  const {act,sup}=myActions();
+  const open=act.filter(a=>a.status!=="Done"), done=act.filter(a=>a.status==="Done");
+  const k=a=>a.due||"9999";
+  open.sort((a,b)=>k(a).localeCompare(k(b)));
+  const groups=[
+    ["Late",open.filter(a=>daysTo(a.due)!==null&&daysTo(a.due)<0)],
+    ["Due in the next 2 weeks",open.filter(a=>{const d=daysTo(a.due); return d!==null&&d>=0&&d<=14;})],
+    ["Later",open.filter(a=>{const d=daysTo(a.due); return d!==null&&d>14;})],
+    ["No date yet",open.filter(a=>daysTo(a.due)===null)]
+  ].filter(g=>g[1].length);
+  const late=groups.find(g=>g[0]==="Late"), week=groups.find(g=>g[0]==="Due in the next 2 weeks");
+  const row=a=>{
+    const w=whenText(a), isOpen=openAct===a.key, ed=a.s?canEditStep(a.s,a.t):canEditTask(a.t), d=deptById(deptOf(a.t));
+    const started=a.status==="In progress", held=a.status==="On hold", isDone=a.status==="Done";
+    return `<li class="act ${isDone?"is-done":""} ${w.cls==="late"?"is-late":""}">
+      <button class="tick ${isDone?"on":""}" data-tick="${a.key}" ${ed?"":"disabled"} aria-pressed="${isDone}" aria-label="${isDone?"Mark as not done":"Mark as done"}: ${esc(a.title)}"></button>
+      <div class="act-main">
+        <p class="act-title">${esc(a.title)}</p>
+        <p class="act-meta"><span class="when ${w.cls}">${esc(w.txt)}</span>${a.helper?`<span>with ${esc(nameOf(a.helper))}</span>`:""}${started?`<span class="flag ip">Started</span>`:""}${held?`<span class="flag oh">On hold</span>`:""}</p>
+        <p class="act-from">${esc(d.name)}, part of <b>${esc(a.t.title)}</b></p>
+        <div class="act-links">
+          ${ed&&!isDone?`<button class="txtbtn" data-start="${a.key}">${started?"Not started yet":"I have started"}</button>`:""}
+          <button class="txtbtn quiet" data-more="${a.key}" aria-expanded="${isOpen}">${isOpen?"Hide details":"Details"}</button>
+        </div>
+        ${isOpen?moreHTML(a):""}
       </div>
-    </article>`;
+    </li>`;
   };
+  const supRow=a=>{ const w=whenText(a); return `<li class="sup"><span class="sup-title">${esc(a.title)}</span><span class="sup-meta">${esc(nameOf(a.lead)||"To be confirmed")} leads, ${esc(a.status.toLowerCase())}${a.due&&a.status!=="Done"?`, ${esc(w.txt.toLowerCase())}`:""}</span></li>`; };
   const first=nameOf(role);
   $("#main").innerHTML=`
   <section class="wrap mine">
     <div class="mine-head">
-      <h1>${pending.length?`${pending.length} ${pending.length===1?"task is":"tasks are"} with you, ${esc(first)}`:`Nothing is pending with you, ${esc(first)}`}</h1>
-      <p>${late?`<span class="late">${late} overdue.</span> `:""}Across all departments, earliest deadline first.</p>
+      <h1>${open.length?`${esc(first)}, you have ${open.length} thing${open.length===1?"":"s"} to do`:`${esc(first)}, you are all caught up`}</h1>
+      <p>${late?`<span class="late">${late[1].length} ${late[1].length===1?"is":"are"} late.</span> `:""}${week?`${week[1].length} due in the next 2 weeks. `:""}${open.length?"Tick the circle when something is done.":"Nothing is waiting on you right now."}</p>
     </div>
-    <div class="tasks">${pending.length?pending.map(card).join(""):`<div class="empty big">${mine.length?"Every task allocated to you is complete.":"No tasks are allocated to you yet. Prequate allocates them after the review meeting."}</div>`}</div>
-    ${done.length?`<details class="done"><summary>Completed tasks (${done.length})</summary><div class="tasks">${done.map(card).join("")}</div></details>`:""}
+    ${groups.map(([name,items])=>`<h2 class="grp ${name==="Late"?"late":""}">${name}<span>${items.length}</span></h2><ul class="acts">${items.map(row).join("")}</ul>`).join("")}
+    ${!act.length?`<div class="empty big">No tasks are allocated to you yet. Prequate allocates them after the review meeting.</div>`:""}
+    ${sup.length?`<details class="done sup-list"><summary>You are supporting others on ${sup.length} item${sup.length===1?"":"s"}</summary><ul>${sup.map(supRow).join("")}</ul></details>`:""}
+    ${done.length?`<details class="done"><summary>Done (${done.length})</summary><ul class="acts">${done.map(row).join("")}</ul></details>`:""}
     <p class="foot">${lastSaved()}</p>
     ${viewNotice()?`<p class="notice">${viewNotice()}</p>`:""}
   </section>`;
-  document.querySelectorAll("[data-st]").forEach(b=>b.onclick=()=>{ if(b.classList.contains("on")) return; setField(b.dataset.id,"status",b.dataset.st);
-    toast(b.dataset.st==="Done"?"Marked as done.":"Status set to "+b.dataset.st.toLowerCase()+"."); });
+  const find=key=>act.find(a=>a.key===key)||done.find(a=>a.key===key);
+  const setAct=(a,v)=>{ if(a.s) setStep(a.t.id,a.s.id,"status",v); else setField(a.t.id,"status",v); };
+  document.querySelectorAll("[data-tick]").forEach(b=>b.onclick=()=>{ const a=find(b.dataset.tick); if(!a) return;
+    const v=a.status==="Done"?"Not started":"Done"; setAct(a,v); toast(v==="Done"?"Marked as done.":"Moved back to your list."); });
+  document.querySelectorAll("[data-start]").forEach(b=>b.onclick=()=>{ const a=find(b.dataset.start); if(!a) return;
+    setAct(a,a.status==="In progress"?"Not started":"In progress"); });
+  document.querySelectorAll("[data-more]").forEach(b=>b.onclick=()=>{ openAct=openAct===b.dataset.more?null:b.dataset.more; renderMine(); updateStatus(); });
   document.querySelectorAll("[data-m=note]").forEach(el=>el.onchange=()=>setField(el.dataset.id,"note",el.value.trim(),true));
-  bindSteps();
+  document.querySelectorAll("[data-hold]").forEach(b=>b.onclick=()=>{ const a=find(b.dataset.hold); if(!a) return; setAct(a,a.status==="On hold"?"In progress":"On hold"); });
+}
+function moreHTML(a){
+  const t=a.t, owner=t.primary===role||t.secondary===role;
+  return `<div class="more-box">
+    ${t.outcome?`<p><b>Why it matters</b> ${esc(t.outcome)}</p>`:""}
+    ${t.remarks?`<p><b>Remarks</b> ${esc(t.remarks)}</p>`:""}
+    ${t.how?`<p><b>How it works</b> ${esc(t.how)}</p>`:""}
+    ${stepsOf(t).length?`<p><b>All steps in this task</b></p><ol class="mini">${stepsOf(t).map(s=>`<li class="${s.status==="Done"?"is-done":""}">${esc(s.title)} <span>${s.primary?esc(nameOf(s.primary)):"To be confirmed"}, ${esc(s.status.toLowerCase())}</span></li>`).join("")}</ol>`:""}
+    ${owner&&canEditTask(t)?`<label class="note-l"><b>Add an update for everyone</b><textarea class="note" data-m="note" data-id="${t.id}" rows="2" placeholder="What moved, what is blocked, what you need">${esc(t.note)}</textarea></label>`:t.note?`<p><b>Latest update</b> ${esc(t.note)}</p>`:""}
+    ${(a.s?canEditStep(a.s,t):canEditTask(t))&&a.status!=="Done"?`<button class="txtbtn quiet" data-hold="${a.key}">${a.status==="On hold"?"Take off hold":"Put on hold"}</button>`:""}
+  </div>`;
 }
 
 render();
