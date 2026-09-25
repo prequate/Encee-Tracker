@@ -585,7 +585,22 @@ function migrate(s){
   if(s.schema<6){ upgrade6(s); changed=true; }
   if(s.schema<7){ upgrade7(s); changed=true; }
   if(s.schema<8){ upgrade8(s); changed=true; }
+  if(s.schema<9){ upgrade9(s); changed=true; }
   return changed;
+}
+/* Version 9: only Ankitha, Nanjaraj or Prequate can be primary; others move to secondary. New MIS due 15 Oct. */
+function upgrade9(s){
+  const L=["ankitha","nanjaraj","prequate"];
+  const fixOwner=(o,fallback)=>{
+    if(!o.primary||L.includes(o.primary)) return;
+    const old=o.primary;
+    if(o.secondary&&L.includes(o.secondary)){ o.primary=o.secondary; }
+    else { o.primary=L.includes(fallback)?fallback:""; }
+    o.secondary=old;
+  };
+  s.tasks.forEach(t=>{ fixOwner(t,""); (t.steps||[]).forEach(st=>fixOwner(st,t.primary)); });
+  const mis=s.tasks.find(t=>t.id==="p1"); if(mis&&!mis.due) mis.due="2026-10-15";
+  s.schema=9;
 }
 /* Version 8: use the name Nanjaraj everywhere instead of Nanju */
 function upgrade8(s){
@@ -968,6 +983,8 @@ function canEditStep(s,t){ if(role==="prequate") return true; if(!token||tokenBa
   return s.primary===role||s.secondary===role||t.primary===role||t.secondary===role; }
 function renumber(){ numberTasks(state); }
 function stepDue(s){ if(!s.due) return {label:"",cls:""}; return dueInfo(s); }
+const LEADS=["ankitha","nanjaraj","prequate"];
+const leadOpts=v=>`<option value="">Unassigned</option>`+state.people.filter(p=>LEADS.includes(p.id)).map(p=>`<option value="${p.id}" ${p.id===v?"selected":""}>${esc(p.name)}</option>`).join("");
 const personOpts=(v,blank)=>`<option value="">${blank||"Unassigned"}</option>`+state.people.map(p=>`<option value="${p.id}" ${p.id===v?"selected":""}>${esc(p.name)}</option>`).join("");
 const whoLabel=id=>id?`<span class="who">${avatar(id,"xs")}${esc(nameOf(id))}</span>`:`<span class="muted">None</span>`;
 
@@ -1009,7 +1026,7 @@ function handoverHTML(){
 function peopleHTML(){
   const T=tasksIn(curDept);
   const core=new Set(["nanjaraj","ankitha","prequate"]);
-  const list=state.people.filter(p=>core.has(p.id)||T.some(t=>involved(t,p.id)));
+  const list=state.people.filter(p=>core.has(p.id));
   return `<section class="wrap people" aria-label="Pending by person">
     ${list.map(p=>{
       const mine=T.filter(t=>t.primary===p.id&&t.status!=="Done");
@@ -1051,7 +1068,7 @@ function renderOverall(){
         <span class="tt" data-no="${esc(t.no)}">${esc(t.title)}</span>
         <span class="ty">${esc(t.type)}${S.length?`<span class="stc">${stepsDone(t)} of ${S.length} steps done</span>`:""}<span class="more">${open?"Close":isP?"Edit details":"Details"}</span></span>
       </button>
-      <span class="r-cell r-p" data-l="Primary">${isP?`<select class="sel" data-f="primary" data-id="${t.id}" aria-label="Primary">${personOpts(t.primary)}</select>`:t.primary?whoLabel(t.primary):`<span class="muted">Unassigned</span>`}</span>
+      <span class="r-cell r-p" data-l="Primary">${isP?`<select class="sel" data-f="primary" data-id="${t.id}" aria-label="Primary">${leadOpts(t.primary)}</select>`:t.primary?whoLabel(t.primary):`<span class="muted">Unassigned</span>`}</span>
       <span class="r-cell r-s" data-l="Secondary">${isP?`<select class="sel" data-f="secondary" data-id="${t.id}" aria-label="Secondary">${personOpts(t.secondary,"None")}</select>`:whoLabel(t.secondary)}</span>
       <span class="r-cell r-d" data-l="Timeline">${isP?`<input class="sel" type="date" data-f="due" data-id="${t.id}" value="${esc(t.due)}" aria-label="Expected timeline">`:`<span class="dt">${esc(di.label)}</span>`}${di.sub?`<span class="due ${di.cls}">${esc(di.sub)}</span>`:""}</span>
       <span class="r-cell r-st" data-l="Status">${ed?`<select class="sel st ${stCls(t.status)}" data-f="status" data-id="${t.id}" aria-label="Status">${STATUSES.map(s=>`<option ${s===t.status?"selected":""}>${s}</option>`).join("")}</select>`:`<span class="pill ${stCls(t.status)}">${esc(t.status)}</span>`}</span>
@@ -1104,7 +1121,7 @@ function stepsHTML(t,editing){
     if(editing) return `<div class="step edit">
       <span class="sn">${t.no}.${k+1}</span>
       <input type="text" class="st-title" data-s="title" data-t="${t.id}" data-id="${s.id}" value="${esc(s.title)}" aria-label="Step">
-      <select class="sel" data-s="primary" data-t="${t.id}" data-id="${s.id}" aria-label="Step primary">${personOpts(s.primary)}</select>
+      <select class="sel" data-s="primary" data-t="${t.id}" data-id="${s.id}" aria-label="Step primary">${leadOpts(s.primary)}</select>
       <select class="sel" data-s="secondary" data-t="${t.id}" data-id="${s.id}" aria-label="Step secondary">${personOpts(s.secondary,"None")}</select>
       <input type="date" class="sel" data-s="due" data-t="${t.id}" data-id="${s.id}" value="${esc(s.due)}" aria-label="Step date">
       <select class="sel st ${stCls(s.status)}" data-s="status" data-t="${t.id}" data-id="${s.id}" aria-label="Step status">${STATUSES.map(x=>`<option ${x===s.status?"selected":""}>${x}</option>`).join("")}</select>
