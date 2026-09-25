@@ -586,7 +586,14 @@ function migrate(s){
   if(s.schema<7){ upgrade7(s); changed=true; }
   if(s.schema<8){ upgrade8(s); changed=true; }
   if(s.schema<9){ upgrade9(s); changed=true; }
+  if(s.schema<10){ upgrade10(s); changed=true; }
   return changed;
+}
+/* Version 10: Ankitha drafts the client cheat sheets with Prequate */
+function upgrade10(s){
+  const t=s.tasks.find(x=>x.id==="s1"), st=t&&(t.steps||[]).find(x=>x.id==="s1b");
+  if(st){ st.title="Ankitha and Prequate draft a one-page cheat sheet for each client"; st.primary="ankitha"; st.secondary="prequate"; }
+  s.schema=10;
 }
 /* Version 9: only Ankitha, Nanjaraj or Prequate can be primary; others move to secondary. New MIS due 15 Oct. */
 function upgrade9(s){
