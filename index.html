@@ -591,7 +591,18 @@ function migrate(s){
   if(s.schema<9){ upgrade9(s); changed=true; }
   if(s.schema<10){ upgrade10(s); changed=true; }
   if(s.schema<11){ upgrade11(s); changed=true; }
+  if(s.schema<12){ upgrade12(s); changed=true; }
   return changed;
+}
+/* Version 12: Nanjaraj introduces the Prequate team to key contacts, starting with forex */
+function upgrade12(s){
+  if(!s.tasks.some(t=>t.id==="p5")){
+    s.tasks.push(T({id:"p5",dept:"pq",title:"Introduce the Prequate team to Encee's key contacts",primary:"nanjaraj",secondary:"prequate",due:"2026-09-30",
+      outcome:"Prequate is introduced to the people it needs to work with directly, so it can move on its tasks without routing every request through Nanjaraj.",
+      remarks:"Start with the forex contact. More contacts can be added as steps.",
+      steps:[S("p5a","Introduce the Prequate team to the forex contact","nanjaraj","prequate","2026-09-30")]}));
+  }
+  numberTasks(s); s.schema=12;
 }
 /* Version 11: dated windows for each step of Sales Task 1; the task now runs to 18 Oct */
 function upgrade11(s){
